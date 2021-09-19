@@ -1,0 +1,8 @@
+*.o
+.vscode
+surfaces
+surfaces_test
+doc/html
+callgrind.*
+.~lock.*
+*.csv
