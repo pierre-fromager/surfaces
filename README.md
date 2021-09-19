@@ -1,7 +1,7 @@
 # Surfaces
 
-Surfaces illustrates howto fast calculate order 1 function integral.  
-
+Surfaces illustrates how to fast calculate order 1 function integral to get surface.  
+In a second time we will introduce the way to get surface for functions with orders greater than 1.
 
 ## Build
 
@@ -64,3 +64,15 @@ to run tests with or without options (bci)
 ``` 
 ./surfaces_test <options>
 ```
+
+## Links
+
+* [Méthodes numériques de résolution d’équations différentielles](https://www.fresnel.fr/perso/stout/Anal_numer/Cours4.pdf)
+* [Taylor Series](https://2k8618.blogspot.com/2011/05/taylor-series-c-program.html)
+* [Runge-Kutta Methods](https://www.bragitoff.com/2017/09/runge-kutta-methods-c-program/)
+* [Fourth Order Runge-Kutta](https://www.patnauniversity.ac.in/e-content/science/physics/RungeKuttaIVmethod(PG)_CC05&09_Physics_SanjayKumar.pdf)
+* [Calcul intégral](https://lyceesgisors.spip.ac-rouen.fr/IMG/pdf/integration-2.pdf)
+* [Riemann sum](https://en.wikipedia.org/wiki/Riemann_sum)
+* [Calcul numérique d'une intégrale](https://fr.wikipedia.org/wiki/Calcul_num%C3%A9rique_d%27une_int%C3%A9grale)
+* [Calcul numérique intégrale - exercicce](https://ressources.unisciel.fr/ramses/517-3-calcul-integral/co/fe701_1.html)
+* [Area Under a Curve](https://revisionmaths.com/advanced-level-maths-revision/pure-maths/calculus/area-under-curve)
