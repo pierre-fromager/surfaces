@@ -1,12 +1,12 @@
 
-#include "integral.h"
+#include "integ.h"
 
 static double lfn(double x, linear_fn_t f)
 {
     return f.s * x + f.o;
 }
 
-double linsurf(linear_fn_t lf, integral_t li)
+double integ_trapezoid(linear_fn_t lf, interval_t li)
 {
     const double dhl = li.h - li.l;
     const double yl = lfn(li.l, lf);

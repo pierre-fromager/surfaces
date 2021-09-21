@@ -14,7 +14,7 @@
 
 #include <stdlib.h>
 #include <stdio.h>
-#include "integral.h"
+#include "integ.h"
 
 #define SYM_ITGR "∫"
 #define ITGR_UA "u.a"
@@ -24,6 +24,6 @@
 #define SOL_ITGR_LIM "%slh => l:%.2f h:%.2f\n"
 #define SOL_RES "%s = %s%sdx = %.3f %s\n"
 
-void print_sol(FILE *streamout, linear_fn_t lf, integral_t li, double sol);
+void print_sol(FILE *streamout, linear_fn_t lf, interval_t li, double sol);
 
 #endif // _SURFACES_SOL_
