@@ -19,33 +19,41 @@
 #define FN0_S 0.5f
 #define FN0_O 3.0f
 #define IVL_L 0.0f
-#define IVL_M 2.0f
-#define IVL_H 5.0f
+#define IVL_STEP 1.0f
+#define IVL_H 5.0f / IVL_STEP
+#define __ACCURA 16.0f
+#define __ACBASE 10.0f
 
 arguments_t args;
 
+static double around(double n, double i);
 static interval_t single_interval(void);
-static void setup_itvls(intervals_t itvls, interval_t itvl_tpl);
-static double trapezoid_s_interval(linear_fn_t f, interval_t interval);
-static double trapezoid_m_intervals(linear_fn_t f, intervals_t itvls, unsigned nbintvls);
+static void set_intervals(intervals_t itvls, interval_t itvl_tpl);
+static double trapz_s_interval(linear_fn_t f, interval_t interval);
+static double trapz_m_intervals(linear_fn_t f, intervals_t itvls, unsigned nbintvls);
+
+static double around(double n, double i)
+{
+    return floor(pow(__ACBASE, i) * n) / pow(__ACBASE, i);
+}
 
 static interval_t single_interval()
 {
     return (interval_t){.l = IVL_L, .h = IVL_H};
 }
 
-static void setup_itvls(intervals_t itvls, interval_t itvl_tpl)
+static void set_intervals(intervals_t itvls, interval_t itvl_tpl)
 {
     itvls[0] = itvls[1] = itvl_tpl;
-    itvls[0].h = itvls[1].l = IVL_M;
+    itvls[0].h = itvls[1].l = (itvls[0].l + itvls[0].h) / 2;
 }
 
-static double trapezoid_s_interval(linear_fn_t f, interval_t itvl)
+static double trapz_s_interval(linear_fn_t f, interval_t itvl)
 {
     return integ_trapezoid(f, itvl);
 }
 
-static double trapezoid_m_intervals(linear_fn_t f, intervals_t itvls, unsigned nbintvls)
+static double trapz_m_intervals(linear_fn_t f, intervals_t itvls, unsigned nbintvls)
 {
     unsigned itvlcpt;
     double sol, solsum = 0;
@@ -64,15 +72,15 @@ int main(int argc, char *argv[])
 
     linear_fn_t f = {.s = FN0_S, .o = FN0_O};
     const interval_t itvl_tpl = single_interval();
-    const double sol_s = trapezoid_s_interval(f, itvl_tpl);
+    const double sol_s = trapz_s_interval(f, itvl_tpl);
     print_sol(stdout, f, itvl_tpl, sol_s);
 
     const unsigned nbitvls = 2;
     intervals_t itvls = malloc(sizeof(interval_t) * nbitvls);
-    setup_itvls(itvls, itvl_tpl);
-    const double sol_m = trapezoid_m_intervals(f, itvls, nbitvls);
+    set_intervals(itvls, itvl_tpl);
+    const double sol_m = trapz_m_intervals(f, itvls, nbitvls);
     free(itvls);
-    
-    assert(sol_s == sol_m);
+
+    assert(around(sol_s, __ACCURA) == around(sol_m, __ACCURA));
     return EXIT_SUCCESS;
 }
