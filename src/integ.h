@@ -16,8 +16,9 @@ typedef struct interval_s
     double l, h;
 } interval_t;
 
-typedef interval_t *intervals_t; 
+typedef interval_t *intervals_t;
 
-double integ_trapezoid(linear_fn_t lf, interval_t li);
+double integ_midpnt(linear_fn_t lf, interval_t li);
+double integ_trapez(linear_fn_t lf, interval_t li);
 
 #endif // _SURFACES_INTEG_

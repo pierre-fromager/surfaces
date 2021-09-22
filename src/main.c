@@ -50,7 +50,7 @@ static void set_intervals(intervals_t itvls, interval_t itvl_tpl)
 
 static double trapz_s_interval(linear_fn_t f, interval_t itvl)
 {
-    return integ_trapezoid(f, itvl);
+    return integ_trapez(f, itvl);
 }
 
 static double trapz_m_intervals(linear_fn_t f, intervals_t itvls, unsigned nbintvls)
@@ -59,8 +59,9 @@ static double trapz_m_intervals(linear_fn_t f, intervals_t itvls, unsigned nbint
     double sol, solsum = 0;
     for (itvlcpt = 0; itvlcpt < nbintvls; itvlcpt++)
     {
-        sol = integ_trapezoid(f, itvls[itvlcpt]);
+        sol = integ_trapez(f, itvls[itvlcpt]);
         solsum += sol;
+        printf("%s\n", "Multiple intervals integ trapz method");
         print_sol(stdout, f, itvls[itvlcpt], sol);
     }
     return solsum;
@@ -70,10 +71,14 @@ int main(int argc, char *argv[])
 {
     arguments_process(argc, argv, &args);
 
+    printf("%s\n", "Single interval integ trapz method");
     linear_fn_t f = {.s = FN0_S, .o = FN0_O};
     const interval_t itvl_tpl = single_interval();
     const double sol_s = trapz_s_interval(f, itvl_tpl);
     print_sol(stdout, f, itvl_tpl, sol_s);
+    printf("%s\n", "Single interval integ middle point method");
+    const double sol_sf = integ_midpnt(f, itvl_tpl);
+    print_sol(stdout, f, itvl_tpl, sol_sf);
 
     const unsigned nbitvls = 2;
     intervals_t itvls = malloc(sizeof(interval_t) * nbitvls);
