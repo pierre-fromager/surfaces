@@ -10,7 +10,7 @@ double integ_midpnt(linear_fn_t lf, interval_t li)
 {
     const double dhl = li.h - li.l;
     const double shl = li.l + li.h;
-    return fabs(dhl * lfn(shl / 2.0f, lf));
+    return fabs(dhl * lfn(shl / INTEG_TWO, lf));
 }
 
 double integ_trapez(linear_fn_t lf, interval_t li)
@@ -20,5 +20,5 @@ double integ_trapez(linear_fn_t lf, interval_t li)
     if (lf.s == 0.0)
         return fabs(dhl * yl);
     const double dy = lfn(li.h, lf) - yl;
-    return fabs(yl * dhl + (dhl * dy / 2));
+    return fabs(yl * dhl + (dhl * dy / INTEG_TWO));
 }

@@ -17,6 +17,7 @@
 #include <getopt.h>
 #include <string.h>
 #include <stdio.h>
+#include "surfaces_suites/suite_polynomial.h"
 
 int main(int argc, char *argv[])
 {
@@ -101,6 +102,8 @@ int main(int argc, char *argv[])
 			CU_get_error_msg());
 		return 2;
 	}
+
+	test_surfaces_polynomial_add_suite();
 
 	switch (interface)
 	{
