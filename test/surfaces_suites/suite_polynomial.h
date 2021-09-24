@@ -14,5 +14,6 @@ void reset_test_polynomial(void);
 void test_surfaces_polynomial_o0(void);
 void test_surfaces_polynomial_o1(void);
 void test_surfaces_polynomial_o2(void);
+void test_surfaces_polynomial_o3(void);
 
 #endif // __TEST_SURFACES_SUITE_POLYNOMIAL_H__

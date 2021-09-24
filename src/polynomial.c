@@ -50,7 +50,8 @@ polynomial_item_t polynomial_calc(polynomial_item_t x, polynomial_t *p)
     polynomial_item_t sum = 0;
 
     for (ocpt = 0; ocpt < p->order + 1; ocpt++)
-        sum += p->factors[ocpt] * pow(x, p->orders[ocpt]);
+        if (p->factors[ocpt] != 0.0f)
+            sum += p->factors[ocpt] * pow(x, p->orders[ocpt]);
     return sum;
 }
 
