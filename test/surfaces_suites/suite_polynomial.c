@@ -59,18 +59,20 @@ void test_surfaces_polynomial_o0()
     const polynomial_item_t ev = 10.0f;
     const polynomial_order_t io = 0;
     polynomial_order_t iocpt;
+    polynomial_item_t cptv;
     CU_ASSERT_PTR_NOT_NULL_FATAL(p);
     polynomial_construct(io, p);
-    CU_ASSERT_EQUAL(sizeof(p->factors), 8);
-
-    for (iocpt = 0; iocpt < io; iocpt++)
+    for (iocpt = 0; iocpt < io + 1; iocpt++)
         CU_ASSERT_EQUAL(polynomial_getorder(iocpt, p), iocpt);
-    CU_ASSERT_EQUAL(sizeof(p->factors), 8);
-
+    for (iocpt = 0; iocpt < io + 1; iocpt++)
+        CU_ASSERT_EQUAL(polynomial_getfactor(iocpt, p), 0);
+    // y = 0
     CU_ASSERT_EQUAL(polynomial_calc(ev, p), 0);
+    // y = 10
     polynomial_setfactor(0, ev, p);
     CU_ASSERT_EQUAL(polynomial_getfactor(0, p), ev);
-    CU_ASSERT_EQUAL(polynomial_calc(1.0f, p), ev);
+    for (cptv = -ev; cptv < ev; cptv++)
+        CU_ASSERT_EQUAL(polynomial_calc(cptv, p), ev);
 }
 
 void test_surfaces_polynomial_o1()
@@ -82,17 +84,36 @@ void test_surfaces_polynomial_o1()
     CU_ASSERT_PTR_NOT_NULL_FATAL(p);
     polynomial_construct(io, p);
     CU_ASSERT_EQUAL(sizeof(p->factors), 8);
-    for (iocpt = 0; iocpt < io; iocpt++)
+    for (iocpt = 0; iocpt < io + 1; iocpt++)
         CU_ASSERT_EQUAL(polynomial_getorder(iocpt, p), iocpt);
-    CU_ASSERT_EQUAL(sizeof(p->factors), 8);
+    for (iocpt = 0; iocpt < io + 1; iocpt++)
+        CU_ASSERT_EQUAL(polynomial_getfactor(iocpt, p), 0);
     CU_ASSERT_EQUAL(polynomial_calc(ev, p), 0);
+    // y = x
     polynomial_setfactor(0, 0.0f, p);
     polynomial_setfactor(1, 1.0f, p);
     CU_ASSERT_EQUAL(polynomial_getfactor(0, p), 0);
     CU_ASSERT_EQUAL(polynomial_getfactor(1, p), 1);
-    for (cptv = 0; cptv < 100.0f; cptv++)
+    for (cptv = -ev; cptv < ev; cptv++)
         CU_ASSERT_EQUAL(polynomial_calc(cptv, p), cptv);
+    // y = x + 1
     polynomial_setfactor(0, 1.0f, p);
-    for (cptv = 0; cptv < 100.0f; cptv++)
+    CU_ASSERT_EQUAL(polynomial_getfactor(0, p), 1);
+    for (cptv = -ev; cptv < ev; cptv++)
         CU_ASSERT_EQUAL(polynomial_calc(cptv, p), cptv + 1);
+    // y = x + 5
+    polynomial_setfactor(0, 5.0f, p);
+    CU_ASSERT_EQUAL(polynomial_getfactor(0, p), 5);
+    for (cptv = -ev; cptv < ev; cptv++)
+        CU_ASSERT_EQUAL(polynomial_calc(cptv, p), cptv + 5);
+    // y = 2x + 5
+    polynomial_setfactor(1, 2.0f, p);
+    CU_ASSERT_EQUAL(polynomial_getfactor(1, p), 2);
+    for (cptv = -ev; cptv < ev; cptv++)
+        CU_ASSERT_EQUAL(polynomial_calc(cptv, p), 2 * cptv + 5);
+    // y = -2x + 5
+    polynomial_setfactor(1, -2.0f, p);
+    CU_ASSERT_EQUAL(polynomial_getfactor(1, p), -2);
+    for (cptv = -ev; cptv < ev; cptv++)
+        CU_ASSERT_EQUAL(polynomial_calc(cptv, p), -2 * cptv + 5);
 }
