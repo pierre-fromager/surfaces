@@ -31,7 +31,7 @@ static struct
     {test_surfaces_derivative_o0, "derivative_o0"},
     {test_surfaces_derivative_o1, "derivative_o1"},
     {test_surfaces_derivative_o1, "derivative_o2"},
-    //{test_surfaces_derivative_o3, "derivative_o3"},
+    {test_surfaces_derivative_o3, "derivative_o3"},
     {0, 0},
 };
 
@@ -166,7 +166,7 @@ void test_surfaces_derivative_o2()
     derivative_derivate(psrc, pdst);
     for (cptv = -ev; cptv < ev; cptv++)
         CU_ASSERT_EQUAL(polynomial_calc(cptv, pdst), 4 * cptv);
-    // y = -2x² + x + 5 => y' = 4x + 1
+    // y = 2x² + x + 5 => y' = 4x + 1
     polynomial_setfactor(1, 1.0f, psrc);
     CU_ASSERT_EQUAL(polynomial_getfactor(1, psrc), 1);
     derivative_derivate(psrc, pdst);
@@ -174,7 +174,6 @@ void test_surfaces_derivative_o2()
         CU_ASSERT_EQUAL(polynomial_calc(cptv, pdst), 4 * cptv + 1);
 }
 
-/*
 void test_surfaces_derivative_o3()
 {
     const polynomial_item_t ev = 10.0f;
@@ -183,44 +182,37 @@ void test_surfaces_derivative_o3()
     polynomial_item_t cptv;
     CU_ASSERT_PTR_NOT_NULL_FATAL(psrc);
     CU_ASSERT_PTR_NOT_NULL_FATAL(pdst);
-    polynomial_construct(io, psrc);    
+    polynomial_construct(io, psrc);
     for (iocpt = 0; iocpt < io + 1; iocpt++)
-        CU_ASSERT_EQUAL(polynomial_getorder(iocpt, p), iocpt);
+        CU_ASSERT_EQUAL(polynomial_getorder(iocpt, psrc), iocpt);
     for (iocpt = 0; iocpt < io + 1; iocpt++)
-        CU_ASSERT_EQUAL(polynomial_getfactor(iocpt, p), 0);
-    CU_ASSERT_EQUAL(polynomial_calc(ev, p), 0);
-    // y = x³
-    polynomial_setfactor(3, 1.0f, p);
-    CU_ASSERT_EQUAL(polynomial_getfactor(3, p), 1);
+        CU_ASSERT_EQUAL(polynomial_getfactor(iocpt, psrc), 0);
+    // y = x³ => y' = 3x²
+    polynomial_setfactor(3, 1.0f, psrc);
+    CU_ASSERT_EQUAL(polynomial_getfactor(3, psrc), 1);
+    derivative_derivate(psrc, pdst);
     for (cptv = -ev; cptv < ev; cptv++)
-        CU_ASSERT_EQUAL(polynomial_calc(cptv, p), cptv * cptv * cptv);
-    // y = x³ + 1
-    polynomial_setfactor(0, 1.0f, p);
-    CU_ASSERT_EQUAL(polynomial_getfactor(0, p), 1);
+        CU_ASSERT_EQUAL(polynomial_calc(cptv, pdst), 3 * cptv * cptv);
+    // y = x³ + 1 => y' = 3x²
+    polynomial_setfactor(0, 1.0f, psrc);
+    CU_ASSERT_EQUAL(polynomial_getfactor(0, psrc), 1);
+    derivative_derivate(psrc, pdst);
     for (cptv = -ev; cptv < ev; cptv++)
-        CU_ASSERT_EQUAL(polynomial_calc(cptv, p), cptv * cptv * cptv + 1);
-    // y = x³ + 5
-    polynomial_setfactor(0, 5.0f, p);
-    CU_ASSERT_EQUAL(polynomial_getfactor(0, p), 5);
+        CU_ASSERT_EQUAL(polynomial_calc(cptv, pdst), 3 * cptv * cptv);
+    // y = 2x³ + 1 => y' = 6x²
+    polynomial_setfactor(3, 2.0f, psrc);
+    CU_ASSERT_EQUAL(polynomial_getfactor(3, psrc), 2);
+    derivative_derivate(psrc, pdst);
     for (cptv = -ev; cptv < ev; cptv++)
-        CU_ASSERT_EQUAL(polynomial_calc(cptv, p), cptv * cptv * cptv + 5);
-    // y = 2x³ + 5
-    polynomial_setfactor(3, 2.0f, p);
-    CU_ASSERT_EQUAL(polynomial_getfactor(3, p), 2);
-    for (cptv = -ev; cptv < ev; cptv++)
-        CU_ASSERT_EQUAL(polynomial_calc(cptv, p), 2 * cptv * cptv * cptv + 5);
-    // y = -2x³ + 5
-    polynomial_setfactor(3, -2.0f, p);
-    CU_ASSERT_EQUAL(polynomial_getfactor(3, p), -2);
-    for (cptv = -ev; cptv < ev; cptv++)
-        CU_ASSERT_EQUAL(polynomial_calc(cptv, p), -2 * cptv * cptv * cptv + 5);
-    // y = -2x³ + x² + x + 5
-    polynomial_setfactor(1, 1.0f, p);
-    CU_ASSERT_EQUAL(polynomial_getfactor(1, p), 1);
-    polynomial_setfactor(2, 1.0f, p);
-    CU_ASSERT_EQUAL(polynomial_getfactor(2, p), 1);
+        CU_ASSERT_EQUAL(polynomial_calc(cptv, pdst), 6 * cptv * cptv);
+    // y = 2x³ + x² + x + 1 => y' = 6x² + 2x + 1
+    polynomial_setfactor(1, 1.0f, psrc);
+    CU_ASSERT_EQUAL(polynomial_getfactor(1, psrc), 1);
+    polynomial_setfactor(2, 1.0f, psrc);
+    CU_ASSERT_EQUAL(polynomial_getfactor(2, psrc), 1);
+    derivative_derivate(psrc, pdst);
     for (cptv = -ev; cptv < ev; cptv++)
         CU_ASSERT_EQUAL(
-            polynomial_calc(cptv, p),
-            (-2 * cptv * cptv * cptv) + (cptv * cptv) + cptv + 5);
-}*/
+            polynomial_calc(cptv, pdst),
+            (6 * cptv * cptv) + (2 * cptv) + 1);
+}
