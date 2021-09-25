@@ -4,7 +4,9 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <math.h>
+//#include <math.h>
+#include "polynomial.h"
 
+void derivative_derivate(polynomial_t *psrc, polynomial_t *pdst);
 
 #endif // _SURFACES_DERIVATIVE_

@@ -18,6 +18,7 @@
 #include <string.h>
 #include <stdio.h>
 #include "surfaces_suites/suite_polynomial.h"
+#include "surfaces_suites/suite_derivative.h"
 
 int main(int argc, char *argv[])
 {
@@ -104,6 +105,7 @@ int main(int argc, char *argv[])
 	}
 
 	test_surfaces_polynomial_add_suite();
+	test_surfaces_derivative_add_suite();
 
 	switch (interface)
 	{
