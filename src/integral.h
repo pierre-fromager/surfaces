@@ -1,0 +1,23 @@
+
+#ifndef _SURFACES_INTEGRAL_
+#define _SURFACES_INTEGRAL_
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <math.h>
+#include "interval.h"
+#include "linearfn.h"
+#include "polynomial.h"
+#include "derivative.h"
+
+#define INTEG_TWO 2.0f
+#define INTEG_EPSILON "ε"
+
+double integral_midpnt(linear_fn_t lf, interval_t li);
+double integral_trapez(linear_fn_t lf, interval_t li);
+
+polynomial_item_t integral_factory(polynomial_t *p, interval_t li, polynomial_item_t n);
+polynomial_item_t integral_factory_midpnt(polynomial_t *p, interval_t li);
+polynomial_item_t integral_factory_riemann(polynomial_t *p, interval_t li, polynomial_item_t n);
+
+#endif // _SURFACES_INTEGRAL_

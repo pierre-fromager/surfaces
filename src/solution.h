@@ -14,7 +14,7 @@
 
 #include <stdlib.h>
 #include <stdio.h>
-#include "integ.h"
+#include "integral.h"
 
 #define SYM_ITGR "∫"
 #define ITGR_UA "u.a"

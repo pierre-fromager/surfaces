@@ -1,7 +1,8 @@
 # Surfaces
 
-Surfaces illustrates how to fast calculate order 1 function integral to get surface.  
-In a second time we will introduce the way to get surface for functions with orders greater than 1.
+Surfaces illustrates how to fast calculate surface from a polynomial.  
+A factory design pattern let an exact calculus for polynomial with order lower than 2,
+otherwise an iterative approximation will be applied from riemann sum algorithm with a partitioning factor.  
 
 ## Build
 
