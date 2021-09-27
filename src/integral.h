@@ -19,5 +19,6 @@ double integral_trapez(linear_fn_t lf, interval_t li);
 polynomial_item_t integral_factory(polynomial_t *p, interval_t li, polynomial_item_t n);
 polynomial_item_t integral_factory_midpnt(polynomial_t *p, interval_t li);
 polynomial_item_t integral_factory_riemann(polynomial_t *p, interval_t li, polynomial_item_t n);
+polynomial_item_t integral_factory_simpson(polynomial_t *p, interval_t li);
 
 #endif // _SURFACES_INTEGRAL_

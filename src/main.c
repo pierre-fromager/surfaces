@@ -109,6 +109,13 @@ int main(int argc, char *argv[])
     printf("\t%sf(x)dx = %0.12f\n", SYM_ITGR, itgr_fact_sol);
     printf("\t%s : %0.12f\n", INTEG_EPSILON, sol_sf - itgr_fact_sol);
 
+    const polynomial_item_t itgs_fact_sol = integral_factory_simpson(p,itvl_tpl);
+    printf("\nUsing simpson with polynomial form same f(x) and interval\n");
+    //printf("\tParition size : %10.0f\n", partition_size);
+    printf("\t%sab  a:%0.1f b:%0.1f\n", SYM_ITGR, itvl_tpl.l, itvl_tpl.h);
+    printf("\t%sf(x)dx = %0.12f\n", SYM_ITGR, itgs_fact_sol);
+    printf("\t%s : %0.12f\n", INTEG_EPSILON, sol_sf - itgs_fact_sol);    
+
     polynomial_destruct(p);
 
     return EXIT_SUCCESS;
