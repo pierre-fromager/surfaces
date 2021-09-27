@@ -18,12 +18,12 @@
 
 #define SYM_ITGR "∫"
 #define ITGR_UA "u.a"
-#define LFN "f(x)"
-#define ITGFN "F(x)"
+#define SOL_FN "f(x)"
+#define SOL_ITGFN "F(x)"
 #define SOL_EQ_FMT "%s = %.8f*x+%.8f\n"
 #define SOL_ITGR_LIM "%slh => l:%.8f h:%.8f\n"
 #define SOL_RES "%s = %s%sdx = %.18f %s\n"
 
-void print_sol(FILE *streamout, linear_fn_t lf, interval_t li, double sol, char *title);
+void solution_print(FILE *streamout, polynomial_t *p, interval_t li, polynomial_item_t sol, char *title);
 
 #endif // _SURFACES_SOL_

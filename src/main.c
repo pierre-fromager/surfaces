@@ -21,9 +21,9 @@
 #define TITLE_SOL_MPTM "Multiple intervals ITG trapz method"
 #define FN0_S 0.5f
 #define FN0_O 3.0f
-#define IVL_L 0.0f
-#define IVL_STEP 1.0f
-#define IVL_H 5.0f / IVL_STEP
+#define IL_L 0.0f
+#define IL_STEP 1.0f
+#define IL_H 5.0f / IL_STEP
 #define __ACCURA 16.0f
 #define __ACBASE 10.0f
 
@@ -37,7 +37,7 @@ static double around(double n, double i)
 
 static interval_t single_interval()
 {
-    return (interval_t){.l = IVL_L, .h = IVL_H};
+    return (interval_t){.l = IL_L, .h = IL_H};
 }
 
 static void set_intervals(intervals_t itvls, interval_t itvl_tpl)
@@ -46,20 +46,20 @@ static void set_intervals(intervals_t itvls, interval_t itvl_tpl)
     itvls[0].h = itvls[1].l = (itvls[0].l + itvls[0].h) / 2;
 }
 
-static double trapz_s_interval(linear_fn_t f, interval_t itvl)
+static double trapz_s_interval(polynomial_t *p, interval_t itvl)
 {
-    return integral_trapez(f, itvl);
+    return integral_poly_trapez(p, itvl);
 }
 
-static double trapz_m_intervals(linear_fn_t f, intervals_t itvls, unsigned nbintvls)
+static double trapz_m_intervals(polynomial_t *p, intervals_t itvls, unsigned nbintvls)
 {
     unsigned itvlcpt;
     double sol, solsum = 0;
     for (itvlcpt = 0; itvlcpt < nbintvls; itvlcpt++)
     {
-        sol = integral_trapez(f, itvls[itvlcpt]);
+        sol = integral_poly_trapez(p, itvls[itvlcpt]);
         solsum += sol;
-        print_sol(stdout, f, itvls[itvlcpt], sol, TITLE_SOL_MPTM);
+        solution_print(stdout, p, itvls[itvlcpt], sol, TITLE_SOL_MPTM);
     }
     return solsum;
 }
@@ -68,18 +68,23 @@ int main(int argc, char *argv[])
 {
     arguments_process(argc, argv, &args);
 
-    linear_fn_t f = {.s = FN0_S, .o = FN0_O};
-    const interval_t itvl_tpl = single_interval();
-    const double sol_s = trapz_s_interval(f, itvl_tpl);
-    print_sol(stdout, f, itvl_tpl, sol_s, TITLE_SOL_SITZM);
+    polynomial_t *p;
+    p = malloc(sizeof(polynomial_t));
+    polynomial_construct(1, p);
+    polynomial_setfactor(0, FN0_O, p);
+    polynomial_setfactor(1, FN0_S, p);
 
-    const double sol_sf = integral_midpnt(f, itvl_tpl);
-    print_sol(stdout, f, itvl_tpl, sol_sf, TITLE_SOL_SIMPM);
+    const interval_t itvl_tpl = single_interval();
+    const polynomial_item_t sol_s = trapz_s_interval(p, itvl_tpl);
+    solution_print(stdout, p, itvl_tpl, sol_s, TITLE_SOL_SITZM);
+
+    const polynomial_item_t sol_sf = integral_poly_midpnt(p, itvl_tpl);
+    solution_print(stdout, p, itvl_tpl, sol_sf, TITLE_SOL_SIMPM);
 
     const unsigned nbitvls = 2;
     intervals_t itvls = malloc(sizeof(interval_t) * nbitvls);
     set_intervals(itvls, itvl_tpl);
-    const double sol_m = trapz_m_intervals(f, itvls, nbitvls);
+    const polynomial_item_t sol_m = trapz_m_intervals(p, itvls, nbitvls);
     free(itvls);
 
     assert(around(sol_s, __ACCURA) == around(sol_sf, __ACCURA));
@@ -87,16 +92,12 @@ int main(int argc, char *argv[])
 
     printf("Integrate polynomial same f(x) and interval\n");
     printf("\t%sab  a:%0.1f b:%0.1f\n", SYM_ITGR, itvl_tpl.l, itvl_tpl.h);
-    polynomial_t *p;
-    p = malloc(sizeof(polynomial_t));
-    polynomial_construct(1, p);
-    polynomial_setfactor(0, FN0_O, p);
-    polynomial_setfactor(1, FN0_S, p);
+
     const polynomial_item_t partition_amount = pow(4.0f, 10.0f);
     const polynomial_item_t itgf_fact_sol = integral_factory(
         p,
         itvl_tpl,
-        partition_amount);    
+        partition_amount);
     printf("\t%sf(x)dx = %0.12f\n", SYM_ITGR, itgf_fact_sol);
     printf("\t%s : %0.12f\n", INTEG_EPSILON, sol_sf - itgf_fact_sol);
     const polynomial_item_t itgr_fact_sol = integral_poly_riemann(

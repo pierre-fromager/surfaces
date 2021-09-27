@@ -1,25 +1,21 @@
 
 #include "integral.h"
 
-static double lfn(double x, linear_fn_t f)
-{
-    return f.s * x + f.o;
-}
-
-double integral_midpnt(linear_fn_t lf, interval_t il)
+polynomial_item_t integral__poly_midpnt(polynomial_t *p, interval_t il)
 {
     const double dhl = il.h - il.l;
     const double shl = il.l + il.h;
-    return dhl * lfn(shl / INTEG_TWO, lf);
+    return dhl * polynomial_calc(shl / INTEG_TWO, p);
 }
 
-double integral_trapez(linear_fn_t lf, interval_t il)
+polynomial_item_t integral_poly_trapez(polynomial_t *p, interval_t il)
 {
-    const double dhl = il.h - il.l;
-    const double yl = lfn(il.l, lf);
-    if (lf.s == 0.0)
+    const polynomial_item_t dhl = il.h - il.l;
+    const polynomial_item_t yl = polynomial_calc(il.l, p);
+    if (polynomial_getfactor(1, p) == 0.0f)
         return dhl * yl;
-    const double dy = lfn(il.h, lf) - yl;
+    //const double dy = lfn(il.h, lf) - yl;
+    const double dy = polynomial_calc(il.h, p) - yl;
     return yl * dhl + (dhl * dy / INTEG_TWO);
 }
 
