@@ -25,22 +25,20 @@ double integral_trapez(linear_fn_t lf, interval_t li)
 
 polynomial_item_t integral_factory_simpson(polynomial_t *p, interval_t li)
 {
-    polynomial_item_t sum;
     const polynomial_item_t dx = (li.h - li.l) / 6;
     const polynomial_item_t mid = (li.h + li.l) / 2;
-    sum = dx * (polynomial_calc(li.l, p) + (4 * polynomial_calc(mid, p)) + polynomial_calc(li.h, p));
-    return sum;
+    const polynomial_item_t fl = polynomial_calc(li.l, p);
+    const polynomial_item_t fm = polynomial_calc(mid, p);
+    const polynomial_item_t fh = polynomial_calc(li.h, p);
+    return (fl + 4 * fm + fh) * dx;
 }
 
 polynomial_item_t integral_factory_riemann(polynomial_t *p, interval_t li, polynomial_item_t n)
 {
-    polynomial_item_t i, xi, sum = 0;
+    polynomial_item_t i, sum = 0;
     const polynomial_item_t dx = (li.h - li.l) / n;
     for (i = 0; i < n; i++)
-    {
-        xi = li.l + i * dx;
-        sum += polynomial_calc(xi, p) * dx;
-    }
+        sum += polynomial_calc(li.l + i * dx, p) * dx;
     return sum;
 }
 
@@ -56,6 +54,6 @@ polynomial_item_t integral_factory(polynomial_t *p, interval_t li, polynomial_it
     if (p->order < 2)
         return integral_factory_midpnt(p, li);
     if (p->order < 4)
-        return integral_factory_simpson(p, li);        
+        return integral_factory_simpson(p, li);
     return integral_factory_riemann(p, li, n);
 }
