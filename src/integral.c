@@ -60,29 +60,11 @@ polynomial_item_t integral_poly_newton_cote_1_2(polynomial_t *p, interval_t il)
     return (dhl / fact) * ((fact * fshl) + (dhl * (d1h - d1l)));
 }
 
-polynomial_item_t integral_poly_newton_cote_2_2(polynomial_t *p, interval_t il)
-{
-    const polynomial_item_t dhl = il.h - il.l;
-    const polynomial_item_t fact = 12.0f;
-    const polynomial_item_t dfact = dhl / fact;
-    const polynomial_item_t hfact = fact / INTEG_TWO;
-    const polynomial_item_t fl = polynomial_calc(il.l, p);
-    const polynomial_item_t fh = polynomial_calc(il.h, p);
-    polynomial_t *d1;
-    d1 = malloc(sizeof(polynomial_t));
-    polynomial_construct(p->order - 1, d1);
-    derivative_derivate(p, d1);
-    const polynomial_item_t d1l = polynomial_calc(il.l, d1);
-    const polynomial_item_t d1h = polynomial_calc(il.h, d1);
-    polynomial_destruct(d1);
-    return dfact * ((hfact * (fl + fh)) + (dhl * (d1h - d1l)));
-}
-
-polynomial_item_t integral_factory(polynomial_t *p, interval_t il, polynomial_item_t n)
+polynomial_item_t integral_factory(polynomial_t *p, interval_t il)
 {
     if (p->order < 2)
         return integral_poly_midpnt(p, il);
     if (p->order < 4)
         return integral_poly_simpson(p, il);
-    return integral_poly_riemann(p, il, n);
+    return integral_poly_newton_cote_1_2(p, il);
 }
