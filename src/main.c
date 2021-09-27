@@ -85,45 +85,41 @@ int main(int argc, char *argv[])
     assert(around(sol_s, __ACCURA) == around(sol_sf, __ACCURA));
     assert(around(sol_s, __ACCURA) == around(sol_m, __ACCURA));
 
+    printf("Integrate polynomial same f(x) and interval\n");
+    printf("\t%sab  a:%0.1f b:%0.1f\n", SYM_ITGR, itvl_tpl.l, itvl_tpl.h);
     polynomial_t *p;
     p = malloc(sizeof(polynomial_t));
     polynomial_construct(1, p);
     polynomial_setfactor(0, FN0_O, p);
     polynomial_setfactor(1, FN0_S, p);
-    const polynomial_item_t partition_size = pow(4.0f, 10.0f);
+    const polynomial_item_t partition_amount = pow(4.0f, 10.0f);
     const polynomial_item_t itgf_fact_sol = integral_factory(
         p,
         itvl_tpl,
-        partition_size);
-    printf("integral polynomial same f(x) and interval\n");
-    printf("\t%sab  a:%0.1f b:%0.1f\n", SYM_ITGR, itvl_tpl.l, itvl_tpl.h);
+        partition_amount);    
     printf("\t%sf(x)dx = %0.12f\n", SYM_ITGR, itgf_fact_sol);
     printf("\t%s : %0.12f\n", INTEG_EPSILON, sol_sf - itgf_fact_sol);
     const polynomial_item_t itgr_fact_sol = integral_poly_riemann(
         p,
         itvl_tpl,
-        partition_size);
-    printf("\nRiemann polynomial same f(x) and interval\n");
-    printf("\tParition size : %10.0f\n", partition_size);
-    printf("\t%sab  a:%0.1f b:%0.1f\n", SYM_ITGR, itvl_tpl.l, itvl_tpl.h);
+        partition_amount);
+    printf("\nRiemann sum iterative method\n");
+    printf("\tParition amount : %10.0f\n", partition_amount);
     printf("\t%sf(x)dx = %0.12f\n", SYM_ITGR, itgr_fact_sol);
     printf("\t%s : %0.12f\n", INTEG_EPSILON, sol_sf - itgr_fact_sol);
 
     const polynomial_item_t itgs_fact_sol = integral_poly_simpson(p, itvl_tpl);
-    printf("\nSimpson polynomial same f(x) and interval\n");
-    printf("\t%sab  a:%0.1f b:%0.1f\n", SYM_ITGR, itvl_tpl.l, itvl_tpl.h);
+    printf("\nSimpson method\n");
     printf("\t%sf(x)dx = %0.12f\n", SYM_ITGR, itgs_fact_sol);
     printf("\t%s : %0.12f\n", INTEG_EPSILON, sol_sf - itgs_fact_sol);
 
     const polynomial_item_t itgn12_fact_sol = integral_poly_newton_cote_1_2(p, itvl_tpl);
-    printf("\nNewton-cote-1-2 polynomial same f(x) and interval\n");
-    printf("\t%sab  a:%0.1f b:%0.1f\n", SYM_ITGR, itvl_tpl.l, itvl_tpl.h);
+    printf("\nNewton-cote-1-2 method\n");
     printf("\t%sf(x)dx = %0.12f\n", SYM_ITGR, itgn12_fact_sol);
     printf("\t%s : %0.12f\n", INTEG_EPSILON, sol_sf - itgn12_fact_sol);
 
     const polynomial_item_t itgn22_fact_sol = integral_poly_newton_cote_2_2(p, itvl_tpl);
-    printf("\nNewton-cote-2-2 polynomial same f(x) and interval\n");
-    printf("\t%sab  a:%0.1f b:%0.1f\n", SYM_ITGR, itvl_tpl.l, itvl_tpl.h);
+    printf("\nNewton-cote-2-2 method\n");
     printf("\t%sf(x)dx = %0.12f\n", SYM_ITGR, itgn22_fact_sol);
     printf("\t%s : %0.12f\n", INTEG_EPSILON, sol_sf - itgn22_fact_sol);
 
