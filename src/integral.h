@@ -17,8 +17,10 @@ double integral_midpnt(linear_fn_t lf, interval_t li);
 double integral_trapez(linear_fn_t lf, interval_t li);
 
 polynomial_item_t integral_factory(polynomial_t *p, interval_t li, polynomial_item_t n);
-polynomial_item_t integral_factory_midpnt(polynomial_t *p, interval_t li);
-polynomial_item_t integral_factory_riemann(polynomial_t *p, interval_t li, polynomial_item_t n);
-polynomial_item_t integral_factory_simpson(polynomial_t *p, interval_t li);
+polynomial_item_t integral_poly_midpnt(polynomial_t *p, interval_t li);
+polynomial_item_t integral_poly_riemann(polynomial_t *p, interval_t li, polynomial_item_t n);
+polynomial_item_t integral_poly_simpson(polynomial_t *p, interval_t li);
+polynomial_item_t integral_poly_newton_cote_1_2(polynomial_t *p, interval_t li);
+polynomial_item_t integral_poly_newton_cote_2_2(polynomial_t *p, interval_t li);
 
 #endif // _SURFACES_INTEGRAL_
