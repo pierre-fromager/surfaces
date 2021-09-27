@@ -4,13 +4,14 @@
 static void solution_equation(FILE *streamout, polynomial_t *p)
 {
     unsigned c;
-    fprintf(streamout, "\n\t%s=",SOL_FN);
+    fprintf(streamout, "\n\t%s = ", SOL_FN);
     for (c = 0; c < p->order + 1; c++)
         if (polynomial_getfactor(c, p) != 0.0f)
         {
-            fprintf(streamout, "%0.4fx^%u", p->factors[c], c);
-            if (c < p->order)
-                fprintf(streamout, "+");
+            const char *sign = (polynomial_getfactor(c, p) < 0) ? "" : "+";
+            const char *fmto = (c == 0) ? "%s%0.4f" : "%s%0.4fx";
+            const char *fmt = (c > 1) ? "%s%0.4fx^%u" : fmto;
+            fprintf(streamout, fmt, sign, polynomial_getfactor(c, p), c);
         }
     fprintf(streamout, "\n");
 }

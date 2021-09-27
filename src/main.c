@@ -11,14 +11,13 @@
 
 #include <stdlib.h>
 #include <string.h>
-#include <assert.h>
 #include "arguments.h"
 #include "integral.h"
 #include "solution.h"
 
-#define TITLE_SOL_SITZM "Single interval ITG trapezoid method"
-#define TITLE_SOL_SIMPM "Single interval ITG middle point method"
-#define TITLE_SOL_MPTM "Multiple intervals ITG trapz method"
+#define TITLE_SOL_SITZM "Integrate trapezoid method"
+#define TITLE_SOL_SIMPM "Integrate middle point method"
+#define TITLE_SOL_MPTM "Integrate intervals I%u"
 #define FN0_S 0.5f
 #define FN0_O 3.0f
 #define IL_L 0.0f
@@ -29,11 +28,6 @@
 
 arguments_t args;
 static interval_t single_interval(void);
-
-static double around(double n, double i)
-{
-    return floor(pow(__ACBASE, i) * n) / pow(__ACBASE, i);
-}
 
 static interval_t single_interval()
 {
@@ -55,11 +49,13 @@ static double trapz_m_intervals(polynomial_t *p, intervals_t itvls, unsigned nbi
 {
     unsigned itvlcpt;
     double sol, solsum = 0;
+    char title[50];
     for (itvlcpt = 0; itvlcpt < nbintvls; itvlcpt++)
     {
         sol = integral_poly_trapez(p, itvls[itvlcpt]);
         solsum += sol;
-        solution_print(stdout, p, itvls[itvlcpt], sol, TITLE_SOL_MPTM);
+        snprintf(title, sizeof(title), TITLE_SOL_MPTM, itvlcpt);
+        solution_print(stdout, p, itvls[itvlcpt], sol, title);
     }
     return solsum;
 }
@@ -85,14 +81,11 @@ int main(int argc, char *argv[])
     intervals_t itvls = malloc(sizeof(interval_t) * nbitvls);
     set_intervals(itvls, itvl_tpl);
     const polynomial_item_t sol_m = trapz_m_intervals(p, itvls, nbitvls);
+    solution_print(stdout, p, itvl_tpl, sol_m, "Sum intervals I 0-1");
     free(itvls);
 
-    assert(around(sol_s, __ACCURA) == around(sol_sf, __ACCURA));
-    assert(around(sol_s, __ACCURA) == around(sol_m, __ACCURA));
-
-    printf("Integrate polynomial same f(x) and interval\n");
+    printf("Integrate with factory\n");
     printf("\t%sab  a:%0.1f b:%0.1f\n", SYM_ITGR, itvl_tpl.l, itvl_tpl.h);
-
     const polynomial_item_t partition_amount = pow(4.0f, 10.0f);
     const polynomial_item_t itgf_fact_sol = integral_factory(
         p,
@@ -100,6 +93,7 @@ int main(int argc, char *argv[])
         partition_amount);
     printf("\t%sf(x)dx = %0.12f\n", SYM_ITGR, itgf_fact_sol);
     printf("\t%s : %0.12f\n", INTEG_EPSILON, sol_sf - itgf_fact_sol);
+
     const polynomial_item_t itgr_fact_sol = integral_poly_riemann(
         p,
         itvl_tpl,
