@@ -1,7 +1,7 @@
 
 #include "solution.h"
 
-static void solution_equation(FILE *streamout, polynomial_t *p)
+void solution_equation(FILE *streamout, polynomial_t *p)
 {
     unsigned c;
     fprintf(streamout, "\n\t%s = ", SOL_FN);

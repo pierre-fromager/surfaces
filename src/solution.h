@@ -24,6 +24,7 @@
 #define SOL_ITGR_LIM "%slh => l:%.8f h:%.8f\n"
 #define SOL_RES "%s = %s%sdx = %.18f %s\n"
 
+void solution_equation(FILE *streamout, polynomial_t *p);
 void solution_print(FILE *streamout, polynomial_t *p, interval_t li, polynomial_item_t sol, char *title);
 
 #endif // _SURFACES_SOL_

@@ -14,7 +14,6 @@ polynomial_item_t integral_poly_trapez(polynomial_t *p, interval_t il)
     const polynomial_item_t yl = polynomial_calc(il.l, p);
     if (polynomial_getfactor(1, p) == 0.0f)
         return dhl * yl;
-    //const double dy = lfn(il.h, lf) - yl;
     const double dy = polynomial_calc(il.h, p) - yl;
     return yl * dhl + (dhl * dy / INTEG_TWO);
 }
@@ -58,7 +57,7 @@ polynomial_item_t integral_poly_newton_cote_1_2(polynomial_t *p, interval_t il)
     const polynomial_item_t d1l = polynomial_calc(il.l, d1);
     const polynomial_item_t d1h = polynomial_calc(il.h, d1);
     polynomial_destruct(d1);
-    return (dhl / fact) * (fact * fshl) + (dhl * (d1h - d1l));
+    return (dhl / fact) * ((fact * fshl) + (dhl * (d1h - d1l)));
 }
 
 polynomial_item_t integral_poly_newton_cote_2_2(polynomial_t *p, interval_t il)
@@ -76,7 +75,7 @@ polynomial_item_t integral_poly_newton_cote_2_2(polynomial_t *p, interval_t il)
     const polynomial_item_t d1l = polynomial_calc(il.l, d1);
     const polynomial_item_t d1h = polynomial_calc(il.h, d1);
     polynomial_destruct(d1);
-    return dfact * (hfact * (fl + fh)) + (dhl * (d1h - d1l));
+    return dfact * ((hfact * (fl + fh)) + (dhl * (d1h - d1l)));
 }
 
 polynomial_item_t integral_factory(polynomial_t *p, interval_t il, polynomial_item_t n)

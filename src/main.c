@@ -66,6 +66,7 @@ int main(int argc, char *argv[])
 
     polynomial_t *p;
     p = malloc(sizeof(polynomial_t));
+    // y = 1/2x + 3
     polynomial_construct(1, p);
     polynomial_setfactor(0, FN0_O, p);
     polynomial_setfactor(1, FN0_S, p);
@@ -81,7 +82,7 @@ int main(int argc, char *argv[])
     intervals_t itvls = malloc(sizeof(interval_t) * nbitvls);
     set_intervals(itvls, itvl_tpl);
     const polynomial_item_t sol_m = trapz_m_intervals(p, itvls, nbitvls);
-    solution_print(stdout, p, itvl_tpl, sol_m, "Sum intervals I 0-1");
+    solution_print(stdout, p, itvl_tpl, sol_m, "Sum intervals I0-1");
     free(itvls);
 
     printf("Integrate with factory\n");
@@ -94,29 +95,37 @@ int main(int argc, char *argv[])
     printf("\t%sf(x)dx = %0.12f\n", SYM_ITGR, itgf_fact_sol);
     printf("\t%s : %0.12f\n", INTEG_EPSILON, sol_sf - itgf_fact_sol);
 
+    // y = x² + 1/2x + 3
+    polynomial_construct(4, p);
+    polynomial_setfactor(0, FN0_O, p);
+    polynomial_setfactor(1, FN0_S, p);
+    polynomial_setfactor(3, 1.0f, p);
     const polynomial_item_t itgr_fact_sol = integral_poly_riemann(
         p,
         itvl_tpl,
         partition_amount);
-    printf("\nRiemann sum iterative method\n");
-    printf("\tParition amount : %10.0f\n", partition_amount);
+    printf("\nRiemann iterative method ε ref\n");
+    solution_equation(stdout, p);
+    printf("\tPartition amount : %10.0f\n", partition_amount);
     printf("\t%sf(x)dx = %0.12f\n", SYM_ITGR, itgr_fact_sol);
-    printf("\t%s : %0.12f\n", INTEG_EPSILON, sol_sf - itgr_fact_sol);
 
     const polynomial_item_t itgs_fact_sol = integral_poly_simpson(p, itvl_tpl);
     printf("\nSimpson method\n");
+    solution_equation(stdout, p);
     printf("\t%sf(x)dx = %0.12f\n", SYM_ITGR, itgs_fact_sol);
-    printf("\t%s : %0.12f\n", INTEG_EPSILON, sol_sf - itgs_fact_sol);
+    printf("\t%s : %0.12f\n", INTEG_EPSILON, itgr_fact_sol - itgs_fact_sol);
 
     const polynomial_item_t itgn12_fact_sol = integral_poly_newton_cote_1_2(p, itvl_tpl);
     printf("\nNewton-cote-1-2 method\n");
+    solution_equation(stdout, p);
     printf("\t%sf(x)dx = %0.12f\n", SYM_ITGR, itgn12_fact_sol);
-    printf("\t%s : %0.12f\n", INTEG_EPSILON, sol_sf - itgn12_fact_sol);
+    printf("\t%s : %0.12f\n", INTEG_EPSILON, itgr_fact_sol - itgn12_fact_sol);
 
     const polynomial_item_t itgn22_fact_sol = integral_poly_newton_cote_2_2(p, itvl_tpl);
+    solution_equation(stdout, p);
     printf("\nNewton-cote-2-2 method\n");
     printf("\t%sf(x)dx = %0.12f\n", SYM_ITGR, itgn22_fact_sol);
-    printf("\t%s : %0.12f\n", INTEG_EPSILON, sol_sf - itgn22_fact_sol);
+    printf("\t%s : %0.12f\n", INTEG_EPSILON, itgr_fact_sol - itgn22_fact_sol);
 
     polynomial_destruct(p);
 
