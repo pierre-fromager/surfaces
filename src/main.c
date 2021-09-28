@@ -9,11 +9,15 @@
  * 
  */
 
+#define _POSIX_C_SOURCE 200809L
+
 #include <stdlib.h>
 #include <string.h>
+#include <stdio.h>
 #include "arguments.h"
 #include "integral.h"
 #include "solution.h"
+#include "profile.h"
 
 #define TITLE_SOL_SITZM "Integrate trapezoid method"
 #define TITLE_SOL_SIMPM "Integrate middle point method"
@@ -62,7 +66,11 @@ static double trapz_m_intervals(polynomial_t *p, intervals_t itvls, unsigned nbi
 
 int main(int argc, char *argv[])
 {
+
     arguments_process(argc, argv, &args);
+
+    profile_t *prof;
+    prof = malloc(sizeof(profile_t));
 
     polynomial_t *p;
     p = malloc(sizeof(polynomial_t));
@@ -97,6 +105,8 @@ int main(int argc, char *argv[])
     polynomial_setfactor(0, FN0_O, p);
     polynomial_setfactor(1, FN0_S, p);
     polynomial_setfactor(3, 1.0f, p);
+
+    profile_start(prof);
     const polynomial_item_t itgr_fact_sol = integral_poly_riemann(
         p,
         itvl_tpl,
@@ -105,20 +115,29 @@ int main(int argc, char *argv[])
     solution_equation(stdout, p);
     printf("\tPartition amount : %10.0f\n", partition_amount);
     printf("\t%sf(x)dx = %0.12f\n", SYM_ITGR, itgr_fact_sol);
+    profile_stop(prof);
+    printf("\tElapse : %f s\n", profile_elapse(prof));
 
+    profile_start(prof);
     const polynomial_item_t itgs_fact_sol = integral_poly_simpson(p, itvl_tpl);
     printf("\nSimpson method\n");
     solution_equation(stdout, p);
     printf("\t%sf(x)dx = %0.12f\n", SYM_ITGR, itgs_fact_sol);
     printf("\t%s = %0.12f\n", INTEG_EPSILON, itgr_fact_sol - itgs_fact_sol);
+    profile_stop(prof);
+    printf("\tElapse : %f s\n", profile_elapse(prof));
 
+    profile_start(prof);
     const polynomial_item_t itgn12_fact_sol = integral_poly_newton_cote_1_2(p, itvl_tpl);
     printf("\nNewton-cote-1-2 method\n");
     solution_equation(stdout, p);
     printf("\t%sf(x)dx = %0.12f\n", SYM_ITGR, itgn12_fact_sol);
     printf("\t%s = %0.12f\n", INTEG_EPSILON, itgr_fact_sol - itgn12_fact_sol);
+    profile_stop(prof);
+    printf("\tElapse : %f s\n", profile_elapse(prof));
 
     polynomial_destruct(p);
+    free(prof);
 
     return EXIT_SUCCESS;
 }
