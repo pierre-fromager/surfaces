@@ -56,17 +56,23 @@ static double trapz_s_interval(polynomial_t *p, interval_t itvl)
     return integral_poly_trapez(p, itvl);
 }
 
-static double trapz_m_intervals(polynomial_t *p, intervals_t itvls, unsigned nbintvls)
+static double trapz_m_intervals(
+    polynomial_t *p,
+    intervals_t itvls,
+    unsigned nbintvls,
+    profile_t *prof)
 {
     unsigned itvlcpt;
     double sol, solsum = 0;
     char title[50];
     for (itvlcpt = 0; itvlcpt < nbintvls; itvlcpt++)
     {
+        profile_start(prof);
         sol = integral_poly_trapez(p, itvls[itvlcpt]);
+        profile_stop(prof);
         solsum += sol;
         snprintf(title, sizeof(title), TITLE_SOL_MPTM, itvlcpt);
-        solution_print(stdout, p, itvls[itvlcpt], sol, title);
+        solution_print(stdout, p, itvls[itvlcpt], sol, title, prof);
     }
     return solsum;
 }
@@ -88,21 +94,27 @@ int main(int argc, char *argv[])
     polynomial_setfactor(1, FN0_S, p);
 
     const interval_t itvl_tpl = single_interval();
+    profile_start(prof);
     const polynomial_item_t sol_s = trapz_s_interval(p, itvl_tpl);
-    solution_print(streamout, p, itvl_tpl, sol_s, TITLE_SOL_SITZM);
+    profile_stop(prof);
+    solution_print(streamout, p, itvl_tpl, sol_s, TITLE_SOL_SITZM, prof);
 
+    profile_start(prof);
     const polynomial_item_t sol_sf = integral_poly_midpnt(p, itvl_tpl);
-    solution_print(streamout, p, itvl_tpl, sol_sf, TITLE_SOL_SIMPM);
+    profile_stop(prof);
+    solution_print(streamout, p, itvl_tpl, sol_sf, TITLE_SOL_SIMPM, prof);
 
     const unsigned nbitvls = 2;
     intervals_t itvls = malloc(sizeof(interval_t) * nbitvls);
     set_intervals(itvls, itvl_tpl);
-    const polynomial_item_t sol_m = trapz_m_intervals(p, itvls, nbitvls);
-    solution_print(streamout, p, itvl_tpl, sol_m, TITLE_SOL_IL);
+    const polynomial_item_t sol_m = trapz_m_intervals(p, itvls, nbitvls, prof);
+    solution_print(streamout, p, itvl_tpl, sol_m, TITLE_SOL_IL, prof);
     free(itvls);
 
+    profile_start(prof);
     const polynomial_item_t fact_sol = integral_factory(p, itvl_tpl);
-    solution_print(stdout, p, itvl_tpl, fact_sol, TITLE_SOL_FACTORY);
+    profile_stop(prof);
+    solution_print(stdout, p, itvl_tpl, fact_sol, TITLE_SOL_FACTORY, prof);
     printf(EPSILON_FMT, INTEG_EPSILON, sol_sf - fact_sol);
 
     // y = x^3 + 1/2x + 3
@@ -118,21 +130,21 @@ int main(int argc, char *argv[])
         itvl_tpl,
         partition_amount);
     profile_stop(prof);
-    solution_print(streamout, p, itvl_tpl, itg_riemann, TITLE_SOL_RIEMANN);
+    solution_print(streamout, p, itvl_tpl, itg_riemann, TITLE_SOL_RIEMANN, prof);
     printf("\tPartition amount : %10.0f\n", partition_amount);
     printf(ELAPSE_FMT, profile_elapse(prof));
 
     profile_start(prof);
     const polynomial_item_t itg_simpson = integral_poly_simpson(p, itvl_tpl);
     profile_stop(prof);
-    solution_print(streamout, p, itvl_tpl, itg_simpson, TITLE_SOL_SIMPSON);
+    solution_print(streamout, p, itvl_tpl, itg_simpson, TITLE_SOL_SIMPSON, prof);
     printf(EPSILON_FMT, INTEG_EPSILON, itg_riemann - itg_simpson);
     printf(ELAPSE_FMT, profile_elapse(prof));
 
     profile_start(prof);
     const polynomial_item_t itgn12_fact_sol = integral_poly_newton_cote_1_2(p, itvl_tpl);
     profile_stop(prof);
-    solution_print(streamout, p, itvl_tpl, itgn12_fact_sol, TITLE_SOL_NC12);
+    solution_print(streamout, p, itvl_tpl, itgn12_fact_sol, TITLE_SOL_NC12, prof);
     printf(EPSILON_FMT, INTEG_EPSILON, itg_riemann - itgn12_fact_sol);
     printf(ELAPSE_FMT, profile_elapse(prof));
 

@@ -48,7 +48,7 @@ void solution_equation(FILE *streamout, polynomial_t *p)
     fprintf(streamout, "\n");
 }
 
-void solution_print(FILE *streamout, polynomial_t *p, interval_t li, polynomial_item_t sol, char *title)
+void solution_print(FILE *streamout, polynomial_t *p, interval_t li, polynomial_item_t sol, char *title, profile_t *prof)
 {
     char fmt_buff[SOL_FMT_BUFF_LEN];
     char fmt_iv_l[SOL_FMT_BUFF_LEN];
@@ -63,4 +63,5 @@ void solution_print(FILE *streamout, polynomial_t *p, interval_t li, polynomial_
     snprintf(fmt_buff, sizeof(char) * SOL_FMT_BUFF_LEN, SOL_DOUBLE_FMT, sol);
     solution_format_double(fmt_buff, 5);
     fprintf(streamout, "\t" SOL_RES, SYM_ITGR, SOL_FN, fmt_buff, ITGR_UA);
+    fprintf(streamout, SOL_ELAPSE_FMT, profile_elapse(prof));
 }
