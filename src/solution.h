@@ -21,9 +21,14 @@
 #define SOL_FN "f(x)"
 #define SOL_ITGFN "F(x)"
 #define SOL_EQ_FMT "%s = %.8f*x+%.8f\n"
-#define SOL_ITGR_LIM "%slh => l:%.8f h:%.8f\n"
-#define SOL_RES "%s = %s%sdx = %.18f %s\n"
+#define SOL_ITGR_LIM "%slh => l:%s h:%s\n"
+#define SOL_RES "%s = %s%sdx = %s %s\n"
+#define SOL_FMT_BUFF_LEN 12
+#define SOL_NULL_CHAR '\0'
+#define SOL_DOT_CHAR '.'
+#define SOL_DOUBLE_FMT "%0.12f"
 
+void solution_format_double(char *s, unsigned n);
 void solution_equation(FILE *streamout, polynomial_t *p);
 void solution_print(FILE *streamout, polynomial_t *p, interval_t li, polynomial_item_t sol, char *title);
 

@@ -12,8 +12,6 @@
 #ifndef _SURFACES_PROFILE_
 #define _SURFACES_PROFILE_
 
-#include <stdlib.h>
-#include <stdio.h>
 #include <math.h>
 #include <sys/time.h>
 
