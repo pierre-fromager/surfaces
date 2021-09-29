@@ -53,15 +53,14 @@ void solution_print(FILE *streamout, polynomial_t *p, interval_t li, polynomial_
     char fmt_buff[SOL_FMT_BUFF_LEN];
     char fmt_iv_l[SOL_FMT_BUFF_LEN];
     char fmt_iv_h[SOL_FMT_BUFF_LEN];
-    fprintf(streamout, "%s\n", title);
+    fprintf(streamout, "\n%s", title);
     solution_equation(streamout, p);
     snprintf(fmt_iv_l, sizeof(char) * SOL_FMT_BUFF_LEN, SOL_DOUBLE_FMT, li.l);
     solution_format_double(fmt_iv_l, 5);
     snprintf(fmt_iv_h, sizeof(char) * SOL_FMT_BUFF_LEN, SOL_DOUBLE_FMT, li.h);
     solution_format_double(fmt_iv_h, 5);
-    fprintf(streamout, "\t" SOL_ITGR_LIM, SOL_ITGFN, fmt_iv_l, fmt_iv_h);
+    fprintf(streamout, "\t" SOL_ITGR_LIM, "Interval", fmt_iv_l, fmt_iv_h);
     snprintf(fmt_buff, sizeof(char) * SOL_FMT_BUFF_LEN, SOL_DOUBLE_FMT, sol);
     solution_format_double(fmt_buff, 5);
-    fprintf(streamout, "\t" SOL_RES, SOL_ITGFN, SYM_ITGR, SOL_FN, fmt_buff, ITGR_UA);
-    fprintf(streamout, "\n");
+    fprintf(streamout, "\t" SOL_RES, SYM_ITGR, SOL_FN, fmt_buff, ITGR_UA);
 }

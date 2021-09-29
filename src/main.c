@@ -22,6 +22,8 @@
 #define TITLE_SOL_SITZM "Integrate trapezoid method"
 #define TITLE_SOL_SIMPM "Integrate middle point method"
 #define TITLE_SOL_MPTM "Integrate intervals I%u"
+#define EPSILON_FMT "\t%s : %0.12f\n"
+#define ELAPSE_FMT "\tElapse : %f s\n"
 #define FN0_S 0.5f
 #define FN0_O 3.0f
 #define IL_L 0.0f
@@ -90,15 +92,13 @@ int main(int argc, char *argv[])
     intervals_t itvls = malloc(sizeof(interval_t) * nbitvls);
     set_intervals(itvls, itvl_tpl);
     const polynomial_item_t sol_m = trapz_m_intervals(p, itvls, nbitvls);
-    solution_print(stdout, p, itvl_tpl, sol_m, "Sum intervals I0-1");
+    solution_print(stdout, p, itvl_tpl, sol_m, "Sum intervals [I0..I1]");
     free(itvls);
 
-    printf("Integrate with factory\n");
-    printf("\t%sab  a:%0.1f b:%0.1f\n", SYM_ITGR, itvl_tpl.l, itvl_tpl.h);
     const polynomial_item_t partition_amount = pow(4.0f, 10.0f);
-    const polynomial_item_t itgf_fact_sol = integral_factory(p, itvl_tpl);
-    printf("\t%sf(x)dx = %0.12f\n", SYM_ITGR, itgf_fact_sol);
-    printf("\t%s : %0.12f\n", INTEG_EPSILON, sol_sf - itgf_fact_sol);
+    const polynomial_item_t fact_sol = integral_factory(p, itvl_tpl);
+    solution_print(stdout, p, itvl_tpl, fact_sol, "Integrate with factory");
+    printf(EPSILON_FMT, INTEG_EPSILON, sol_sf - fact_sol);
 
     // y = x^3 + 1/2x + 3
     polynomial_construct(4, p);
@@ -107,34 +107,28 @@ int main(int argc, char *argv[])
     polynomial_setfactor(3, 1.0f, p);
 
     profile_start(prof);
-    const polynomial_item_t itgr_fact_sol = integral_poly_riemann(
+    const polynomial_item_t itg_riemann = integral_poly_riemann(
         p,
         itvl_tpl,
         partition_amount);
-    printf("\nRiemann iterative method ε ref\n");
-    solution_equation(stdout, p);
-    printf("\tPartition amount : %10.0f\n", partition_amount);
-    printf("\t%sf(x)dx = %0.12f\n", SYM_ITGR, itgr_fact_sol);
     profile_stop(prof);
-    printf("\tElapse : %f s\n", profile_elapse(prof));
+    solution_print(stdout, p, itvl_tpl, itg_riemann, "Riemann iterative method ε ref");
+    printf("\tPartition amount : %10.0f\n", partition_amount);
+    printf(ELAPSE_FMT, profile_elapse(prof));
 
     profile_start(prof);
-    const polynomial_item_t itgs_fact_sol = integral_poly_simpson(p, itvl_tpl);
-    printf("\nSimpson method\n");
-    solution_equation(stdout, p);
-    printf("\t%sf(x)dx = %0.12f\n", SYM_ITGR, itgs_fact_sol);
-    printf("\t%s = %0.12f\n", INTEG_EPSILON, itgr_fact_sol - itgs_fact_sol);
+    const polynomial_item_t itg_simpson = integral_poly_simpson(p, itvl_tpl);
     profile_stop(prof);
-    printf("\tElapse : %f s\n", profile_elapse(prof));
+    solution_print(stdout, p, itvl_tpl, itg_simpson, "Simpson method");
+    printf(EPSILON_FMT, INTEG_EPSILON, itg_riemann - itg_simpson);
+    printf(ELAPSE_FMT, profile_elapse(prof));
 
     profile_start(prof);
     const polynomial_item_t itgn12_fact_sol = integral_poly_newton_cote_1_2(p, itvl_tpl);
-    printf("\nNewton-cote-1-2 method\n");
-    solution_equation(stdout, p);
-    printf("\t%sf(x)dx = %0.12f\n", SYM_ITGR, itgn12_fact_sol);
-    printf("\t%s = %0.12f\n", INTEG_EPSILON, itgr_fact_sol - itgn12_fact_sol);
     profile_stop(prof);
-    printf("\tElapse : %f s\n", profile_elapse(prof));
+    solution_print(stdout, p, itvl_tpl, itgn12_fact_sol, "Newton-cote-1-2 method");
+    printf(EPSILON_FMT, INTEG_EPSILON, itg_riemann - itgn12_fact_sol);
+    printf(ELAPSE_FMT, profile_elapse(prof));
 
     polynomial_destruct(p);
     free(prof);
