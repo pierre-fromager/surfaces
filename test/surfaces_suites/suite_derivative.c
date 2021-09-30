@@ -76,6 +76,7 @@ void test_surfaces_derivative_o0()
     polynomial_setfactor(0, ev, psrc);
     CU_ASSERT_EQUAL(polynomial_getfactor(0, psrc), ev);
     derivative_derivate(psrc, pdst);
+    CU_ASSERT_EQUAL(polynomial_getorder(0, pdst), 0.0f);
     CU_ASSERT_EQUAL(polynomial_getfactor(0, pdst), 0.0f);
     for (iocpt = 0; iocpt < io + 1; iocpt++)
         CU_ASSERT_EQUAL(polynomial_getorder(0, psrc), iocpt);

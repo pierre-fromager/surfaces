@@ -8,8 +8,8 @@ void polynomial_debug(polynomial_t *p)
     printf("\nfs : %zu os : %zu\n", sizeof(p->factors), sizeof(p->orders));
     for (ocpt = 0; ocpt < p->order + 1; ocpt++)
     {
-        printf("factors[%u] : %0.10f\n", ocpt, *(p->factors + ocpt));
-        printf("orders[%u] : %0.10f\n", ocpt, *(p->orders + ocpt));
+        printf("factors[%u] : %Lf\n", ocpt, *(p->factors + ocpt));
+        printf("orders[%u] : %Lf\n", ocpt, *(p->orders + ocpt));
     }
 }
 
@@ -23,9 +23,10 @@ void polynomial_construct(polynomial_order_t o, polynomial_t *p)
     for (ocpt = 0; ocpt < o + 1; ocpt++)
         *(p->orders + ocpt) = ocpt;
     p->factors = malloc(asize);
-    memset(p->factors, (int)ifactor, asize);
+    for (ocpt = 0; ocpt < o + 1; ocpt++)
+        *(p->factors + ocpt) = ifactor;
 #ifdef POLYNOMIAL_DEBUG
-    //polynomial_debug(p);
+    polynomial_debug(p);
 #endif
 }
 
@@ -36,7 +37,7 @@ void polynomial_setfactor(polynomial_order_t o, polynomial_item_t v, polynomial_
 
 polynomial_item_t polynomial_getfactor(polynomial_order_t o, polynomial_t *p)
 {
-    return *(p->factors + o);
+    return isnan(*(p->factors + o)) ? 0 : *(p->factors + o);
 }
 
 polynomial_item_t polynomial_getorder(polynomial_order_t o, polynomial_t *p)
@@ -48,10 +49,9 @@ polynomial_item_t polynomial_calc(polynomial_item_t x, polynomial_t *p)
 {
     polynomial_order_t ocpt;
     polynomial_item_t sum = 0;
-
     for (ocpt = 0; ocpt < p->order + 1; ocpt++)
-        if (p->factors[ocpt] != 0.0f)
-            sum += p->factors[ocpt] * pow(x, p->orders[ocpt]);
+        if (*(p->factors + ocpt) != 0.0f)
+            sum += polynomial_getfactor(ocpt, p) * powl(x, polynomial_getorder(ocpt, p));
     return sum;
 }
 

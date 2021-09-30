@@ -1,15 +1,13 @@
 /**
  * @file main.c
  * @author Pierre Fromager (info@pier-infor.fr)
- * @brief   surface calculus for order 1 fn
+ * @brief  surface calc for polynomial
  * @version 0.1
  * @date 2021-09-19
  * 
  * @copyright Copyright (c) 2021
  * 
  */
-
-#define _POSIX_C_SOURCE 200809L
 
 #include <stdlib.h>
 #include <string.h>
@@ -27,7 +25,7 @@
 #define TITLE_SOL_RIEMANN "Riemann iterative method ε ref"
 #define TITLE_SOL_SIMPSON "Simpson method"
 #define TITLE_SOL_NC12 "Newton-cote-1-2 method"
-#define EPSILON_FMT "\t%s %0.12f\n"
+#define EPSILON_FMT "\t%s %Lf\n"
 #define FN0_S 0.5f
 #define FN0_O 3.0f
 #define IL_L 0.0f
@@ -51,7 +49,7 @@ static void set_intervals(intervals_t itvls, interval_t itvl_tpl)
     itvls[0].h = itvls[1].l = (itvls[0].l + itvls[0].h) / 2;
 }
 
-static double trapz_m_intervals(
+static polynomial_item_t trapz_m_intervals(
     polynomial_t *p,
     intervals_t itvls,
     unsigned nbintvls,
@@ -100,21 +98,21 @@ int main(int argc, char *argv[])
     profile_stop(prof);
     solution_print(streamout, p, itvl_tpl, sol_sf, TITLE_SOL_SIMPM, prof);
 
-    const unsigned nbitvls = 2;
-    intervals_t itvls = malloc(sizeof(interval_t) * nbitvls);
+    const unsigned nbivs = 2;
+    intervals_t itvls = malloc(sizeof(interval_t) * nbivs);
     set_intervals(itvls, itvl_tpl);
-    const polynomial_item_t sol_m = trapz_m_intervals(p, itvls, nbitvls, prof);
-    solution_print(streamout, p, itvl_tpl, sol_m, TITLE_SOL_IL, prof);
+    const polynomial_item_t sol_m = trapz_m_intervals(p, itvls, nbivs, prof);
     free(itvls);
-
+    solution_print(streamout, p, itvl_tpl, sol_m, TITLE_SOL_IL, prof);
+    
     profile_start(prof);
     const polynomial_item_t fact_sol = integral_factory(p, itvl_tpl);
     profile_stop(prof);
-    solution_print(stdout, p, itvl_tpl, fact_sol, TITLE_SOL_FACTORY, prof);
+    solution_print(streamout, p, itvl_tpl, fact_sol, TITLE_SOL_FACTORY, prof);
     fprintf(streamout, EPSILON_FMT, INTEG_EPSILON, sol_sf - fact_sol);
 
     // y = x^3 + 1/2x + 3
-    polynomial_construct(4, p);
+    polynomial_construct(3, p);
     polynomial_setfactor(0, FN0_O, p);
     polynomial_setfactor(1, FN0_S, p);
     polynomial_setfactor(3, 1.0f, p);
@@ -127,7 +125,7 @@ int main(int argc, char *argv[])
         partition_amount);
     profile_stop(prof);
     solution_print(streamout, p, itvl_tpl, itg_riemann, TITLE_SOL_RIEMANN, prof);
-    fprintf(streamout, "\tPartition amount : %10.0f\n", partition_amount);
+    fprintf(streamout, "\tPartition amount : %Lf\n", partition_amount);
 
     profile_start(prof);
     const polynomial_item_t itg_simpson = integral_poly_simpson(p, itvl_tpl);

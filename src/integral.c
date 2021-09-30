@@ -3,8 +3,8 @@
 
 polynomial_item_t integral__poly_midpnt(polynomial_t *p, interval_t il)
 {
-    const double dhl = il.h - il.l;
-    const double shl = il.l + il.h;
+    const polynomial_item_t dhl = il.h - il.l;
+    const polynomial_item_t shl = il.l + il.h;
     return dhl * polynomial_calc(shl / INTEG_TWO, p);
 }
 
@@ -14,7 +14,7 @@ polynomial_item_t integral_poly_trapez(polynomial_t *p, interval_t il)
     const polynomial_item_t yl = polynomial_calc(il.l, p);
     if (polynomial_getfactor(1, p) == 0.0f)
         return dhl * yl;
-    const double dy = polynomial_calc(il.h, p) - yl;
+    const polynomial_item_t dy = polynomial_calc(il.h, p) - yl;
     return yl * dhl + (dhl * dy / INTEG_TWO);
 }
 

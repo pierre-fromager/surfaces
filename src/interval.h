@@ -4,7 +4,7 @@
 
 typedef struct interval_s
 {
-    double l, h;
+    long double l, h;
 } interval_t;
 
 typedef interval_t *intervals_t;
