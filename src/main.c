@@ -26,8 +26,8 @@
 #define TITLE_SOL_SIMPSON "Simpson method"
 #define TITLE_SOL_NC12 "Newton-cote-1-2 method"
 #define EPSILON_FMT "\t%s %Lf\n"
-#define FN0_S 0.5f
-#define FN0_O 3.0f
+#define FN0_S 1.0f
+#define FN0_O 0.0f
 #define IL_L 0.0f
 #define IL_STEP 1.0f
 #define IL_H 5.0f / IL_STEP
