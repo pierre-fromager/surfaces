@@ -87,7 +87,7 @@ void test_surfaces_integral_trapez_o0()
 void test_surfaces_integral_midpnt_o0()
 {
     const polynomial_order_t io = 0;
-    const polynomial_item_t ev = 100.0f;
+    const polynomial_item_t ev = 100.0f;    
     polynomial_order_t iocpt;
     polynomial_item_t cptv;
     CU_ASSERT_PTR_NOT_NULL_FATAL(pol);
@@ -148,6 +148,8 @@ void test_surfaces_integral_midpnt_o1()
     const polynomial_order_t io = 1;
     const polynomial_item_t ev = 100.0f;
     const polynomial_item_t expected = 12.5f;
+    const polynomial_item_t expectedplusten = 62.5f;
+    const polynomial_item_t expected2xplusten = 75.0f;    
     polynomial_order_t iocpt;
     polynomial_item_t cptv;
     CU_ASSERT_PTR_NOT_NULL_FATAL(pol);
@@ -165,6 +167,16 @@ void test_surfaces_integral_midpnt_o1()
         polynomial_setfactor(1, cptv, pol);
         CU_ASSERT_EQUAL(integral_poly_midpnt(pol, iv), expected * cptv);
     }
+    // y = x + 10    
+    polynomial_setfactor(0, 10.0f, pol);
+    polynomial_setfactor(1, 1.0f, pol);
+    CU_ASSERT_EQUAL(polynomial_getfactor(0, pol), 10.0f);
+    CU_ASSERT_EQUAL(polynomial_getfactor(1, pol), 1.0f);
+    CU_ASSERT_EQUAL(integral_poly_midpnt(pol, iv), expectedplusten);
+    // y = 2x + 10
+    polynomial_setfactor(1, 2.0f, pol);
+    CU_ASSERT_EQUAL(polynomial_getfactor(1, pol), 2.0f);
+    CU_ASSERT_EQUAL(integral_poly_midpnt(pol, iv), expected2xplusten);
 }
 
 void test_surfaces_integral_o1()
