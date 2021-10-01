@@ -17,11 +17,9 @@
 #include "solution.h"
 #include "profile.h"
 
-#define TITLE_SOL_SITZM "Integrate trapezoid method"
-#define TITLE_SOL_SIMPM "Integrate middle point method"
-#define TITLE_SOL_MPTM "Integrate intervals I%u"
-#define TITLE_SOL_IL "Sum intervals [I0..I1]"
-#define TITLE_SOL_FACTORY "Integrate with factory"
+#define TITLE_SOL_SITZM "Factory o1"
+#define TITLE_SOL_MPTM "Factory interval %u"
+#define TITLE_SOL_IL "Factory sum previous intervals"
 #define TITLE_SOL_RIEMANN "Riemann iterative method ε ref"
 #define TITLE_SOL_SIMPSON "Simpson method"
 #define TITLE_SOL_NC12 "Newton-cote-1-2 method"
@@ -36,20 +34,13 @@
 
 arguments_t args;
 
-static interval_t interval_template(void);
-
-static interval_t interval_template()
-{
-    return (interval_t){.l = IL_L, .h = IL_H};
-}
-
-static void set_intervals(intervals_t itvls, interval_t itvl_tpl)
+static void set_multiple_intervals(intervals_t itvls, interval_t itvl_tpl)
 {
     itvls[0] = itvls[1] = itvl_tpl;
     itvls[0].h = itvls[1].l = (itvls[0].l + itvls[0].h) / 2;
 }
 
-static polynomial_item_t trapz_m_intervals(
+static polynomial_item_t factory_intervals(
     polynomial_t *p,
     intervals_t itvls,
     unsigned nbintvls,
@@ -61,7 +52,7 @@ static polynomial_item_t trapz_m_intervals(
     for (itvlcpt = 0; itvlcpt < nbintvls; itvlcpt++)
     {
         profile_start(prof);
-        sol = integral_poly_trapez(p, itvls[itvlcpt]);
+        sol = integral_factory(p, itvls[itvlcpt]);
         profile_stop(prof);
         solsum += sol;
         snprintf(title, sizeof(title), TITLE_SOL_MPTM, itvlcpt);
@@ -87,30 +78,20 @@ int main(int argc, char *argv[])
     polynomial_setfactor(0, FN0_O, p);
     polynomial_setfactor(1, FN0_S, p);
 
-    const interval_t itvl_tpl = interval_template();
+    const interval_t itvl_tpl = {.l = IL_L, .h = IL_H};
     profile_start(prof);
-    const polynomial_item_t sol_s = integral_poly_trapez(p, itvl_tpl);
+    const polynomial_item_t sol_o1 = integral_factory(p, itvl_tpl);
     profile_stop(prof);
-    solution_print(streamout, p, itvl_tpl, sol_s, TITLE_SOL_SITZM, prof);
-
-    profile_start(prof);
-    const polynomial_item_t sol_sf = integral_poly_midpnt(p, itvl_tpl);
-    profile_stop(prof);
-    solution_print(streamout, p, itvl_tpl, sol_sf, TITLE_SOL_SIMPM, prof);
+    solution_print(streamout, p, itvl_tpl, sol_o1, TITLE_SOL_SITZM, prof);
 
     const unsigned nbivs = 2;
     intervals_t itvls = malloc(sizeof(interval_t) * nbivs);
-    set_intervals(itvls, itvl_tpl);
-    const polynomial_item_t sol_m = trapz_m_intervals(p, itvls, nbivs, prof);
+    set_multiple_intervals(itvls, itvl_tpl);
+    const polynomial_item_t sol_m01 = factory_intervals(p, itvls, nbivs, prof);
     free(itvls);
-    solution_print(streamout, p, itvl_tpl, sol_m, TITLE_SOL_IL, prof);
+    solution_print(streamout, p, itvl_tpl, sol_m01, TITLE_SOL_IL, prof);
+    fprintf(streamout, EPSILON_FMT, INTEG_EPSILON, sol_o1 - sol_m01);
     
-    profile_start(prof);
-    const polynomial_item_t fact_sol = integral_factory(p, itvl_tpl);
-    profile_stop(prof);
-    solution_print(streamout, p, itvl_tpl, fact_sol, TITLE_SOL_FACTORY, prof);
-    fprintf(streamout, EPSILON_FMT, INTEG_EPSILON, sol_sf - fact_sol);
-
     // y = x^3 + 1/2x + 3
     polynomial_construct(3, p);
     polynomial_setfactor(0, FN0_O, p);

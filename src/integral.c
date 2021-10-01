@@ -1,7 +1,7 @@
 
 #include "integral.h"
 
-polynomial_item_t integral__poly_midpnt(polynomial_t *p, interval_t il)
+polynomial_item_t integral_poly_midpnt(polynomial_t *p, interval_t il)
 {
     const polynomial_item_t dhl = il.h - il.l;
     const polynomial_item_t shl = il.l + il.h;
@@ -35,13 +35,6 @@ polynomial_item_t integral_poly_riemann(polynomial_t *p, interval_t il, polynomi
     for (i = 0; i < n; i++)
         sum += polynomial_calc(il.l + i * dx, p) * dx;
     return sum;
-}
-
-polynomial_item_t integral_poly_midpnt(polynomial_t *p, interval_t il)
-{
-    const polynomial_item_t dhl = il.h - il.l;
-    const polynomial_item_t shl = il.l + il.h;
-    return dhl * polynomial_calc(shl / INTEG_TWO, p);
 }
 
 polynomial_item_t integral_poly_newton_cote_1_2(polynomial_t *p, interval_t il)

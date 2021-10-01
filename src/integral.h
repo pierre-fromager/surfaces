@@ -14,7 +14,6 @@
 
 polynomial_item_t integral_poly_midpnt(polynomial_t *p, interval_t il);
 polynomial_item_t integral_poly_trapez(polynomial_t *p, interval_t il);
-polynomial_item_t integral_poly_midpnt(polynomial_t *p, interval_t il);
 polynomial_item_t integral_poly_riemann(polynomial_t *p, interval_t il, polynomial_item_t n);
 polynomial_item_t integral_poly_simpson(polynomial_t *p, interval_t il);
 polynomial_item_t integral_poly_newton_cote_1_2(polynomial_t *p, interval_t il);
