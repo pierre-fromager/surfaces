@@ -18,14 +18,14 @@
 #include "profile.h"
 
 #define TITLE_SOL_SITZM "Factory o1"
-#define TITLE_SOL_MPTM "Factory interval %u"
-#define TITLE_SOL_IL "Factory sum previous intervals"
+#define TITLE_SOL_MPTM "Factory o1 interval %u"
+#define TITLE_SOL_IL "Factory o1 sum previous intervals"
 #define TITLE_SOL_RIEMANN "Riemann iterative method ε ref"
 #define TITLE_SOL_SIMPSON "Simpson method"
 #define TITLE_SOL_NC12 "Newton-cote-1-2 method"
 #define EPSILON_FMT "\t%s %Lf\n"
-#define FN0_S 1.0f
-#define FN0_O 0.0f
+#define FN0_S 0.5f
+#define FN0_O 3.0f
 #define IL_L 0.0f
 #define IL_STEP 1.0f
 #define IL_H 5.0f / IL_STEP

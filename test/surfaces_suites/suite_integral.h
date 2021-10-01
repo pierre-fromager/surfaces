@@ -22,8 +22,9 @@ void test_surfaces_integral_factory_o0(void);
 void test_surfaces_integral_trapez_o1(void);
 void test_surfaces_integral_midpnt_o1(void);
 void test_surfaces_integral_factory_o1(void);
+/*
 void test_surfaces_integral_o1(void);
 void test_surfaces_integral_o2(void);
 void test_surfaces_integral_o3(void);
-
+*/
 #endif // __TEST_SURFACES_SUITE_INTEGRAL_H__
