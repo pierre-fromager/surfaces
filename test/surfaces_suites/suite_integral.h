@@ -18,9 +18,13 @@ void reset_test_integral(void);
 
 void test_surfaces_integral_trapez_o0(void);
 void test_surfaces_integral_midpnt_o0(void);
+void test_surfaces_integral_riemann_o0(void);
+void test_surfaces_integral_simpson_o0(void);
 void test_surfaces_integral_factory_o0(void);
+
 void test_surfaces_integral_trapez_o1(void);
 void test_surfaces_integral_midpnt_o1(void);
+void test_surfaces_integral_riemann_o1(void);
 void test_surfaces_integral_factory_o1(void);
 /*
 void test_surfaces_integral_o1(void);

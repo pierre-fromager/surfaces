@@ -91,20 +91,34 @@ int main(int argc, char *argv[])
     free(itvls);
     solution_print(streamout, p, itvl_tpl, sol_m01, TITLE_SOL_IL, prof);
     fprintf(streamout, EPSILON_FMT, INTEG_EPSILON, sol_o1 - sol_m01);
-    
+
+    // y = 2x^3 + x^2 + 1
+    polynomial_construct(3, p);
+    polynomial_setfactor(0, 1.0f, p);
+    printf("0FACT %Lf\n",polynomial_getfactor(0,p));
+    polynomial_setfactor(2, 1.0f, p);
+    polynomial_setfactor(3, 2.0f, p);
+    polynomial_t *pad;
+    pad = malloc(sizeof(polynomial_t));
+    derivative_antiderivate(p, pad);
+    solution_equation(streamout, p);
+    solution_equation(streamout, pad);
+    free(pad);
+
     // y = x^3 + 1/2x + 3
     polynomial_construct(3, p);
     polynomial_setfactor(0, FN0_O, p);
     polynomial_setfactor(1, FN0_S, p);
     polynomial_setfactor(3, 1.0f, p);
 
-    const polynomial_item_t partition_amount = pow(4.0f, 10.0f);
+    const polynomial_item_t partition_amount = 20.0f; //(polynomial_item_t)p->order * 2.0f;//pow(4.0f, 10.0f);
     profile_start(prof);
     const polynomial_item_t itg_riemann = integral_poly_riemann(
         p,
         itvl_tpl,
         partition_amount);
     profile_stop(prof);
+    printf("\nPOLC %Lf\n", polynomial_calc(1.0f + 2.0f, p));
     solution_print(streamout, p, itvl_tpl, itg_riemann, TITLE_SOL_RIEMANN, prof);
     fprintf(streamout, "\tPartition amount : %Lf\n", partition_amount);
 

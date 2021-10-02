@@ -15,3 +15,22 @@ void derivative_derivate(polynomial_t *psrc, polynomial_t *pdst)
             polynomial_setfactor(cpto - 1, actfac * cpto, pdst);
     }
 }
+
+void derivative_antiderivate(polynomial_t *psrc, polynomial_t *pdst)
+{
+    polynomial_order_t cpto;
+    polynomial_item_t actfac;
+    const polynomial_order_t pdst_order = (psrc->order > 0) ? psrc->order + 1 : 0;
+    polynomial_construct(pdst_order, pdst);
+    polynomial_setfactor(0, 0.0f, pdst);
+    for (cpto = 0; cpto < pdst_order + 1; cpto++)
+    {
+        actfac = polynomial_getfactor(cpto, psrc);
+        if (actfac != 0)
+        {
+            const polynomial_item_t nf = 1.0f / (actfac + cpto);
+            //printf("\ncpto %u actfact %Lf a+ctfact %Lf\n",cpto, actfac, nf);
+            polynomial_setfactor(cpto + 1, nf, pdst);
+        }
+    }
+}

@@ -7,5 +7,6 @@
 #include "polynomial.h"
 
 void derivative_derivate(polynomial_t *psrc, polynomial_t *pdst);
+void derivative_antiderivate(polynomial_t *psrc, polynomial_t *pdst);
 
 #endif // _SURFACES_DERIVATIVE_
