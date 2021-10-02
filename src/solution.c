@@ -30,7 +30,7 @@ void solution_equation(FILE *streamout, polynomial_t *p)
     char factor_buff[SOL_FMT_BUFF_LEN];
     fprintf(streamout, SOL_LF SOL_TAB "%s = ", SOL_FN);
     for (c = 0; c < p->order + 1; c++)
-        if (polynomial_getfactor(c, p) != 0.0f)
+        if (polynomial_getfactor(c, p) > 0.0f)
         {
             const char *sign = (polynomial_getfactor(c, p) < 0) ? "" : "+";
             const char *fmto = (c == 0) ? "%s%s" : "%s%sx";
@@ -41,7 +41,7 @@ void solution_equation(FILE *streamout, polynomial_t *p)
                 SOL_DOUBLE_FMT,
                 polynomial_getfactor(c, p));
             solution_format_double(factor_buff, 5);
-            if (strcmp(factor_buff, "1") == 0)
+            if (strcmp(factor_buff, "1") == 0 && c != 0)
                 factor_buff[0] = SOL_NULL_CHAR;
             fprintf(streamout, fmt, sign, factor_buff, c);
         }
