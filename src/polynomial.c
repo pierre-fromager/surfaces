@@ -37,6 +37,7 @@ void polynomial_setfactor(polynomial_order_t o, polynomial_item_t v, polynomial_
 
 polynomial_item_t polynomial_getfactor(polynomial_order_t o, polynomial_t *p)
 {
+    //return *(p->factors + o);
     return isnan(*(p->factors + o)) ? 0 : *(p->factors + o);
 }
 
