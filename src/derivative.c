@@ -28,7 +28,7 @@ void derivative_antiderivate(polynomial_t *psrc, polynomial_t *pdst)
         actfac = polynomial_getfactor(cpto, psrc);
         if (actfac != 0.0f)
         {
-            const polynomial_item_t nf = actfac / (polynomial_item_t)cpto;
+            const polynomial_item_t nf = actfac / ((polynomial_item_t)cpto + 1.0f);
             polynomial_setfactor(cpto + 1, (isinf(nf)) ? 1.0f : nf, pdst);
         }
     }

@@ -100,9 +100,11 @@ int main(int argc, char *argv[])
     polynomial_t *pad;
     pad = malloc(sizeof(polynomial_t));
     // (antid) y => 1/3x^4 + 1/2x^2 + x
-    derivative_antiderivate(p, pad);
     solution_equation(streamout, p);
+    derivative_antiderivate(p, pad);    
     solution_equation(streamout, pad);
+    const polynomial_item_t iexact = polynomial_calc(itvl_tpl.h, pad) - polynomial_calc(itvl_tpl.l, pad);
+    printf("iexact %Lf\n", iexact);    
     free(pad);
 
     const polynomial_item_t partition_amount = 40.0f; //(polynomial_item_t)p->order * 2.0f;//pow(4.0f, 10.0f);
