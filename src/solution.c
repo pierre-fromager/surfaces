@@ -40,7 +40,7 @@ void solution_equation(FILE *streamout, polynomial_t *p)
                 sizeof(char) * SOL_FMT_BUFF_LEN,
                 SOL_DOUBLE_FMT,
                 polynomial_getfactor(c, p));
-            solution_format_double(factor_buff, 5);
+            solution_format_double(factor_buff, SOL_DOUBLE_FMT_DISPLAY_LEN);
             if (strcmp(factor_buff, "1") == 0 && c != 0)
                 factor_buff[0] = SOL_NULL_CHAR;
             fprintf(streamout, fmt, sign, factor_buff, c);
@@ -63,12 +63,12 @@ void solution_print(
     fprintf(streamout, SOL_LF "%s", title);
     solution_equation(streamout, p);
     snprintf(fmt_iv_l, sizeof(char) * SOL_FMT_BUFF_LEN, SOL_DOUBLE_FMT, li.l);
-    solution_format_double(fmt_iv_l, 5);
+    solution_format_double(fmt_iv_l, SOL_DOUBLE_FMT_DISPLAY_LEN);
     snprintf(fmt_iv_h, sizeof(char) * SOL_FMT_BUFF_LEN, SOL_DOUBLE_FMT, li.h);
-    solution_format_double(fmt_iv_h, 5);
+    solution_format_double(fmt_iv_h, SOL_DOUBLE_FMT_DISPLAY_LEN);
     fprintf(streamout, SOL_TAB SOL_ITGR_LIM, "Interval", fmt_iv_l, fmt_iv_h);
     snprintf(fmt_buff, sizeof(char) * SOL_FMT_BUFF_LEN, SOL_DOUBLE_FMT, sol);
-    solution_format_double(fmt_buff, 5);
+    solution_format_double(fmt_buff, SOL_DOUBLE_FMT_DISPLAY_LEN);
     fprintf(streamout, SOL_TAB SOL_RES, SYM_ITGR, SOL_FN, fmt_buff, ITGR_UA);
     snprintf(
         fmt_elapse,

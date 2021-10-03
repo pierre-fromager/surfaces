@@ -26,7 +26,7 @@
 #define SOL_FMT_BUFF_LEN 12
 #define SOL_NULL_CHAR '\0'
 #define SOL_DOT_CHAR '.'
-//#define SOL_DOUBLE_FMT "%0.12f"
+#define SOL_DOUBLE_FMT_DISPLAY_LEN 5
 #define SOL_DOUBLE_FMT "%Lf"
 #define SOL_ELAPSE_FMT "\tElapse %fs\n"
 #define SOL_TAB "\t"

@@ -26,11 +26,10 @@ void derivative_antiderivate(polynomial_t *psrc, polynomial_t *pdst)
     for (cpto = 0; cpto < pdst_order + 1; cpto++)
     {
         actfac = polynomial_getfactor(cpto, psrc);
-        if (actfac != 0)
+        if (actfac != 0.0f)
         {
-            const polynomial_item_t nf = 1.0f / (actfac + cpto);
-            //printf("\ncpto %u actfact %Lf a+ctfact %Lf\n",cpto, actfac, nf);
-            polynomial_setfactor(cpto + 1, nf, pdst);
+            const polynomial_item_t nf = actfac / (polynomial_item_t)cpto;
+            polynomial_setfactor(cpto + 1, (isinf(nf)) ? 1.0f : nf, pdst);
         }
     }
 }
