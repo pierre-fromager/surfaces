@@ -76,11 +76,21 @@ polynomial_item_t integral_poly_newton_cote_1_2(polynomial_t *p, interval_t il)
     return (dhl / fact) * ((fact * fshl) + (dhl * (d1h - d1l)));
 }
 
+polynomial_item_t integral_poly_reference(polynomial_t *p, interval_t il)
+{
+    polynomial_t *pad;
+    pad = malloc(sizeof(polynomial_t));
+    derivative_antiderivate(p, pad);
+    const polynomial_item_t r = polynomial_calc(il.h, pad) - polynomial_calc(il.l, pad);
+    free(pad);
+    return r;
+}
+
 polynomial_item_t integral_factory(polynomial_t *p, interval_t il)
 {
     if (p->order < 2)
         return integral_poly_midpnt(p, il);
     if (p->order < 4)
         return integral_poly_simpson(p, il);
-    return integral_poly_newton_cote_1_2(p, il);
+    return integral_poly_reference(p, il);
 }

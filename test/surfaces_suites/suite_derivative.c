@@ -109,9 +109,6 @@ void test_surfaces_derivative_antiderivate_o0()
     derivative_antiderivate(psrc, pdst);
     CU_ASSERT_EQUAL(polynomial_getfactor(io, pdst), 0.0f);
     CU_ASSERT_EQUAL(polynomial_getfactor(io + 1, pdst), ev);
-    solution_equation(stdout, pdst);
-    for (iocpt = io + 2; iocpt < 12; iocpt++)
-        CU_ASSERT_EQUAL(polynomial_getfactor(iocpt, pdst), 0);
     for (cptv = -ev; cptv < ev; cptv++)
         CU_ASSERT_EQUAL(polynomial_calc(cptv, pdst), ev * cptv);
 }

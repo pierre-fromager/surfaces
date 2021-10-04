@@ -97,38 +97,29 @@ int main(int argc, char *argv[])
     polynomial_setfactor(0, FN0_O, p);
     polynomial_setfactor(1, FN0_S, p);
     polynomial_setfactor(3, 1.0f, p);
-    polynomial_t *pad;
-    pad = malloc(sizeof(polynomial_t));
-    // (antid) y => 1/3x^4 + 1/2x^2 + x
-    solution_equation(streamout, p);
-    derivative_antiderivate(p, pad);    
-    solution_equation(streamout, pad);
-    const polynomial_item_t iexact = polynomial_calc(itvl_tpl.h, pad) - polynomial_calc(itvl_tpl.l, pad);
-    printf("iexact %Lf\n", iexact);    
-    free(pad);
-
-    const polynomial_item_t partition_amount = 40.0f; //(polynomial_item_t)p->order * 2.0f;//pow(4.0f, 10.0f);
+    const polynomial_item_t itg_ref = integral_poly_reference(p,itvl_tpl);    
+    const polynomial_item_t partition_amount = 40.0f;
     profile_start(prof);
     const polynomial_item_t itg_riemann = integral_poly_riemann(
         p,
         itvl_tpl,
         partition_amount);
     profile_stop(prof);
-    printf("\nPOLC %Lf\n", polynomial_calc(1.0f + 2.0f, p));
     solution_print(streamout, p, itvl_tpl, itg_riemann, TITLE_SOL_RIEMANN, prof);
     fprintf(streamout, "\tPartition amount : %Lf\n", partition_amount);
+    fprintf(streamout, EPSILON_FMT, INTEG_EPSILON, itg_ref - itg_riemann);
 
     profile_start(prof);
     const polynomial_item_t itg_simpson = integral_poly_simpson(p, itvl_tpl);
     profile_stop(prof);
     solution_print(streamout, p, itvl_tpl, itg_simpson, TITLE_SOL_SIMPSON, prof);
-    fprintf(streamout, EPSILON_FMT, INTEG_EPSILON, itg_riemann - itg_simpson);
+    fprintf(streamout, EPSILON_FMT, INTEG_EPSILON, itg_ref - itg_simpson);
 
     profile_start(prof);
     const polynomial_item_t itgn12_fact_sol = integral_poly_newton_cote_1_2(p, itvl_tpl);
     profile_stop(prof);
     solution_print(streamout, p, itvl_tpl, itgn12_fact_sol, TITLE_SOL_NC12, prof);
-    fprintf(streamout, EPSILON_FMT, INTEG_EPSILON, itg_riemann - itgn12_fact_sol);
+    fprintf(streamout, EPSILON_FMT, INTEG_EPSILON, itg_ref - itgn12_fact_sol);
 
     polynomial_destruct(p);
     free(prof);

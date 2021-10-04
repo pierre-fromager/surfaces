@@ -7,8 +7,6 @@
 #include <math.h>
 #include <string.h>
 
-//#define POLYNOMIAL_DEBUG
-
 typedef unsigned polynomial_order_t;
 typedef long double polynomial_item_t;
 
