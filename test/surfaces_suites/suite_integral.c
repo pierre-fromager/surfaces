@@ -276,19 +276,23 @@ void test_surfaces_integral_riemann_o1()
     for (cptv = -ev; cptv < ev; cptv++)
     {
         polynomial_setfactor(1, cptv, pol);
-        CU_ASSERT_EQUAL(integral_poly_riemann(pol, iv, 1.0f), expected * cptv);
+        CU_ASSERT_EQUAL(
+            integral_factory_riemann(pol, iv, 1.0f, riemann_left),
+            expected * cptv);
     }
     // y = x + 10
     polynomial_setfactor(0, 10.0f, pol);
     polynomial_setfactor(1, 1.0f, pol);
     CU_ASSERT_EQUAL(polynomial_getfactor(0, pol), 10.0f);
     CU_ASSERT_EQUAL(polynomial_getfactor(1, pol), 1.0f);
-    CU_ASSERT_EQUAL(integral_poly_riemann(pol, iv, 1.0f), expectedplusten);
+    CU_ASSERT_EQUAL(integral_factory_riemann(pol, iv, 1.0f, riemann_left), expectedplusten);
     // y = 2x + 10
     polynomial_setfactor(1, 2.0f, pol);
     CU_ASSERT_EQUAL(polynomial_getfactor(1, pol), 2.0f);
-    printf("\nintegral_poly_riemann n 3 %Lf\n",integral_poly_riemann(pol, iv, 3.0f));
-    CU_ASSERT_EQUAL(integral_poly_riemann(pol, iv, 3.0f), expected2xplusten);
+    printf(
+        "\nintegral_poly_riemann n 3 %Lf\n",
+        integral_factory_riemann(pol, iv, 3.0f, riemann_left));
+    CU_ASSERT_EQUAL(integral_factory_riemann(pol, iv, 3.0f, riemann_left), expected2xplusten);
 }
 
 void test_surfaces_integral_factory_o1()
