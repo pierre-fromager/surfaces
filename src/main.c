@@ -97,13 +97,14 @@ int main(int argc, char *argv[])
     polynomial_setfactor(0, FN0_O, p);
     polynomial_setfactor(1, FN0_S, p);
     polynomial_setfactor(3, 1.0f, p);
-    const polynomial_item_t itg_ref = integral_poly_reference(p,itvl_tpl);    
+    const polynomial_item_t itg_ref = integral_poly_reference(p, itvl_tpl);
     const polynomial_item_t partition_amount = 4.0f;
     profile_start(prof);
-    const polynomial_item_t itg_riemann = integral_poly_riemann(
+    const polynomial_item_t itg_riemann = integral_factory_riemann(
         p,
         itvl_tpl,
-        partition_amount);
+        partition_amount,
+        riemann_right);
     profile_stop(prof);
     solution_print(streamout, p, itvl_tpl, itg_riemann, TITLE_SOL_RIEMANN, prof);
     fprintf(streamout, "\tPartition amount : %Lf\n", partition_amount);

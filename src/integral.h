@@ -22,6 +22,15 @@
 #define INTEG_TWO 2.0f
 #define INTEG_EPSILON "ε"
 
+typedef enum
+{
+    riemann_trapezoid,
+    riemann_middle_point,
+    riemann_rectangle,
+    riemann_left,
+    riemann_right,
+} integral_riemann_method_t;
+
 /**
  * @brief polynomial integration middle point
  * 
@@ -39,15 +48,6 @@ polynomial_item_t integral_poly_midpnt(polynomial_t *p, interval_t il);
  * @return polynomial_item_t 
  */
 polynomial_item_t integral_poly_trapez(polynomial_t *p, interval_t il);
-
-/**
- * @brief polynomial integration riemann method
- * 
- * @param p 
- * @param il 
- * @return polynomial_item_t 
- */
-polynomial_item_t integral_poly_riemann(polynomial_t *p, interval_t il, polynomial_item_t n);
 
 /**
  * @brief polynomial integration simpson method
@@ -75,6 +75,21 @@ polynomial_item_t integral_poly_newton_cote_1_2(polynomial_t *p, interval_t il);
  * @return polynomial_item_t 
  */
 polynomial_item_t integral_poly_reference(polynomial_t *p, interval_t il);
+
+/**
+ * @brief polynomial integration riemann factory
+ * 
+ * @param p 
+ * @param il 
+ * @param n 
+ * @param m 
+ * @return polynomial_item_t 
+ */
+polynomial_item_t integral_factory_riemann(
+    polynomial_t *p,
+    interval_t il,
+    polynomial_item_t n,
+    integral_riemann_method_t m);
 
 /**
  * @brief polynomial integration factory
