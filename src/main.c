@@ -20,7 +20,11 @@
 #define TITLE_SOL_SITZM "Factory o1"
 #define TITLE_SOL_MPTM "Factory o1 interval %u"
 #define TITLE_SOL_IL "Factory o1 sum previous intervals"
-#define TITLE_SOL_RIEMANN "Riemann iterative method ε ref"
+#define TITLE_SOL_RIEMANN_LEFT "Riemann sum left"
+#define TITLE_SOL_RIEMANN_RIGHT "Riemann sum right"
+#define TITLE_SOL_RIEMANN_RECT "Riemann sum rectangle"
+#define TITLE_SOL_RIEMANN_TRAP "Riemann sum trapezoid"
+#define TITLE_SOL_RIEMANN_MP "Riemann sum middle point"
 #define TITLE_SOL_SIMPSON "Simpson method"
 #define TITLE_SOL_NC12 "Newton-cote-1-2 method"
 #define EPSILON_FMT "\t%s %Lf\n"
@@ -99,16 +103,59 @@ int main(int argc, char *argv[])
     polynomial_setfactor(3, 1.0f, p);
     const polynomial_item_t itg_ref = integral_poly_reference(p, itvl_tpl);
     const polynomial_item_t partition_amount = 4.0f;
+
+    fprintf(streamout, "\nAntiderivative F(h) - F(l) = %Lf\n", itg_ref);
+    fprintf(streamout, "Riemann sum nb rectangles = %Lf\n", partition_amount);
+
     profile_start(prof);
-    const polynomial_item_t itg_riemann = integral_factory_riemann(
+    const polynomial_item_t riemann_sum_left = integral_factory_riemann(
+        p,
+        itvl_tpl,
+        partition_amount,
+        riemann_left);
+    profile_stop(prof);
+    solution_print(streamout, p, itvl_tpl, riemann_sum_left, TITLE_SOL_RIEMANN_LEFT, prof);    
+    fprintf(streamout, EPSILON_FMT, INTEG_EPSILON, itg_ref - riemann_sum_left);
+
+    profile_start(prof);
+    const polynomial_item_t riemann_sum_right = integral_factory_riemann(
         p,
         itvl_tpl,
         partition_amount,
         riemann_right);
     profile_stop(prof);
-    solution_print(streamout, p, itvl_tpl, itg_riemann, TITLE_SOL_RIEMANN, prof);
-    fprintf(streamout, "\tPartition amount : %Lf\n", partition_amount);
-    fprintf(streamout, EPSILON_FMT, INTEG_EPSILON, itg_ref - itg_riemann);
+    solution_print(streamout, p, itvl_tpl, riemann_sum_right, TITLE_SOL_RIEMANN_RIGHT, prof);    
+    fprintf(streamout, EPSILON_FMT, INTEG_EPSILON, itg_ref - riemann_sum_right);
+
+    profile_start(prof);
+    const polynomial_item_t riemann_sum_rect = integral_factory_riemann(
+        p,
+        itvl_tpl,
+        partition_amount,
+        riemann_rectangle);
+    profile_stop(prof);
+    solution_print(streamout, p, itvl_tpl, riemann_sum_rect, TITLE_SOL_RIEMANN_RECT, prof);    
+    fprintf(streamout, EPSILON_FMT, INTEG_EPSILON, itg_ref - riemann_sum_rect);
+
+    profile_start(prof);
+    const polynomial_item_t riemann_sum_trap = integral_factory_riemann(
+        p,
+        itvl_tpl,
+        partition_amount,
+        riemann_trapezoid);
+    profile_stop(prof);
+    solution_print(streamout, p, itvl_tpl, riemann_sum_trap, TITLE_SOL_RIEMANN_TRAP, prof);    
+    fprintf(streamout, EPSILON_FMT, INTEG_EPSILON, itg_ref - riemann_sum_trap);    
+
+    profile_start(prof);
+    const polynomial_item_t riemann_sum_mp = integral_factory_riemann(
+        p,
+        itvl_tpl,
+        partition_amount,
+        riemann_middle_point);
+    profile_stop(prof);
+    solution_print(streamout, p, itvl_tpl, riemann_sum_mp, TITLE_SOL_RIEMANN_MP, prof);    
+    fprintf(streamout, EPSILON_FMT, INTEG_EPSILON, itg_ref - riemann_sum_mp);      
 
     profile_start(prof);
     const polynomial_item_t itg_simpson = integral_poly_simpson(p, itvl_tpl);
