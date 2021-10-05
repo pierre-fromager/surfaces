@@ -15,6 +15,12 @@ void polynomial_construct(polynomial_order_t o, polynomial_t *p)
         *(p->factors + ocpt) = ifactor;
 }
 
+void polynomial_destruct(polynomial_t *p)
+{
+    free(p->factors);
+    free(p->orders);
+}
+
 void polynomial_setfactor(polynomial_order_t o, polynomial_item_t v, polynomial_t *p)
 {
     *(p->factors + o) = v;
@@ -38,10 +44,4 @@ polynomial_item_t polynomial_calc(polynomial_item_t x, polynomial_t *p)
         if (*(p->factors + ocpt) != 0.0f)
             sum += polynomial_getfactor(ocpt, p) * powl(x, polynomial_getorder(ocpt, p));
     return sum;
-}
-
-void polynomial_destruct(polynomial_t *p)
-{
-    free(p->factors);
-    free(p->orders);
 }

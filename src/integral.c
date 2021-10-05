@@ -27,7 +27,7 @@ polynomial_item_t integral_poly_simpson(polynomial_t *p, interval_t il)
     const polynomial_item_t fh = polynomial_calc(il.h, p);
     return (fl + 4 * fm + fh) * dx;
 }
-/*
+
 static polynomial_item_t integral_poly_riemann_rect(polynomial_t *p, interval_t il, polynomial_item_t n)
 {
     polynomial_item_t i, sum = 0;
@@ -35,7 +35,7 @@ static polynomial_item_t integral_poly_riemann_rect(polynomial_t *p, interval_t 
     for (i = 0; i < n; i++)
         sum += polynomial_calc(il.l + i * dx, p) * dx;
     return sum;
-}*/
+}
 
 static polynomial_item_t integral_poly_riemann_trap(polynomial_t *p, interval_t il, polynomial_item_t n)
 {
@@ -52,12 +52,25 @@ static polynomial_item_t integral_poly_riemann_trap(polynomial_t *p, interval_t 
     return sum;
 }
 
+static polynomial_item_t integral_poly_riemann_mp(polynomial_t *p, interval_t il, polynomial_item_t n)
+{
+    polynomial_item_t i, sum = 0;
+    const polynomial_item_t dx = (il.h - il.l) / n;
+    for (i = 0; i < n; i++)
+    {
+        polynomial_item_t term = ((i * dx) + ((i + 1) * dx)) / INTEG_TWO;
+        sum += polynomial_calc(term, p);
+    }
+    return dx * sum;
+}
+
 polynomial_item_t integral_poly_riemann(polynomial_t *p, interval_t il, polynomial_item_t n)
 {
-    //polynomial_item_t i;
-    //polynomial_item_t i = integral_poly_riemann_rect(p, il, n);
-    //printf("SUM integral_poly_riemann_rect = %Lf", i);
-    return integral_poly_riemann_trap(p, il, n);
+    polynomial_item_t r;
+    r = integral_poly_riemann_trap(p, il, n);    
+    r = integral_poly_riemann_rect(p, il, n);
+    r = integral_poly_riemann_mp(p, il, n);
+    return r;
 }
 
 polynomial_item_t integral_poly_newton_cote_1_2(polynomial_t *p, interval_t il)
