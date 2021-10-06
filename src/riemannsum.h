@@ -1,7 +1,7 @@
 /**
  * @file riemannsum.h
  * @author Pierre Fromager (info@pier-infor.fr)
- * @brief polynomial integration
+ * @brief polynomial riemann sum
  * @version 0.1
  * @date 2021-08-26
  * 
@@ -17,15 +17,6 @@
 #include <math.h>
 #include "interval.h"
 #include "polynomial.h"
-
-typedef enum
-{
-    riemann_trapezoid,
-    riemann_middle_point,
-    riemann_rectangle,
-    riemann_left,
-    riemann_right,
-} integral_riemann_method_t;
 
 /**
  * @brief riemann sum rectangle method

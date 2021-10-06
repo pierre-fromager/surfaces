@@ -28,10 +28,13 @@ static struct
     char *name;
 } test_functions[] = {
     {test_surfaces_derivative_derivate_o0, "derivate_o0"},
-    {test_surfaces_derivative_antiderivate_o0, "antiderivate_o0"},
     {test_surfaces_derivative_derivate_o1, "derivate_o1"},
     {test_surfaces_derivative_derivate_o1, "derivate_o2"},
     {test_surfaces_derivative_derivate_o3, "derivate_o3"},
+    {test_surfaces_derivative_antiderivate_o0, "antiderivate_o0"},
+    {test_surfaces_derivative_antiderivate_o1, "antiderivate_o1"},
+    {test_surfaces_derivative_antiderivate_o2, "antiderivate_o2"},
+    {test_surfaces_derivative_antiderivate_o3, "antiderivate_o3"},
     {0, 0},
 };
 
@@ -239,4 +242,120 @@ void test_surfaces_derivative_derivate_o3()
         CU_ASSERT_EQUAL(
             polynomial_calc(cptv, pdst),
             (6 * cptv * cptv) + (2 * cptv) + 1);
+}
+
+void test_surfaces_derivative_antiderivate_o1()
+{
+    const polynomial_order_t io = 1;
+    const polynomial_item_t ev = 1.0f;
+    const double granularity = 0.00001f;
+    polynomial_order_t iocpt;
+    CU_ASSERT_PTR_NOT_NULL_FATAL(psrc);
+    CU_ASSERT_PTR_NOT_NULL_FATAL(pdst);
+    polynomial_construct(io, psrc);
+    for (iocpt = 0; iocpt < io + 1; iocpt++)
+        CU_ASSERT_EQUAL(polynomial_getorder(iocpt, psrc), iocpt);
+    for (iocpt = 0; iocpt < io + 1; iocpt++)
+        CU_ASSERT_EQUAL(polynomial_getfactor(iocpt, psrc), 0);
+    // y = x => Y = (1/2)x²
+    polynomial_setfactor(1, ev, psrc);
+    CU_ASSERT_EQUAL(polynomial_getfactor(1, psrc), ev);
+    derivative_antiderivate(psrc, pdst);
+    CU_ASSERT_EQUAL(polynomial_getfactor(0, pdst), 0.0f);
+    CU_ASSERT_EQUAL(polynomial_getfactor(1, pdst), 0.0f);
+    CU_ASSERT_DOUBLE_EQUAL(polynomial_getfactor(2, pdst), 0.5f, granularity);
+    // y = x + 10 => Y = (1/2)x² + 10x
+    polynomial_setfactor(0, 10.0f, psrc);
+    CU_ASSERT_EQUAL(polynomial_getfactor(0, psrc), 10.0f);
+    derivative_antiderivate(psrc, pdst);
+    CU_ASSERT_EQUAL(polynomial_getfactor(0, pdst), 0.0f);
+    CU_ASSERT_EQUAL(polynomial_getfactor(1, pdst), 10.0f);
+    CU_ASSERT_DOUBLE_EQUAL(polynomial_getfactor(2, pdst), 0.5f, granularity);
+    // y = 2x + 10 => Y = x² + 10x
+    polynomial_setfactor(1, 2.0f, psrc);
+    CU_ASSERT_EQUAL(polynomial_getfactor(1, psrc), 2.0f);
+    derivative_antiderivate(psrc, pdst);
+    CU_ASSERT_EQUAL(polynomial_getfactor(0, pdst), 0.0f);
+    CU_ASSERT_EQUAL(polynomial_getfactor(1, pdst), 10.0f);
+    CU_ASSERT_DOUBLE_EQUAL(polynomial_getfactor(2, pdst), 1.0f, granularity);
+}
+
+void test_surfaces_derivative_antiderivate_o2()
+{
+    const polynomial_order_t io = 2;
+    const polynomial_item_t ev = 1.0f;
+    const double granularity = 0.00001f;
+    polynomial_order_t iocpt;
+    CU_ASSERT_PTR_NOT_NULL_FATAL(psrc);
+    CU_ASSERT_PTR_NOT_NULL_FATAL(pdst);
+    polynomial_construct(io, psrc);
+    for (iocpt = 0; iocpt < io + 1; iocpt++)
+        CU_ASSERT_EQUAL(polynomial_getorder(iocpt, psrc), iocpt);
+    for (iocpt = 0; iocpt < io + 1; iocpt++)
+        CU_ASSERT_EQUAL(polynomial_getfactor(iocpt, psrc), 0);
+    // y = x² => Y = (1/3)x^3
+    polynomial_setfactor(2, ev, psrc);
+    CU_ASSERT_EQUAL(polynomial_getfactor(2, psrc), ev);
+    derivative_antiderivate(psrc, pdst);
+    CU_ASSERT_EQUAL(polynomial_getfactor(0, pdst), 0.0f);
+    CU_ASSERT_EQUAL(polynomial_getfactor(1, pdst), 0.0f);
+    CU_ASSERT_EQUAL(polynomial_getfactor(2, pdst), 0.0f);
+    CU_ASSERT_DOUBLE_EQUAL(polynomial_getfactor(3, pdst), 0.333333f, granularity);
+    // y = x² + 10 => Y = (1/3)x^3 + 10x
+    polynomial_setfactor(0, 10.0f, psrc);
+    CU_ASSERT_EQUAL(polynomial_getfactor(0, psrc), 10.0f);
+    derivative_antiderivate(psrc, pdst);
+    CU_ASSERT_EQUAL(polynomial_getfactor(0, pdst), 0.0f);
+    CU_ASSERT_EQUAL(polynomial_getfactor(1, pdst), 10.0f);
+    CU_ASSERT_EQUAL(polynomial_getfactor(2, pdst), 0.0f);
+    CU_ASSERT_DOUBLE_EQUAL(polynomial_getfactor(3, pdst), 0.333333f, granularity);
+    // y = 3x² + 10 => Y = x^3 + 10x
+    polynomial_setfactor(2, 3.0f, psrc);
+    CU_ASSERT_EQUAL(polynomial_getfactor(2, psrc), 3.0f);
+    derivative_antiderivate(psrc, pdst);
+    CU_ASSERT_EQUAL(polynomial_getfactor(0, pdst), 0.0f);
+    CU_ASSERT_EQUAL(polynomial_getfactor(1, pdst), 10.0f);
+    CU_ASSERT_DOUBLE_EQUAL(polynomial_getfactor(3, pdst), 1.0f, granularity);
+}
+
+void test_surfaces_derivative_antiderivate_o3()
+{
+    const polynomial_order_t io = 3;
+    const polynomial_item_t ev = 1.0f;
+    const double granularity = 0.00001f;
+    polynomial_order_t iocpt;
+    CU_ASSERT_PTR_NOT_NULL_FATAL(psrc);
+    CU_ASSERT_PTR_NOT_NULL_FATAL(pdst);
+    polynomial_construct(io, psrc);
+    for (iocpt = 0; iocpt < io + 1; iocpt++)
+        CU_ASSERT_EQUAL(polynomial_getorder(iocpt, psrc), iocpt);
+    for (iocpt = 0; iocpt < io + 1; iocpt++)
+        CU_ASSERT_EQUAL(polynomial_getfactor(iocpt, psrc), 0);
+    // y = x³ => Y = (1/4)x^4
+    polynomial_setfactor(3, ev, psrc);
+    CU_ASSERT_EQUAL(polynomial_getfactor(io, psrc), 1.0f);
+    derivative_antiderivate(psrc, pdst);
+    CU_ASSERT_EQUAL(polynomial_getfactor(0, pdst), 0.0f);
+    CU_ASSERT_EQUAL(polynomial_getfactor(1, pdst), 0.0f);
+    CU_ASSERT_EQUAL(polynomial_getfactor(2, pdst), 0.0f);
+    CU_ASSERT_EQUAL(polynomial_getfactor(3, pdst), 0.0f);
+    CU_ASSERT_DOUBLE_EQUAL(polynomial_getfactor(4, pdst), 0.25f, granularity);
+    // y = x³ + 10 => Y = (1/4)x^4 + 10x
+    polynomial_setfactor(0, 10.0f, psrc);
+    CU_ASSERT_EQUAL(polynomial_getfactor(0, psrc), 10.0f);
+    derivative_antiderivate(psrc, pdst);
+    CU_ASSERT_EQUAL(polynomial_getfactor(0, pdst), 0.0f);
+    CU_ASSERT_EQUAL(polynomial_getfactor(1, pdst), 10.0f);
+    CU_ASSERT_EQUAL(polynomial_getfactor(2, pdst), 0.0f);
+    CU_ASSERT_EQUAL(polynomial_getfactor(3, pdst), 0.0f);
+    CU_ASSERT_DOUBLE_EQUAL(polynomial_getfactor(4, pdst), 0.25f, granularity);
+    // y = 4x³ + 10 => Y = x^4 + 10x
+    polynomial_setfactor(3, 4.0f, psrc);
+    CU_ASSERT_EQUAL(polynomial_getfactor(3, psrc), 4.0f);
+    derivative_antiderivate(psrc, pdst);
+    CU_ASSERT_EQUAL(polynomial_getfactor(0, pdst), 0.0f);
+    CU_ASSERT_EQUAL(polynomial_getfactor(1, pdst), 10.0f);
+    CU_ASSERT_EQUAL(polynomial_getfactor(2, pdst), 0.0f);
+    CU_ASSERT_EQUAL(polynomial_getfactor(3, pdst), 0.0f);
+    CU_ASSERT_DOUBLE_EQUAL(polynomial_getfactor(4, pdst), 1.0f, granularity);
 }
