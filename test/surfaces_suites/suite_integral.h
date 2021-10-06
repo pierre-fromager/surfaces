@@ -16,6 +16,7 @@
 void test_surfaces_integral_add_suite(void);
 void reset_test_integral(void);
 
+void test_surfaces_integral_ref_o0(void);
 void test_surfaces_integral_trapez_o0(void);
 void test_surfaces_integral_midpnt_o0(void);
 void test_surfaces_integral_riemann_left_o0(void);
@@ -25,14 +26,14 @@ void test_surfaces_integral_riemann_rect_o0(void);
 void test_surfaces_integral_riemann_mp_o0(void);
 void test_surfaces_integral_simpson_o0(void);
 void test_surfaces_integral_factory_o0(void);
+void test_surfaces_integral_ref_o1(void);
 void test_surfaces_integral_trapez_o1(void);
 void test_surfaces_integral_midpnt_o1(void);
 void test_surfaces_integral_riemann_left_o1(void);
 void test_surfaces_integral_riemann_right_o1(void);
+void test_surfaces_integral_riemann_trap_o1(void);
+void test_surfaces_integral_riemann_rect_o1(void);
+void test_surfaces_integral_riemann_mp_o1(void);
 void test_surfaces_integral_factory_o1(void);
-/*
-void test_surfaces_integral_o1(void);
-void test_surfaces_integral_o2(void);
-void test_surfaces_integral_o3(void);
-*/
+
 #endif // __TEST_SURFACES_SUITE_INTEGRAL_H__

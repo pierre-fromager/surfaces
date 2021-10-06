@@ -1,4 +1,13 @@
-
+/**
+ * @file polynomial_types.h
+ * @author Pierre Fromager (info@pier-infor.fr)
+ * @brief polynomial types
+ * @version 0.1
+ * @date 2021-08-26
+ * 
+ * @copyright Copyright (c) 2021
+ * 
+ */
 #ifndef _SURFACES_POLYNOMIAL_TYPES_
 #define _SURFACES_POLYNOMIAL_TYPES_
 
