@@ -31,6 +31,7 @@ static struct
     {test_surfaces_integral_trapez_o0, "integral_trapez_o0"},
     {test_surfaces_integral_midpnt_o0, "integral_midpnt_o0"},
     {test_surfaces_integral_simpson_o0, "integral_simpson_o0"},
+    {test_surfaces_integral_factory_riemann_o0, "integral_factory_riemann_o0"},
     {test_surfaces_integral_factory_o0, "integral_factory_o0"},
     {test_surfaces_integral_ref_o1, "integral_ref_o1"},
     {test_surfaces_integral_trapez_o1, "integral_trapez_o1"},
@@ -155,6 +156,61 @@ void test_surfaces_integral_simpson_o0()
     }
 }
 
+void test_surfaces_integral_factory_riemann_o0()
+{
+    const polynomial_order_t io = 0;
+    const polynomial_item_t ev = 100.0f;
+    const polynomial_item_t dxi = iv.h - iv.l;
+    const polynomial_item_t nbr = 2.0f;
+    polynomial_order_t iocpt;
+    polynomial_item_t cptv;
+    CU_ASSERT_PTR_NOT_NULL_FATAL(pol);
+    polynomial_construct(io, pol);
+    for (iocpt = 0; iocpt < io + 1; iocpt++)
+        CU_ASSERT_EQUAL(polynomial_getorder(iocpt, pol), iocpt);
+    for (iocpt = 0; iocpt < io + 1; iocpt++)
+        CU_ASSERT_EQUAL(polynomial_getfactor(iocpt, pol), io);
+    // y = ev
+    polynomial_setfactor(0, ev, pol);
+    CU_ASSERT_EQUAL(polynomial_getfactor(0, pol), ev);
+    // y = x => (-ev < x < ev)
+    for (cptv = -ev; cptv < ev; cptv++)
+    {
+        polynomial_setfactor(io, cptv, pol);
+        CU_ASSERT_EQUAL(
+            integral_factory_riemann(pol, iv, nbr, riemann_left),
+            dxi * cptv);
+    }
+    for (cptv = -ev; cptv < ev; cptv++)
+    {
+        polynomial_setfactor(io, cptv, pol);
+        CU_ASSERT_EQUAL(
+            integral_factory_riemann(pol, iv, nbr, riemann_right),
+            dxi * cptv);
+    }
+    for (cptv = -ev; cptv < ev; cptv++)
+    {
+        polynomial_setfactor(io, cptv, pol);
+        CU_ASSERT_EQUAL(
+            integral_factory_riemann(pol, iv, nbr, riemann_middle_point),
+            dxi * cptv);
+    }
+    for (cptv = -ev; cptv < ev; cptv++)
+    {
+        polynomial_setfactor(io, cptv, pol);
+        CU_ASSERT_EQUAL(
+            integral_factory_riemann(pol, iv, nbr, riemann_trapezoid),
+            dxi * cptv);
+    }
+    for (cptv = -ev; cptv < ev; cptv++)
+    {
+        polynomial_setfactor(io, cptv, pol);
+        CU_ASSERT_EQUAL(
+            integral_factory_riemann(pol, iv, nbr, riemann_rectangle),
+            dxi * cptv);
+    }
+}
+
 void test_surfaces_integral_factory_o0()
 {
     const polynomial_order_t io = 0;
@@ -167,7 +223,7 @@ void test_surfaces_integral_factory_o0()
         CU_ASSERT_EQUAL(polynomial_getorder(iocpt, pol), iocpt);
     for (iocpt = 0; iocpt < io + 1; iocpt++)
         CU_ASSERT_EQUAL(polynomial_getfactor(iocpt, pol), io);
-    // y = 100
+    // y = ev
     polynomial_setfactor(0, ev, pol);
     CU_ASSERT_EQUAL(polynomial_getfactor(0, pol), ev);
     // y = x => (-ev < x < ev)
