@@ -18,18 +18,10 @@
 #include "interval.h"
 #include "polynomial.h"
 #include "derivative.h"
+#include "riemannsum.h"
 
 #define INTEG_TWO 2.0f
 #define INTEG_EPSILON "ε"
-
-typedef enum
-{
-    riemann_trapezoid,
-    riemann_middle_point,
-    riemann_rectangle,
-    riemann_left,
-    riemann_right,
-} integral_riemann_method_t;
 
 /**
  * @brief polynomial integration middle point
