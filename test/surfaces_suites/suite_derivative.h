@@ -7,7 +7,6 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include "../../src/derivative.h"
-#include "../../src/solution.h"
 
 void test_surfaces_derivative_add_suite(void);
 void reset_test_derivative(void);

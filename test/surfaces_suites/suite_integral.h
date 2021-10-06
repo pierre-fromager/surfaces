@@ -26,5 +26,8 @@ void test_surfaces_integral_ref_o1(void);
 void test_surfaces_integral_trapez_o1(void);
 void test_surfaces_integral_midpnt_o1(void);
 void test_surfaces_integral_factory_o1(void);
+void test_surfaces_integral_ref_o2(void);
+void test_surfaces_integral_ref_o3(void);
+void test_surfaces_integral_ref_o4(void);
 
 #endif // __TEST_SURFACES_SUITE_INTEGRAL_H__

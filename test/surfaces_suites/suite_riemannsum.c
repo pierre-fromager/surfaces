@@ -354,7 +354,6 @@ void test_surfaces_riemannsum_mp_o1()
     // y = x
     polynomial_setfactor(1, ev, pol);
     CU_ASSERT_EQUAL(polynomial_getfactor(1, pol), ev);
-    printf("%Lf\n", riemann_sum_mp(pol, iv, 2.0f));
     CU_ASSERT_DOUBLE_EQUAL(
         (double)riemann_sum_mp(pol, iv, 2.0f),
         (double)1250.0f,
