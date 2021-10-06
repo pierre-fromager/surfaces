@@ -1,9 +1,11 @@
 # Surfaces
 
-Surfaces illustrates how to fast calculate surface from a polynomial.  
-A factory design pattern let an exact calculus for polynomial with order lower than 2,
-otherwise an iterative approximation will be applied from riemann sum algorithm with a partitioning factor.  
+Surfaces let fast calculate surface from a polynomial form.  
 
+A factory design pattern optimizes an exact calculus from degree with best effort.  
+
+Riemann sum is exposed an tested here without accuracy purpose, just because it is the basement of integration theory.  
+  
 ## Build
 
 ``` 
