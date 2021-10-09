@@ -13,6 +13,7 @@
 #include <string.h>
 #include <stdio.h>
 #include "arguments.h"
+#include "parser.h"
 #include "integral.h"
 #include "solution.h"
 #include "profile.h"
@@ -81,6 +82,9 @@ int main(int argc, char *argv[])
     polynomial_construct(1, p);
     polynomial_setfactor(0, FN0_O, p);
     polynomial_setfactor(1, FN0_S, p);
+
+    parser_parse("2.5x^3+4.2x^2+5.8x-42.4565454",p);
+    exit(EXIT_SUCCESS);
 
     const interval_t itvl_tpl = {.l = IL_L, .h = IL_H};
     profile_start(prof);
