@@ -14,7 +14,7 @@ static int parser_compile(regex_t *r, const char *regex_text)
     return 0;
 }
 
-static int parse_members(char *sub)
+static int parse_poly_member(char *sub)
 {
     if (strstr(sub, PARSER_PATTERN_X_EXP))
     {
@@ -56,7 +56,7 @@ static int parser_match(regex_t *r, char *eq, polynomial_t *p)
                 start = (int)m[i].rm_so + (int)(pc - eq);
                 finish = (int)m[i].rm_eo + (int)(pc - eq);
                 sprintf(sub, "'%.*s'", (finish - start), eq + start);
-                parse_members(sub);
+                parse_poly_member(sub);
             }
         }
         pc += m[0].rm_eo;
