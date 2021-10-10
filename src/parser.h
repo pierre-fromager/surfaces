@@ -13,7 +13,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <regex.h>
-#include "polynomial_types.h"
+#include "polynomial.h"
 
 #define PARSER_MAX_MATCH 100
 #define PARSER_MEMBER_MAX_LEN 50
@@ -21,9 +21,13 @@
 #define PARSER_MAX_ERROR_MSG 0x1000
 #define PARSER_TERMS_PATTERN "([+-]?[^-+]+)"
 #define PARSER_TERMS_PATTERN_ENF "([+-]?(?:(?:\\d+x\\^\\d+)|(?:\\d+x)|(?:\\d+)|(?:x)))"
-#define PARSER_PATTERN_X_EXP "x^"
-#define PARSER_PATTERN_X_SINGLE "x"
+#define PARSER_PATTERN_EXP "^"
+#define PARSER_PATTERN_X "x"
+#define PARSER_PATTERN_X_EXP PARSER_PATTERN_X PARSER_PATTERN_EXP
+#define PARSER_PATTERN_DIV "/"
 #define PARSER_ERR_MSG_COMPILE "Regex error compiling '%s': %s\n"
+#define PARSER_STR_FMT "%s"
+#define PARSER_SUBSTR_FMT "%.*s"
 
 
 int parser_parse(char *eq, polynomial_t *p);

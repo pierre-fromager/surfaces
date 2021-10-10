@@ -79,11 +79,13 @@ int main(int argc, char *argv[])
     p = malloc(sizeof(polynomial_t));
 
     // y = 1/2x + 3
-    polynomial_construct(1, p);
-    polynomial_setfactor(0, FN0_O, p);
-    polynomial_setfactor(1, FN0_S, p);
-
-    parser_parse("2.5x^3+4.2x^2+5.8x-42.4565454",p);
+    polynomial_construct(128, p);
+    //polynomial_setfactor(0, FN0_O, p);
+    //polynomial_setfactor(1, FN0_S, p);
+    parser_parse("5/2x^3+9/3x^2+16/2x-1/3", p);
+    solution_equation(streamout, p);
+    polynomial_destruct(p);
+    free(p);
     exit(EXIT_SUCCESS);
 
     const interval_t itvl_tpl = {.l = IL_L, .h = IL_H};
@@ -118,7 +120,7 @@ int main(int argc, char *argv[])
         partition_amount,
         riemann_left);
     profile_stop(prof);
-    solution_print(streamout, p, itvl_tpl, riemann_sum_left, TITLE_SOL_RIEMANN_LEFT, prof);    
+    solution_print(streamout, p, itvl_tpl, riemann_sum_left, TITLE_SOL_RIEMANN_LEFT, prof);
     fprintf(streamout, EPSILON_FMT, INTEG_EPSILON, itg_ref - riemann_sum_left);
 
     profile_start(prof);
@@ -128,7 +130,7 @@ int main(int argc, char *argv[])
         partition_amount,
         riemann_right);
     profile_stop(prof);
-    solution_print(streamout, p, itvl_tpl, riemann_sum_right, TITLE_SOL_RIEMANN_RIGHT, prof);    
+    solution_print(streamout, p, itvl_tpl, riemann_sum_right, TITLE_SOL_RIEMANN_RIGHT, prof);
     fprintf(streamout, EPSILON_FMT, INTEG_EPSILON, itg_ref - riemann_sum_right);
 
     profile_start(prof);
@@ -138,7 +140,7 @@ int main(int argc, char *argv[])
         partition_amount,
         riemann_rectangle);
     profile_stop(prof);
-    solution_print(streamout, p, itvl_tpl, riemann_sum_rect, TITLE_SOL_RIEMANN_RECT, prof);    
+    solution_print(streamout, p, itvl_tpl, riemann_sum_rect, TITLE_SOL_RIEMANN_RECT, prof);
     fprintf(streamout, EPSILON_FMT, INTEG_EPSILON, itg_ref - riemann_sum_rect);
 
     profile_start(prof);
@@ -148,8 +150,8 @@ int main(int argc, char *argv[])
         partition_amount,
         riemann_trapezoid);
     profile_stop(prof);
-    solution_print(streamout, p, itvl_tpl, riemann_sum_trap, TITLE_SOL_RIEMANN_TRAP, prof);    
-    fprintf(streamout, EPSILON_FMT, INTEG_EPSILON, itg_ref - riemann_sum_trap);    
+    solution_print(streamout, p, itvl_tpl, riemann_sum_trap, TITLE_SOL_RIEMANN_TRAP, prof);
+    fprintf(streamout, EPSILON_FMT, INTEG_EPSILON, itg_ref - riemann_sum_trap);
 
     profile_start(prof);
     const polynomial_item_t riemann_sum_mp = integral_factory_riemann(
@@ -158,8 +160,8 @@ int main(int argc, char *argv[])
         partition_amount,
         riemann_middle_point);
     profile_stop(prof);
-    solution_print(streamout, p, itvl_tpl, riemann_sum_mp, TITLE_SOL_RIEMANN_MP, prof);    
-    fprintf(streamout, EPSILON_FMT, INTEG_EPSILON, itg_ref - riemann_sum_mp);      
+    solution_print(streamout, p, itvl_tpl, riemann_sum_mp, TITLE_SOL_RIEMANN_MP, prof);
+    fprintf(streamout, EPSILON_FMT, INTEG_EPSILON, itg_ref - riemann_sum_mp);
 
     profile_start(prof);
     const polynomial_item_t itg_simpson = integral_poly_simpson(p, itvl_tpl);

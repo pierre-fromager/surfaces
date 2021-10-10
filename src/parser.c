@@ -14,20 +14,61 @@ static int parser_compile(regex_t *r, const char *regex_text)
     return 0;
 }
 
-static int parse_poly_member(char *sub)
+static int parser_strpos(char *haystack, char *needle)
 {
-    if (strstr(sub, PARSER_PATTERN_X_EXP))
+    char *p = strstr(haystack, needle);
+    if (p)
+        return (int)(p - haystack);
+    return -1;
+}
+
+static polynomial_item_t parser_evaluate(char *buff)
+{
+    polynomial_item_t l, r, e;
+    char lb[10], rb[10];
+    e = 0.0f;
+    const int opos = parser_strpos(buff, PARSER_PATTERN_DIV);
+    if (opos >= 1)
     {
-        printf("a*x^e:%s\n", sub);
-    }
-    else if (strstr(sub, PARSER_PATTERN_X_SINGLE))
-    {
-        printf("a*x:%s\n", sub);
+        sprintf(lb, PARSER_SUBSTR_FMT, opos, buff);
+        sprintf(rb, PARSER_STR_FMT, &(buff[opos + 1]));
+        l = (polynomial_item_t)atof(lb);
+        r = (polynomial_item_t)atof(rb);
+        e = l / r;
     }
     else
     {
-        printf("k:%s\n", sub);
+        e = (polynomial_item_t)atof(buff);
     }
+    return e;
+}
+
+static int parse_poly_member(char *sub, polynomial_t *p)
+{
+    polynomial_item_t v = 0;
+    polynomial_order_t o = 0;
+    char buff[40];
+    const int xpos = parser_strpos(sub, PARSER_PATTERN_X);
+    const int epos = parser_strpos(sub, PARSER_PATTERN_EXP);
+    if (xpos != -1 && epos != -1)
+    {
+        sprintf(buff, PARSER_SUBSTR_FMT, xpos, sub);
+        v = parser_evaluate(buff);
+        sprintf(buff, PARSER_STR_FMT, &(sub[epos + 1]));
+        o = (polynomial_order_t)atoi(buff);
+    }
+    else if (xpos != -1)
+    {
+        o = 1;
+        sprintf(buff, PARSER_SUBSTR_FMT, xpos, sub);
+        v = parser_evaluate(buff);
+    }
+    else
+    {
+        sprintf(buff, PARSER_STR_FMT, sub);
+        v = parser_evaluate(buff);
+    }
+    polynomial_setfactor(o, v, p);
     return 0;
 }
 
@@ -38,9 +79,6 @@ static int parser_match(regex_t *r, char *eq, polynomial_t *p)
     char sub[PARSER_MEMBER_MAX_LEN];
     const int n_matches = PARSER_TERMS_MAX_MATCHES;
     regmatch_t m[PARSER_TERMS_MAX_MATCHES];
-    if (p)
-    {
-    }
     while (1)
     {
         i = 0;
@@ -55,8 +93,8 @@ static int parser_match(regex_t *r, char *eq, polynomial_t *p)
             {
                 start = (int)m[i].rm_so + (int)(pc - eq);
                 finish = (int)m[i].rm_eo + (int)(pc - eq);
-                sprintf(sub, "'%.*s'", (finish - start), eq + start);
-                parse_poly_member(sub);
+                sprintf(sub, PARSER_SUBSTR_FMT, (finish - start), eq + start);
+                parse_poly_member(sub, p);
             }
         }
         pc += m[0].rm_eo;

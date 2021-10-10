@@ -26,11 +26,11 @@ void solution_format_double(char *s, unsigned n)
 
 void solution_equation(FILE *streamout, polynomial_t *p)
 {
-    unsigned c;
+    polynomial_order_t c;
     char factor_buff[SOL_FMT_BUFF_LEN];
     fprintf(streamout, SOL_LF SOL_TAB "%s = ", SOL_FN);
     for (c = 0; c < p->order + 1; c++)
-        if (polynomial_getfactor(c, p) > 0.0f)
+        if (polynomial_getfactor(c, p) != 0.0f)
         {
             const char *sign = (polynomial_getfactor(c, p) < 0) ? "" : "+";
             const char *fmto = (c == 0) ? "%s%s" : "%s%sx";
