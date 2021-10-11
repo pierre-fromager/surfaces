@@ -83,24 +83,12 @@ int main(int argc, char *argv[])
     polynomial_construct(POLY_MAX_ORDER, p);
     //polynomial_setfactor(0, FN0_O, p);
     //polynomial_setfactor(1, FN0_S, p);
-    //printf("argc %d\n",argc);
-    //printf("argv2 %s\n",argv[1]);
     int parser_err;
     parser_err = (argc == 2) ? parser_parse(argv[1], p) : parser_parse("1/2x+3", p);
     if (parser_err != 0)
         printf("%s\n", "Parser compilation failed.");
     else
         solution_equation(streamout, p);
-    /*
-    if (argc > 0)
-        parser_err = parser_parse(argv[1], p);
-    else
-        parser_err = parser_parse("1/2x+3", p);
-    if (parser_err == 0)
-        solution_equation(streamout, p);
-    else
-        printf("%s\n", "Parser compilation failed.");*/
-
     polynomial_destruct(p);
     free(p);
     exit(EXIT_SUCCESS);

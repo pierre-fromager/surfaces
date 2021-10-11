@@ -29,6 +29,7 @@ static polynomial_item_t parser_evaluate(char *buff, int xpos)
     e = 0.0f;
     const int opos = parser_strpos(buff, PARSER_PATTERN_DIV);
     const int mxpos = parser_strpos(buff, PARSER_PATTERN_MINUS);
+    const int pxpos = parser_strpos(buff, PARSER_PATTERN_PLUS);
     if (opos >= 1)
     {
         sprintf(lb, PARSER_SUBSTR_FMT, opos, buff);
@@ -41,7 +42,7 @@ static polynomial_item_t parser_evaluate(char *buff, int xpos)
         e = (polynomial_item_t)atof(buff);
     if (e == 0.0f)
     {
-        if (xpos == 0)
+        if (xpos == 0 || (pxpos == 0 && xpos == 1))
             e = 1.0f;
         if (mxpos == 0)
             e = -1.0f;
