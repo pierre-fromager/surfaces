@@ -4,7 +4,7 @@ Surfaces let fast calculate surface from a polynomial form.
 
 A factory design pattern optimizes an exact calculus from degree with best effort.  
 
-Riemann sum is exposed an tested here without accuracy purpose, just because it is the basement of integration theory.  
+Riemann sum is exposed an tested here with no reliability purpose, just because it is the basement of integration theory.  
   
 ## Build
 
