@@ -79,19 +79,13 @@ int main(int argc, char *argv[])
     polynomial_t *p;
     p = malloc(sizeof(polynomial_t));
 
-    // y = 1/2x + 3
     polynomial_construct(POLY_MAX_ORDER, p);
-    //polynomial_setfactor(0, FN0_O, p);
-    //polynomial_setfactor(1, FN0_S, p);
     int parser_err;
     parser_err = (argc == 2) ? parser_parse(argv[1], p) : parser_parse("1/2x+3", p);
     if (parser_err != 0)
         printf("%s\n", "Parser compilation failed.");
     else
         solution_equation(streamout, p);
-    polynomial_destruct(p);
-    free(p);
-    exit(EXIT_SUCCESS);
 
     const interval_t itvl_tpl = {.l = IL_L, .h = IL_H};
     profile_start(prof);
@@ -107,11 +101,6 @@ int main(int argc, char *argv[])
     solution_print(streamout, p, itvl_tpl, sol_m01, TITLE_SOL_IL, prof);
     fprintf(streamout, EPSILON_FMT, INTEG_EPSILON, sol_o1 - sol_m01);
 
-    // y = x^3 + 1/2x + 3
-    polynomial_construct(3, p);
-    polynomial_setfactor(0, FN0_O, p);
-    polynomial_setfactor(1, FN0_S, p);
-    polynomial_setfactor(3, 1.0f, p);
     const polynomial_item_t itg_ref = integral_poly_reference(p, itvl_tpl);
     const polynomial_item_t partition_amount = 4.0f;
 
@@ -181,6 +170,7 @@ int main(int argc, char *argv[])
     fprintf(streamout, EPSILON_FMT, INTEG_EPSILON, itg_ref - itgn12_fact_sol);
 
     polynomial_destruct(p);
+    free(p);
     free(prof);
 
     return EXIT_SUCCESS;
