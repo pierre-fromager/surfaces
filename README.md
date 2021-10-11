@@ -19,10 +19,6 @@ Doc will be generated in the doc/html folder.
 make doc
 ```
 
-## Caveats parser and arguments
-
-Parser is really minimalistic, when writing eq if first term start with minus sign, escape it as \\'your_poly_eq_here\\' to avoid conflict with args minus options.
-
 ## Usage
 
 Overview
@@ -33,14 +29,24 @@ Detail
 ```
 ./surfaces -?
 ```
-Example with default interval
+
+## Examples
+Default interval
 ```
 ./surfaces 3+x+2x^3
 ```
-Example with custom interval
+Custom interval
 ```
 ./surfaces -l0 -h10 3+x+2x^3
 ```
+Custom interval with ratios
+```
+./surfaces -l0 -h10 1/3+2/3x+2/5x^3
+```
+
+## Caveats parser and arguments
+
+Parser is really minimalistic, when writing eq if first term start with minus sign, escape it as \\'your_poly_eq_here\\' to avoid conflict with args minus options.
 
 ## Performance
 
@@ -48,20 +54,13 @@ Read [Security-related flags and options for C compilers](https://airbus-seclab.
 
 ## Accuracy
 
-Here we are dealing with double type.  
-
-## Limitations
-
-Input buffer is limited to 2048 bytes but you can change it in main.
+Polynomial calculus based on long double type.  
 
 ## Tests
 
 Tests are based on [CUnity/Cunit framework](https://gitlab.com/cunity/cunit).  
-Setup from Debian package (old release ...v2.1)   
-``` 
-sudo apt-get install libcunit1 libcunit1-dev 
-```
-Or build from source (fresh release v3.2.7), clone repo and follow the Readme.  
+
+Build sources (fresh release v3.2.7), clone repo and follow the Readme.  
 Then
 ``` 
 make
