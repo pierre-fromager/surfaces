@@ -19,7 +19,7 @@
 #define PORE_NAME "surfaces"
 #define PORE_VERSION PORE_NAME "1.0"
 #define PORE_MAINT_EMAIL "info@pier-infor.fr"
-#define PORE_ARGS_DOC_ARG "instream-arg"
+#define PORE_ARGS_DOC_ARG "equation"
 #define PORE_ARGS_DOC "Linear surfaces calculus"
 
 typedef struct arguments_s
@@ -27,6 +27,8 @@ typedef struct arguments_s
     char *args[1];
     char *separator;
     int debug;
+    int low;
+    int high;
 } arguments_t;
 
 void arguments_process(int argc, char **argv, arguments_t *arguments);

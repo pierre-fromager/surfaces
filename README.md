@@ -19,13 +19,9 @@ Doc will be generated in the doc/html folder.
 make doc
 ```
 
-## Caveats parser
+## Caveats parser and arguments
 
-Parser is really minimalistic.  
-Even if it applies kind of reduction on similar polynomial degree, you have to respect some rules.  
-When passing the first arg eq you have to :
-* escape eq arg like \\'your_poly_eq_here\\' (because possible conflict with args options).
-* precise both sign and order even if factor is 1.
+Parser is really minimalistic, when writing eq if first term start with minus sign, escape it as \\'your_poly_eq_here\\' to avoid conflict with args minus options.
 
 ## Usage
 
@@ -36,6 +32,14 @@ Overview
 Detail
 ```
 ./surfaces -?
+```
+Example with default interval
+```
+./surfaces 3+x+2x^3
+```
+Example with custom interval
+```
+./surfaces -l0 -h10 3+x+2x^3
 ```
 
 ## Performance

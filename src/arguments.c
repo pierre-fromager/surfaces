@@ -3,7 +3,8 @@
 
 static struct argp_option options[] = {
     {"debug", 'd', 0, 0, "Enable debug", 1},
-    {"separator", 's' , "STRING1", 0, "Set separator", 2},
+    {"low", 'l', "0", 0, "Low interval", 2},
+    {"high", 'h', "5", 0, "High interval", 3},
     {0}};
 
 static error_t parse_opt(int key, char *arg, struct argp_state *state)
@@ -12,12 +13,12 @@ static error_t parse_opt(int key, char *arg, struct argp_state *state)
 
   switch (key)
   {
-  case 's':
-    arguments->separator = arg;
+  case 'l':
+    arguments->low = atoi(arg);
     break;
-  case 'x':
-    //arguments->separator = arg;
-    break;    
+  case 'h':
+    arguments->high = atoi(arg);
+    break;
   case 'd':
     arguments->debug = 1;
     break;
@@ -31,7 +32,7 @@ static error_t parse_opt(int key, char *arg, struct argp_state *state)
   case ARGP_KEY_END:
     if (state->arg_num == 0)
     {
-      //argp_usage(state);
+      argp_usage(state);
     }
     break;
   default:
@@ -44,6 +45,8 @@ static void set_defaults(arguments_t *arguments)
 {
   arguments->separator = " ";
   arguments->debug = 0;
+  arguments->low = 0;
+  arguments->high = 5;
 }
 
 void arguments_process(int argc, char **argv, arguments_t *arguments)

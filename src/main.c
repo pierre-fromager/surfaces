@@ -37,6 +37,7 @@
 #define __ACCURA 16.0f
 #define __ACBASE 10.0f
 #define POLY_MAX_ORDER 128
+#define DEFAULT_EQ "1/2x+3"
 
 arguments_t args;
 
@@ -81,13 +82,19 @@ int main(int argc, char *argv[])
 
     polynomial_construct(POLY_MAX_ORDER, p);
     int parser_err;
-    parser_err = (argc == 2) ? parser_parse(argv[1], p) : parser_parse("1/2x+3", p);
+    //printf("%s\n",);
+    parser_err = (args.args[0] != NULL)
+                     ? parser_parse(args.args[0], p)
+                     : parser_parse(DEFAULT_EQ, p);
     if (parser_err != 0)
         printf("%s\n", "Parser compilation failed.");
     else
         solution_equation(streamout, p);
 
-    const interval_t itvl_tpl = {.l = IL_L, .h = IL_H};
+    const interval_t itvl_tpl = {
+        .l = (polynomial_item_t)args.low,
+        .h = (polynomial_item_t)args.high,
+    };
     profile_start(prof);
     const polynomial_item_t sol_o1 = integral_factory(p, itvl_tpl);
     profile_stop(prof);
