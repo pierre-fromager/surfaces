@@ -1,26 +1,24 @@
 # Surfaces
 
-Surfaces let fast calculate surface from a polynomial form.  
-
-A factory design pattern optimizes an exact calculus from degree with best effort.  
-
-Riemann sum is exposed an tested here with no reliability purpose, just because it is the basement of integration theory.  
+Surfaces let calculate surface from a polynomial form.  
+A factory optimizes an exact calculus from degree with best effort.  
+Alternatives methods with no reliability are exposed and tested here, see alt option :
+* Riemann sums(left,right,rect,trapezoid,midpoint).
+* Simpson rules.
+* Newton-cote.
   
 ## Build
-
 ``` 
 make
 ```
 
 ## Doc
 Doc will be generated in the doc/html folder.
-
 ``` 
 make doc
 ```
 
 ## Usage
-
 Overview
 ``` 
 ./surfaces 
@@ -45,31 +43,23 @@ Custom interval with ratios
 ```
 
 ## Caveats parser and arguments
-
 Parser is really minimalistic, when writing eq if first term start with minus sign, escape it as \\'your_poly_eq_here\\' to avoid conflict with args minus options.
 
 ## Performance
-
 Read [Security-related flags and options for C compilers](https://airbus-seclab.github.io/c-compiler-security/) to know more.
 
 ## Accuracy
-
 Polynomial calculus based on long double type.  
 
 ## Tests
-
 Tests are based on [CUnity/Cunit framework](https://gitlab.com/cunity/cunit).  
-
 Build sources (fresh release v3.2.7), clone repo and follow the Readme.  
 Then
 ``` 
 make
 sudo make install
 ```
-I recommend to build from source because setup and teardown can be done both on suite and test.
-
 Build tests from root project.  
-
 ``` 
 make
 make test
@@ -80,7 +70,6 @@ to run tests with or without options (bci)
 ```
 
 ## Links
-
 * [Méthodes numériques de résolution d’équations différentielles](https://www.fresnel.fr/perso/stout/Anal_numer/Cours4.pdf)
 * [Calcul intégral](https://lyceesgisors.spip.ac-rouen.fr/IMG/pdf/integration-2.pdf)
 * [Riemann sum](https://en.wikipedia.org/wiki/Riemann_sum)

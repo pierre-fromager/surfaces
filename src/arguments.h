@@ -25,8 +25,8 @@
 typedef struct arguments_s
 {
     char *args[1];
-    char *separator;
     int debug;
+    int alt;
     int low;
     int high;
 } arguments_t;

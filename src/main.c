@@ -18,9 +18,9 @@
 #include "solution.h"
 #include "profile.h"
 
-#define TITLE_SOL_SITZM "Factory o1"
-#define TITLE_SOL_MPTM "Factory o1 interval %u"
-#define TITLE_SOL_IL "Factory o1 sum previous intervals"
+#define TITLE_SOL_SITZM "Factory"
+#define TITLE_SOL_MPTM "Factory interval %u"
+#define TITLE_SOL_IL "Factory sum previous intervals"
 #define TITLE_SOL_RIEMANN_LEFT "Riemann sum left"
 #define TITLE_SOL_RIEMANN_RIGHT "Riemann sum right"
 #define TITLE_SOL_RIEMANN_RECT "Riemann sum rectangle"
@@ -82,14 +82,11 @@ int main(int argc, char *argv[])
 
     polynomial_construct(POLY_MAX_ORDER, p);
     int parser_err;
-    //printf("%s\n",);
     parser_err = (args.args[0] != NULL)
                      ? parser_parse(args.args[0], p)
                      : parser_parse(DEFAULT_EQ, p);
     if (parser_err != 0)
         printf("%s\n", "Parser compilation failed.");
-    else
-        solution_equation(streamout, p);
 
     const interval_t itvl_tpl = {
         .l = (polynomial_item_t)args.low,
@@ -100,82 +97,91 @@ int main(int argc, char *argv[])
     profile_stop(prof);
     solution_print(streamout, p, itvl_tpl, sol_o1, TITLE_SOL_SITZM, prof);
 
-    const unsigned nbivs = 2;
-    intervals_t itvls = malloc(sizeof(interval_t) * nbivs);
-    set_multiple_intervals(itvls, itvl_tpl);
-    const polynomial_item_t sol_m01 = factory_intervals(p, itvls, nbivs, prof);
-    free(itvls);
-    solution_print(streamout, p, itvl_tpl, sol_m01, TITLE_SOL_IL, prof);
-    fprintf(streamout, EPSILON_FMT, INTEG_EPSILON, sol_o1 - sol_m01);
+    if (args.debug == 1)
+    {
+        const unsigned nbivs = 2;
+        intervals_t itvls = malloc(sizeof(interval_t) * nbivs);
+        set_multiple_intervals(itvls, itvl_tpl);
+        const polynomial_item_t sol_m01 = factory_intervals(p, itvls, nbivs, prof);
+        free(itvls);
+        solution_print(streamout, p, itvl_tpl, sol_m01, TITLE_SOL_IL, prof);
+        fprintf(streamout, EPSILON_FMT, INTEG_EPSILON, sol_o1 - sol_m01);
+    }
 
+    profile_start(prof);
     const polynomial_item_t itg_ref = integral_poly_reference(p, itvl_tpl);
-    const polynomial_item_t partition_amount = 4.0f;
-
+    profile_stop(prof);
     fprintf(streamout, "\nAntiderivative F(h) - F(l) = %Lf\n", itg_ref);
-    fprintf(streamout, "Riemann sum nb rectangles = %Lf\n", partition_amount);
+    fprintf(streamout, "\tElapse %0.5f s\n", profile_elapse(prof));
+    fprintf(streamout, EPSILON_FMT, INTEG_EPSILON, sol_o1 - itg_ref);
 
-    profile_start(prof);
-    const polynomial_item_t riemann_sum_left = integral_factory_riemann(
-        p,
-        itvl_tpl,
-        partition_amount,
-        riemann_left);
-    profile_stop(prof);
-    solution_print(streamout, p, itvl_tpl, riemann_sum_left, TITLE_SOL_RIEMANN_LEFT, prof);
-    fprintf(streamout, EPSILON_FMT, INTEG_EPSILON, itg_ref - riemann_sum_left);
+    if (args.alt != 0)
+    {
+        const polynomial_item_t partition_amount = 4.0f;
+        fprintf(streamout, "Riemann sum nb rectangles = %Lf\n", partition_amount);
 
-    profile_start(prof);
-    const polynomial_item_t riemann_sum_right = integral_factory_riemann(
-        p,
-        itvl_tpl,
-        partition_amount,
-        riemann_right);
-    profile_stop(prof);
-    solution_print(streamout, p, itvl_tpl, riemann_sum_right, TITLE_SOL_RIEMANN_RIGHT, prof);
-    fprintf(streamout, EPSILON_FMT, INTEG_EPSILON, itg_ref - riemann_sum_right);
+        profile_start(prof);
+        const polynomial_item_t riemann_sum_left = integral_factory_riemann(
+            p,
+            itvl_tpl,
+            partition_amount,
+            riemann_left);
+        profile_stop(prof);
+        solution_print(streamout, p, itvl_tpl, riemann_sum_left, TITLE_SOL_RIEMANN_LEFT, prof);
+        fprintf(streamout, EPSILON_FMT, INTEG_EPSILON, itg_ref - riemann_sum_left);
 
-    profile_start(prof);
-    const polynomial_item_t riemann_sum_rect = integral_factory_riemann(
-        p,
-        itvl_tpl,
-        partition_amount,
-        riemann_rectangle);
-    profile_stop(prof);
-    solution_print(streamout, p, itvl_tpl, riemann_sum_rect, TITLE_SOL_RIEMANN_RECT, prof);
-    fprintf(streamout, EPSILON_FMT, INTEG_EPSILON, itg_ref - riemann_sum_rect);
+        profile_start(prof);
+        const polynomial_item_t riemann_sum_right = integral_factory_riemann(
+            p,
+            itvl_tpl,
+            partition_amount,
+            riemann_right);
+        profile_stop(prof);
+        solution_print(streamout, p, itvl_tpl, riemann_sum_right, TITLE_SOL_RIEMANN_RIGHT, prof);
+        fprintf(streamout, EPSILON_FMT, INTEG_EPSILON, itg_ref - riemann_sum_right);
 
-    profile_start(prof);
-    const polynomial_item_t riemann_sum_trap = integral_factory_riemann(
-        p,
-        itvl_tpl,
-        partition_amount,
-        riemann_trapezoid);
-    profile_stop(prof);
-    solution_print(streamout, p, itvl_tpl, riemann_sum_trap, TITLE_SOL_RIEMANN_TRAP, prof);
-    fprintf(streamout, EPSILON_FMT, INTEG_EPSILON, itg_ref - riemann_sum_trap);
+        profile_start(prof);
+        const polynomial_item_t riemann_sum_rect = integral_factory_riemann(
+            p,
+            itvl_tpl,
+            partition_amount,
+            riemann_rectangle);
+        profile_stop(prof);
+        solution_print(streamout, p, itvl_tpl, riemann_sum_rect, TITLE_SOL_RIEMANN_RECT, prof);
+        fprintf(streamout, EPSILON_FMT, INTEG_EPSILON, itg_ref - riemann_sum_rect);
 
-    profile_start(prof);
-    const polynomial_item_t riemann_sum_mp = integral_factory_riemann(
-        p,
-        itvl_tpl,
-        partition_amount,
-        riemann_middle_point);
-    profile_stop(prof);
-    solution_print(streamout, p, itvl_tpl, riemann_sum_mp, TITLE_SOL_RIEMANN_MP, prof);
-    fprintf(streamout, EPSILON_FMT, INTEG_EPSILON, itg_ref - riemann_sum_mp);
+        profile_start(prof);
+        const polynomial_item_t riemann_sum_trap = integral_factory_riemann(
+            p,
+            itvl_tpl,
+            partition_amount,
+            riemann_trapezoid);
+        profile_stop(prof);
+        solution_print(streamout, p, itvl_tpl, riemann_sum_trap, TITLE_SOL_RIEMANN_TRAP, prof);
+        fprintf(streamout, EPSILON_FMT, INTEG_EPSILON, itg_ref - riemann_sum_trap);
 
-    profile_start(prof);
-    const polynomial_item_t itg_simpson = integral_poly_simpson(p, itvl_tpl);
-    profile_stop(prof);
-    solution_print(streamout, p, itvl_tpl, itg_simpson, TITLE_SOL_SIMPSON, prof);
-    fprintf(streamout, EPSILON_FMT, INTEG_EPSILON, itg_ref - itg_simpson);
+        profile_start(prof);
+        const polynomial_item_t riemann_sum_mp = integral_factory_riemann(
+            p,
+            itvl_tpl,
+            partition_amount,
+            riemann_middle_point);
+        profile_stop(prof);
+        solution_print(streamout, p, itvl_tpl, riemann_sum_mp, TITLE_SOL_RIEMANN_MP, prof);
+        fprintf(streamout, EPSILON_FMT, INTEG_EPSILON, itg_ref - riemann_sum_mp);
 
-    profile_start(prof);
-    const polynomial_item_t itgn12_fact_sol = integral_poly_newton_cote_1_2(p, itvl_tpl);
-    profile_stop(prof);
-    solution_print(streamout, p, itvl_tpl, itgn12_fact_sol, TITLE_SOL_NC12, prof);
-    fprintf(streamout, EPSILON_FMT, INTEG_EPSILON, itg_ref - itgn12_fact_sol);
+        profile_start(prof);
+        const polynomial_item_t itg_simpson = integral_poly_simpson(p, itvl_tpl);
+        profile_stop(prof);
+        solution_print(streamout, p, itvl_tpl, itg_simpson, TITLE_SOL_SIMPSON, prof);
+        fprintf(streamout, EPSILON_FMT, INTEG_EPSILON, itg_ref - itg_simpson);
 
+        profile_start(prof);
+        const polynomial_item_t itgn12_fact_sol = integral_poly_newton_cote_1_2(p, itvl_tpl);
+        profile_stop(prof);
+        solution_print(streamout, p, itvl_tpl, itgn12_fact_sol, TITLE_SOL_NC12, prof);
+        fprintf(streamout, EPSILON_FMT, INTEG_EPSILON, itg_ref - itgn12_fact_sol);
+    }
     polynomial_destruct(p);
     free(p);
     free(prof);
