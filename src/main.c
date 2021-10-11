@@ -111,11 +111,18 @@ int main(int argc, char *argv[])
     profile_start(prof);
     const polynomial_item_t itg_ref = integral_poly_reference(p, itvl_tpl);
     profile_stop(prof);
-    fprintf(streamout, "\nAntiderivative F(h) - F(l) = %Lf\n", itg_ref);
+    polynomial_t *panti;
+    panti = malloc(sizeof(polynomial_t));
+    derivative_antiderivate(p, panti);
+    fprintf(streamout, "\nAntiderivative");
+    solution_equation(streamout, panti);
+    fprintf(streamout, "\tf(h) - f(l) = %0.4Lf\n", itg_ref);
     fprintf(streamout, "\tElapse %0.5f s\n", profile_elapse(prof));
     fprintf(streamout, EPSILON_FMT, INTEG_EPSILON, sol_o1 - itg_ref);
+    polynomial_destruct(panti);
+    free(panti);
 
-    if (args.alt != 0)
+    if (args.alt == 1)
     {
         const polynomial_item_t partition_amount = 4.0f;
         fprintf(streamout, "Riemann sum nb rectangles = %Lf\n", partition_amount);

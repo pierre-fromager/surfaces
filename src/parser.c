@@ -1,6 +1,8 @@
 
 #include "parser.h"
 
+static polynomial_order_t horder;
+
 static int parser_compile(regex_t *r, const char *regex_text)
 {
     int status = regcomp(r, regex_text, REG_EXTENDED | REG_NEWLINE);
@@ -78,6 +80,7 @@ static int parse_poly_member(char *sub, polynomial_t *p)
         sprintf(buff, PARSER_STR_FMT, sub);
         v = parser_evaluate(buff, xpos);
     }
+    horder = (o > horder) ? o : horder;
     acc = polynomial_getfactor(o, p);
     acc += v;
     polynomial_setfactor(o, acc, p);
@@ -91,6 +94,7 @@ static int parser_match(regex_t *r, char *eq, polynomial_t *p)
     char sub[PARSER_MEMBER_MAX_LEN];
     const int n_matches = PARSER_TERMS_MAX_MATCHES;
     regmatch_t m[PARSER_TERMS_MAX_MATCHES];
+    horder = 0;
     while (1)
     {
         i = 0;
@@ -118,9 +122,19 @@ int parser_parse(char *eq, polynomial_t *p)
 {
     int err;
     regex_t r;
+    polynomial_t *p_tmp;
+    polynomial_order_t cpto;
     err = parser_compile(&r, PARSER_TERMS_PATTERN);
     if (err == 0)
         parser_match(&r, eq, p);
     regfree(&r);
+    p_tmp = malloc(sizeof(polynomial_t));
+    polynomial_construct(horder + 1, p_tmp);
+    for (cpto = 0; cpto < horder + 1; cpto++)
+        polynomial_setfactor(cpto, polynomial_getfactor(cpto, p), p_tmp);
+    p_tmp->order = horder + 1;
+    p = p_tmp;
+    polynomial_destruct(p_tmp);
+    free(p_tmp);
     return err;
 }

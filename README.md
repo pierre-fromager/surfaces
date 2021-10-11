@@ -28,19 +28,33 @@ Detail
 ```
 
 ## Examples
-Default interval
+Default interval [0..5]
 ```
 ./surfaces 3+x+2x^3
 ```
-Custom interval
+Custom interval [0..10] by short options
 ```
 ./surfaces -l0 -h10 3+x+2x^3
 ```
-Custom interval with ratios
+Custom interval [-10..10] by long options
 ```
-./surfaces -l0 -h10 1/3+2/3x+2/5x^3
+./surfaces --low=-10 --high=10 3+x+2x^3
 ```
-
+Custom interval [-10..10] with ratios by short options
+```
+./surfaces -l-10 -h10 1/3+2/3x+2/5x^3
+```
+Same as previous with alternatives methods and partial integration sum
+```
+./surfaces -a -d -l-10 -h10 1/3+2/3x+2/5x^3
+```
+Typically messed up with exp greater than POLY_MAX_ORDER
+```
+./surfaces -a -d -l-10 -h10 -l0 -h10 3+4x^2+x^129
+munmap_chunk(): invalid pointer
+Abandon
+```
+Change related define in main to allow higher exp.  
 ## Caveats parser and arguments
 Parser is really minimalistic, when writing eq if first term start with minus sign, escape it as \\'your_poly_eq_here\\' to avoid conflict with args minus options.
 
@@ -75,5 +89,4 @@ to run tests with or without options (bci)
 * [Calcul numérique d'une intégrale](https://fr.wikipedia.org/wiki/Calcul_num%C3%A9rique_d%27une_int%C3%A9grale)
 * [Calcul numérique intégrale - exercicce](https://ressources.unisciel.fr/ramses/517-3-calcul-integral/co/fe701_1.html)
 * [Area Under a Curve](https://revisionmaths.com/advanced-level-maths-revision/pure-maths/calculus/area-under-curve)
-* [integral-calculator](https://github.com/arasgungore/integral-calculator)
 * [Rieman sum calculator](https://www.emathhelp.net/calculators/calculus-2/riemann-sum-calculator/?f=x%5E3+%2B+0.5x+%2B+3&a=0&b=5&n=4&type=mid)

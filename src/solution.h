@@ -23,7 +23,7 @@
 #define SOL_EQ_FMT "%s = %.8f*x+%.8f\n"
 #define SOL_ITGR_LIM "%s [%s .. %s]\n"
 #define SOL_RES "%s%sdx = %s %s\n"
-#define SOL_FMT_BUFF_LEN 12
+#define SOL_FMT_BUFF_LEN 127
 #define SOL_NULL_CHAR '\0'
 #define SOL_DOT_CHAR '.'
 #define SOL_DOUBLE_FMT_DISPLAY_LEN 5
