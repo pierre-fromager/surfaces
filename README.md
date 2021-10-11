@@ -83,9 +83,6 @@ to run tests with or without options (bci)
 ## Links
 
 * [Méthodes numériques de résolution d’équations différentielles](https://www.fresnel.fr/perso/stout/Anal_numer/Cours4.pdf)
-* [Taylor Series](https://2k8618.blogspot.com/2011/05/taylor-series-c-program.html)
-* [Runge-Kutta Methods](https://www.bragitoff.com/2017/09/runge-kutta-methods-c-program/)
-* [Fourth Order Runge-Kutta](https://www.patnauniversity.ac.in/e-content/science/physics/RungeKuttaIVmethod(PG)_CC05&09_Physics_SanjayKumar.pdf)
 * [Calcul intégral](https://lyceesgisors.spip.ac-rouen.fr/IMG/pdf/integration-2.pdf)
 * [Riemann sum](https://en.wikipedia.org/wiki/Riemann_sum)
 * [Calcul numérique d'une intégrale](https://fr.wikipedia.org/wiki/Calcul_num%C3%A9rique_d%27une_int%C3%A9grale)
