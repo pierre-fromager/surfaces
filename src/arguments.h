@@ -20,7 +20,7 @@
 #define PORE_VERSION PORE_NAME "1.0"
 #define PORE_MAINT_EMAIL "info@pier-infor.fr"
 #define PORE_ARGS_DOC_ARG "equation"
-#define PORE_ARGS_DOC "Linear surfaces calculus"
+#define PORE_ARGS_DOC "Polynomial surface"
 
 typedef struct arguments_s
 {

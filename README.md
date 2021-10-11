@@ -1,7 +1,6 @@
-# Surfaces
+# Polynomial surface
 
-Surfaces let calculate surface from a polynomial form.  
-A factory optimizes an exact calculus from degree with best effort.  
+Calculate polynomial surface from an optimized factory on higher degree with best effort.  
 Alternatives methods with no reliability are exposed and tested here, see alt option :
 * Riemann sums(left,right,rect,trapezoid,midpoint).
 * Simpson rules.
