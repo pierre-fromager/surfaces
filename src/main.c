@@ -36,6 +36,7 @@
 #define IL_H 5.0f / IL_STEP
 #define __ACCURA 16.0f
 #define __ACBASE 10.0f
+#define POLY_MAX_ORDER 128
 
 arguments_t args;
 
@@ -79,11 +80,27 @@ int main(int argc, char *argv[])
     p = malloc(sizeof(polynomial_t));
 
     // y = 1/2x + 3
-    polynomial_construct(128, p);
+    polynomial_construct(POLY_MAX_ORDER, p);
     //polynomial_setfactor(0, FN0_O, p);
     //polynomial_setfactor(1, FN0_S, p);
-    parser_parse("5/2x^3+9/3x^2+16/2x-1/3", p);
-    solution_equation(streamout, p);
+    //printf("argc %d\n",argc);
+    //printf("argv2 %s\n",argv[1]);
+    int parser_err;
+    parser_err = (argc == 2) ? parser_parse(argv[1], p) : parser_parse("1/2x+3", p);
+    if (parser_err != 0)
+        printf("%s\n", "Parser compilation failed.");
+    else
+        solution_equation(streamout, p);
+    /*
+    if (argc > 0)
+        parser_err = parser_parse(argv[1], p);
+    else
+        parser_err = parser_parse("1/2x+3", p);
+    if (parser_err == 0)
+        solution_equation(streamout, p);
+    else
+        printf("%s\n", "Parser compilation failed.");*/
+
     polynomial_destruct(p);
     free(p);
     exit(EXIT_SUCCESS);

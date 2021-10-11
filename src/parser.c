@@ -22,12 +22,13 @@ static int parser_strpos(char *haystack, char *needle)
     return -1;
 }
 
-static polynomial_item_t parser_evaluate(char *buff)
+static polynomial_item_t parser_evaluate(char *buff, int xpos)
 {
     polynomial_item_t l, r, e;
     char lb[10], rb[10];
     e = 0.0f;
     const int opos = parser_strpos(buff, PARSER_PATTERN_DIV);
+    const int mxpos = parser_strpos(buff, PARSER_PATTERN_MINUS);
     if (opos >= 1)
     {
         sprintf(lb, PARSER_SUBSTR_FMT, opos, buff);
@@ -37,23 +38,31 @@ static polynomial_item_t parser_evaluate(char *buff)
         e = l / r;
     }
     else
-    {
         e = (polynomial_item_t)atof(buff);
+    if (e == 0.0f)
+    {
+        if (xpos == 0)
+            e = 1.0f;
+        if (mxpos == 0)
+            e = -1.0f;
     }
     return e;
 }
 
 static int parse_poly_member(char *sub, polynomial_t *p)
 {
-    polynomial_item_t v = 0;
+    polynomial_item_t v, acc;
     polynomial_order_t o = 0;
+    acc = v = 0;
     char buff[40];
     const int xpos = parser_strpos(sub, PARSER_PATTERN_X);
     const int epos = parser_strpos(sub, PARSER_PATTERN_EXP);
     if (xpos != -1 && epos != -1)
     {
         sprintf(buff, PARSER_SUBSTR_FMT, xpos, sub);
-        v = parser_evaluate(buff);
+        v = parser_evaluate(buff, xpos);
+        if (v == 0.0f)
+            v++;
         sprintf(buff, PARSER_STR_FMT, &(sub[epos + 1]));
         o = (polynomial_order_t)atoi(buff);
     }
@@ -61,14 +70,16 @@ static int parse_poly_member(char *sub, polynomial_t *p)
     {
         o = 1;
         sprintf(buff, PARSER_SUBSTR_FMT, xpos, sub);
-        v = parser_evaluate(buff);
+        v = parser_evaluate(buff, xpos);
     }
     else
     {
         sprintf(buff, PARSER_STR_FMT, sub);
-        v = parser_evaluate(buff);
+        v = parser_evaluate(buff, xpos);
     }
-    polynomial_setfactor(o, v, p);
+    acc = polynomial_getfactor(o, p);
+    acc += v;
+    polynomial_setfactor(o, acc, p);
     return 0;
 }
 

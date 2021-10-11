@@ -25,6 +25,7 @@
 #define PARSER_PATTERN_X "x"
 #define PARSER_PATTERN_X_EXP PARSER_PATTERN_X PARSER_PATTERN_EXP
 #define PARSER_PATTERN_DIV "/"
+#define PARSER_PATTERN_MINUS "-"
 #define PARSER_ERR_MSG_COMPILE "Regex error compiling '%s': %s\n"
 #define PARSER_STR_FMT "%s"
 #define PARSER_SUBSTR_FMT "%.*s"
