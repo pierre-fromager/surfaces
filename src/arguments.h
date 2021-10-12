@@ -15,6 +15,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <argp.h>
+#include "polynomial_types.h"
 
 #define PORE_NAME "surfaces"
 #define PORE_VERSION PORE_NAME "1.0"
@@ -27,8 +28,8 @@ typedef struct arguments_s
     char *args[1];
     int debug;
     int alt;
-    int low;
-    int high;
+    polynomial_item_t low;
+    polynomial_item_t high;
 } arguments_t;
 
 void arguments_process(int argc, char **argv, arguments_t *arguments);

@@ -15,10 +15,10 @@ static error_t parse_opt(int key, char *arg, struct argp_state *state)
   switch (key)
   {
   case 'l':
-    arguments->low = atoi(arg);
+    arguments->low = atof(arg);
     break;
   case 'h':
-    arguments->high = atoi(arg);
+    arguments->high = atof(arg);
     break;
   case 'd':
     arguments->debug = 1;
