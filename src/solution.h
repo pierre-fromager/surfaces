@@ -21,9 +21,9 @@
 #define ITGR_UA "u.a"
 #define SOL_FN "f(x)"
 #define SOL_EQ_FMT "%s = %.8f*x+%.8f\n"
-#define SOL_ITGR_LIM "%s [%s .. %s]\n"
-#define SOL_RES "%s%sdx = %s %s\n"
-#define SOL_FMT_BUFF_LEN 127
+#define SOL_ITGR_LIM "[%s..%s]"
+#define SOL_RES "\t%s%sdx%s\n\t%s\n"
+#define SOL_FMT_BUFF_LEN 1024 * 8
 #define SOL_NULL_CHAR '\0'
 #define SOL_DOT_CHAR '.'
 #define SOL_DOUBLE_FMT_DISPLAY_LEN 5
@@ -38,7 +38,7 @@ void solution_print(
     FILE *streamout,
     polynomial_t *p,
     interval_t li,
-    polynomial_item_t sol,
+    char *result,
     char *title,
     profile_t *prof);
 

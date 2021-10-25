@@ -22,6 +22,7 @@
 
 #define INTEG_TWO 2.0f
 #define INTEG_EPSILON "ε"
+#define INTEG_FACTORY_BUF_SIZE 1024 * 10
 
 typedef enum
 {
@@ -97,8 +98,17 @@ polynomial_item_t integral_factory_riemann(
  * 
  * @param p 
  * @param il 
- * @return polynomial_item_t 
+ * @param result
  */
-polynomial_item_t integral_factory(polynomial_t *p, interval_t il);
+void integral_factory(polynomial_t *p, interval_t il, char *result);
+
+/**
+ * @brief polynomial integration with gmp arbitrary precision
+ * 
+ * @param acc 
+ * @param p 
+ * @param il 
+ */
+void integral_poly_reference_gmp(mpz_t acc, polynomial_t *p, interval_t il);
 
 #endif // _SURFACES_INTEGRAL_

@@ -8,6 +8,7 @@
 #include <unistd.h>
 #include "../../src/interval.h"
 #include "../../src/integral.h"
+#include "../../src/renderer.h"
 
 #define IL_L 0.0f
 #define IL_STEP 1.0f
@@ -21,13 +22,19 @@ void test_surfaces_integral_trapez_o0(void);
 void test_surfaces_integral_midpnt_o0(void);
 void test_surfaces_integral_simpson_o0(void);
 void test_surfaces_integral_factory_riemann_o0(void);
-void test_surfaces_integral_factory_o0(void);
 void test_surfaces_integral_ref_o1(void);
 void test_surfaces_integral_trapez_o1(void);
 void test_surfaces_integral_midpnt_o1(void);
+void test_surfaces_integral_factory_o0(void);
 void test_surfaces_integral_factory_o1(void);
+void test_surfaces_integral_factory_o2(void);
+void test_surfaces_integral_factory_o3(void);
+void test_surfaces_integral_factory_o1024(void);
+void test_surfaces_integral_factory_o2048(void);
+void test_surfaces_integral_factory_o4096(void);
 void test_surfaces_integral_ref_o2(void);
 void test_surfaces_integral_ref_o3(void);
 void test_surfaces_integral_ref_o4(void);
+void test_surfaces_integral_ref_gmp_int_o4096(void);
 
 #endif // __TEST_SURFACES_SUITE_INTEGRAL_H__

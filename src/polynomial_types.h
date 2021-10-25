@@ -14,11 +14,18 @@
 typedef unsigned polynomial_order_t;
 typedef long double polynomial_item_t;
 
+typedef struct polynomial_ratio_s
+{
+    int num;
+    int denom;
+} polynomial_ratio_t;
+
 typedef struct polynomial_s
 {
     polynomial_order_t order;
-    polynomial_item_t *orders;
+    polynomial_order_t *orders;
     polynomial_item_t *factors;
+    polynomial_ratio_t *fratios;
 } polynomial_t;
 
 #endif // _SURFACES_POLYNOMIAL_TYPES_

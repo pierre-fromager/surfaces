@@ -1,8 +1,6 @@
 
 #include "parser.h"
 
-static polynomial_order_t horder;
-
 static int parser_compile(regex_t *r, const char *regex_text)
 {
     int status = regcomp(r, regex_text, REG_EXTENDED | REG_NEWLINE);
@@ -24,30 +22,47 @@ static int parser_strpos(char *haystack, char *needle)
     return -1;
 }
 
-static polynomial_item_t parser_evaluate(char *buff, int xpos)
+static polynomial_item_t parser_evaluate(char *buff, int xpos, polynomial_order_t o, polynomial_t *p)
 {
-    polynomial_item_t l, r, e;
+    int num, denom;
+    polynomial_item_t e;
     char lb[10], rb[10];
-    e = 0.0f;
-    const int opos = parser_strpos(buff, PARSER_PATTERN_DIV);
+    const int dpos = parser_strpos(buff, PARSER_PATTERN_DIV);
     const int mxpos = parser_strpos(buff, PARSER_PATTERN_MINUS);
     const int pxpos = parser_strpos(buff, PARSER_PATTERN_PLUS);
-    if (opos >= 1)
+    e = 0.0f;
+    if (dpos >= 1)
     {
-        sprintf(lb, PARSER_SUBSTR_FMT, opos, buff);
-        sprintf(rb, PARSER_STR_FMT, &(buff[opos + 1]));
-        l = (polynomial_item_t)atof(lb);
-        r = (polynomial_item_t)atof(rb);
-        e = l / r;
+        sprintf(lb, PARSER_SUBSTR_FMT, dpos, buff);
+        sprintf(rb, PARSER_STR_FMT, &(buff[dpos + 1]));
+        num = atoi(lb);
+        denom = atoi(rb);
+        polynomial_addratio(o, (polynomial_ratio_t){.num = num, .denom = denom}, p);
+        e = (polynomial_item_t)num / (polynomial_item_t)denom;
     }
     else
+    {
         e = (polynomial_item_t)atof(buff);
+        // we don't want to get a fraction from a real because costly
+        // so don't mix real and fractions, tests will run in that direction.
+        if (fmodl(e, 1.0f) == 0)
+            polynomial_addratio(o, (polynomial_ratio_t){.num = (int)e, .denom = 1}, p);
+    }
+
     if (e == 0.0f)
     {
         if (xpos == 0 || (pxpos == 0 && xpos == 1))
+        {
             e = 1.0f;
+            if (o > 0)
+                polynomial_addratio(o, (polynomial_ratio_t){.num = 1, .denom = 1}, p);
+        }
         if (mxpos == 0)
+        {
             e = -1.0f;
+            if (o > 0)
+                polynomial_addratio(o, (polynomial_ratio_t){.num = -1, .denom = 1}, p);
+        }
     }
     return e;
 }
@@ -55,32 +70,34 @@ static polynomial_item_t parser_evaluate(char *buff, int xpos)
 static int parse_poly_member(char *sub, polynomial_t *p)
 {
     polynomial_item_t v, acc;
-    polynomial_order_t o = 0;
+    polynomial_order_t o;
     acc = v = 0;
     char buff[40];
     const int xpos = parser_strpos(sub, PARSER_PATTERN_X);
     const int epos = parser_strpos(sub, PARSER_PATTERN_EXP);
+
     if (xpos != -1 && epos != -1)
     {
-        sprintf(buff, PARSER_SUBSTR_FMT, xpos, sub);
-        v = parser_evaluate(buff, xpos);
-        if (v == 0.0f)
-            v++;
         sprintf(buff, PARSER_STR_FMT, &(sub[epos + 1]));
         o = (polynomial_order_t)atoi(buff);
+        sprintf(buff, PARSER_SUBSTR_FMT, xpos, sub);
+        v = parser_evaluate(buff, xpos, o, p);
+        if (v == 0.0f)
+            v++;
     }
     else if (xpos != -1)
     {
         o = 1;
         sprintf(buff, PARSER_SUBSTR_FMT, xpos, sub);
-        v = parser_evaluate(buff, xpos);
+        v = parser_evaluate(buff, xpos, o, p);
     }
     else
     {
+        o = 0;
         sprintf(buff, PARSER_STR_FMT, sub);
-        v = parser_evaluate(buff, xpos);
+        v = parser_evaluate(buff, xpos, o, p);
     }
-    horder = (o > horder) ? o : horder;
+    p->order = (o > p->order) ? o : p->order;
     acc = polynomial_getfactor(o, p);
     acc += v;
     polynomial_setfactor(o, acc, p);
@@ -90,11 +107,11 @@ static int parse_poly_member(char *sub, polynomial_t *p)
 static int parser_match(regex_t *r, char *eq, polynomial_t *p)
 {
     int i, start, finish;
+    i = start = finish = 0;
     const char *pc = eq;
     char sub[PARSER_MEMBER_MAX_LEN];
     const int n_matches = PARSER_TERMS_MAX_MATCHES;
     regmatch_t m[PARSER_TERMS_MAX_MATCHES];
-    horder = 0;
     while (1)
     {
         i = 0;
@@ -122,19 +139,11 @@ int parser_parse(char *eq, polynomial_t *p)
 {
     int err;
     regex_t r;
-    polynomial_t *p_tmp;
-    polynomial_order_t cpto;
+    p->order = 0;
     err = parser_compile(&r, PARSER_TERMS_PATTERN);
     if (err == 0)
         parser_match(&r, eq, p);
     regfree(&r);
-    p_tmp = malloc(sizeof(polynomial_t));
-    polynomial_construct(horder + 1, p_tmp);
-    for (cpto = 0; cpto < horder + 1; cpto++)
-        polynomial_setfactor(cpto, polynomial_getfactor(cpto, p), p_tmp);
-    p_tmp->order = horder + 1;
-    p = p_tmp;
-    polynomial_destruct(p_tmp);
-    free(p_tmp);
+
     return err;
 }

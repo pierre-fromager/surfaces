@@ -1,24 +1,25 @@
 
 #include "suite_riemannsum.h"
 
-polynomial_t *pol;
-interval_t iv;
+static polynomial_t *pol;
+static interval_t iv;
 
 void reset_test_riemannsum()
 {
     iv = (interval_t){.l = IL_L, .h = IL_H};
+    polynomial_destruct(pol);
 }
 
 static int suite_setup(void)
 {
-    pol = malloc(sizeof(polynomial_t));
+    pol = (polynomial_t *)malloc(sizeof(polynomial_t));
     iv = (interval_t){.l = IL_L, .h = IL_H};
     return 0;
 }
 
 static int suite_teardown(void)
 {
-    polynomial_destruct(pol);
+    free(pol);
     return 0;
 }
 
@@ -26,7 +27,7 @@ static struct
 {
     void (*function)(void);
     char *name;
-} test_functions[] = {    
+} test_functions[] = {
     {test_surfaces_riemannsum_left_o0, "riemann_sum_left_o0"},
     {test_surfaces_riemannsum_right_o0, "riemann_sum_right_o0"},
     {test_surfaces_riemannsum_trap_o0, "riemann_sum_trap_o0"},
@@ -87,6 +88,8 @@ void test_surfaces_riemannsum_left_o0()
         (double)ifr_left,
         (double)(5.0f * ev),
         0.00001);
+
+    reset_test_riemannsum();
 }
 
 void test_surfaces_riemannsum_right_o0()
@@ -112,6 +115,8 @@ void test_surfaces_riemannsum_right_o0()
         (double)ifr_right,
         (double)(5.0f * ev),
         0.00001);
+
+    reset_test_riemannsum();
 }
 
 void test_surfaces_riemannsum_trap_o0()
@@ -137,6 +142,8 @@ void test_surfaces_riemannsum_trap_o0()
         (double)ifr_trap,
         (double)(5.0f * ev),
         0.00001);
+
+    reset_test_riemannsum();
 }
 
 void test_surfaces_riemannsum_rect_o0()
@@ -162,6 +169,8 @@ void test_surfaces_riemannsum_rect_o0()
         (double)ifr_rect,
         (double)(5.0f * ev),
         0.00001);
+
+    reset_test_riemannsum();
 }
 
 void test_surfaces_riemannsum_mp_o0()
@@ -187,6 +196,8 @@ void test_surfaces_riemannsum_mp_o0()
         (double)ifr_mp,
         (double)(5.0f * ev),
         0.00001);
+
+    reset_test_riemannsum();
 }
 
 void test_surfaces_riemannsum_left_o1()
@@ -230,6 +241,8 @@ void test_surfaces_riemannsum_left_o1()
         (double)riemann_sum_left(pol, iv, 3.0f),
         (double)66.666667f,
         0.00001);
+
+    reset_test_riemannsum();
 }
 
 void test_surfaces_riemannsum_right_o1()
@@ -266,6 +279,8 @@ void test_surfaces_riemannsum_right_o1()
         (double)riemann_sum_right(pol, iv, 3.0f),
         (double)83.333333f,
         0.00001);
+
+    reset_test_riemannsum();
 }
 
 void test_surfaces_riemannsum_trap_o1()
@@ -302,6 +317,8 @@ void test_surfaces_riemannsum_trap_o1()
         (double)riemann_sum_trap(pol, iv, 3.0f),
         (double)75.0,
         0.00001);
+
+    reset_test_riemannsum();
 }
 
 void test_surfaces_riemannsum_rect_o1()
@@ -338,6 +355,8 @@ void test_surfaces_riemannsum_rect_o1()
         (double)riemann_sum_rect(pol, iv, 3.0f),
         (double)66.666667f,
         0.00001);
+
+    reset_test_riemannsum();
 }
 
 void test_surfaces_riemannsum_mp_o1()
@@ -374,4 +393,6 @@ void test_surfaces_riemannsum_mp_o1()
         (double)riemann_sum_mp(pol, iv, 3.0f),
         (double)75.0f,
         0.00001);
+
+    reset_test_riemannsum();
 }

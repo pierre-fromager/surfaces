@@ -18,16 +18,16 @@
 #include "polynomial_types.h"
 
 #define PORE_NAME "surfaces"
-#define PORE_VERSION PORE_NAME "1.0"
+#define PORE_VERSION "2.0"
 #define PORE_MAINT_EMAIL "info@pier-infor.fr"
 #define PORE_ARGS_DOC_ARG "equation"
-#define PORE_ARGS_DOC "Polynomial surface"
+#define PORE_ARGS_DOC "Polynomial surface " PORE_VERSION
 
 typedef struct arguments_s
 {
     char *args[1];
     int debug;
-    int alt;
+    int verbose;
     polynomial_item_t low;
     polynomial_item_t high;
 } arguments_t;

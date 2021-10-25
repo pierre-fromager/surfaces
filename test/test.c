@@ -2,7 +2,7 @@
  * @file main.c
  * @author Pierre Fromager (info@pier-infor.fr)
  * @brief cunit main suite runner
- * All suites and tests should run from cunit v1.3 to v3.2.7(latest)
+ * All suites and tests should run with at least cunit v3.2.7
  * 
  * @version 0.1
  * @date 2021-09-05
@@ -17,6 +17,8 @@
 #include <getopt.h>
 #include <string.h>
 #include <stdio.h>
+#include "surfaces_suites/suite_fraction.h"
+#include "surfaces_suites/suite_parser.h"
 #include "surfaces_suites/suite_polynomial.h"
 #include "surfaces_suites/suite_derivative.h"
 #include "surfaces_suites/suite_riemannsum.h"
@@ -106,6 +108,8 @@ int main(int argc, char *argv[])
 		return 2;
 	}
 
+	test_surfaces_fraction_add_suite();
+	test_surfaces_parser_add_suite();
 	test_surfaces_polynomial_add_suite();
 	test_surfaces_derivative_add_suite();
 	test_surfaces_riemannsum_add_suite();
