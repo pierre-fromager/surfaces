@@ -77,8 +77,8 @@ If you activate the sanitizer options on compiler for debug purpose you will see
 Polynomial surface is optimized from higher order as below :
 * o < 2 => middle point method.
 * o < 4 => simpson method (aka rk4).
-* o < 48 => antiderivative sigma method.
-* o > 48 => antiderivative sigma method with gmp mpz_t (integer).
+* o < 48 => antiderivative delta method.
+* o > 48 => antiderivative delta method with gmp mpz_t (integer).
 
 ## Tests
 * Tests are based on [CUnity/Cunit framework](https://gitlab.com/cunity/cunit).  
