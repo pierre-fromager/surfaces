@@ -6,6 +6,7 @@ static struct argp_option options[] = {
     {"verbose", 'v', "5", 0, "Verbose level", 2},
     {"low", 'l', "1", 0, "Low interval", 4},
     {"high", 'h', "2", 0, "High interval", 5},
+    {"precision", 'p', "64", 0, "GMP precision", 6},
     {0}};
 
 static error_t parse_opt(int key, char *arg, struct argp_state *state)
@@ -25,6 +26,9 @@ static error_t parse_opt(int key, char *arg, struct argp_state *state)
     break;
   case 'd':
     arguments->debug = 1;
+    break;
+  case 'p':
+    arguments->precision = (unsigned int)atoi(arg);
     break;
   case ARGP_KEY_ARG:
     if (state->arg_num >= 1)
@@ -49,6 +53,7 @@ static void set_defaults(arguments_t *arguments)
 {
   arguments->debug = 0;
   arguments->verbose = 5;
+  arguments->precision = 64;
   arguments->low = 1;
   arguments->high = 2;
 }

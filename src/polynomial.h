@@ -121,7 +121,8 @@ polynomial_item_t polynomial_calc(polynomial_item_t x, polynomial_t *p);
  * @param acc 
  * @param x 
  * @param p 
+ * @param precision 
  */
-void polynomial_calc_gmp_int(mpz_t acc, polynomial_item_t x, polynomial_t *p);
+void polynomial_calc_gmp_int(mpz_t acc, polynomial_item_t x, polynomial_t *p, mp_bitcnt_t precision);
 
 #endif // _SURFACES_POLYNOMIAL_

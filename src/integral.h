@@ -100,7 +100,7 @@ polynomial_item_t integral_factory_riemann(
  * @param il 
  * @param result
  */
-void integral_factory(polynomial_t *p, interval_t il, char *result);
+void integral_factory(polynomial_t *p, interval_t il, char *result, mp_bitcnt_t precision);
 
 /**
  * @brief polynomial integration with gmp arbitrary precision
@@ -108,7 +108,8 @@ void integral_factory(polynomial_t *p, interval_t il, char *result);
  * @param acc 
  * @param p 
  * @param il 
+ * @param precision 
  */
-void integral_poly_reference_gmp(mpz_t acc, polynomial_t *p, interval_t il);
+void integral_poly_reference_gmp(mpz_t acc, polynomial_t *p, interval_t il, mp_bitcnt_t precision);
 
 #endif // _SURFACES_INTEGRAL_

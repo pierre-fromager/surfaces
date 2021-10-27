@@ -28,6 +28,7 @@ typedef struct arguments_s
     char *args[1];
     int debug;
     int verbose;
+    unsigned int precision;
     polynomial_item_t low;
     polynomial_item_t high;
 } arguments_t;

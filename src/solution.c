@@ -63,7 +63,8 @@ void solution_print(
     interval_t li,
     char *result,
     char *title,
-    profile_t *prof)
+    profile_t *prof,
+    unsigned int precision)
 {
     char fmt_iv_l[SOL_FMT_BUFF_LEN];
     char fmt_iv_h[SOL_FMT_BUFF_LEN];
@@ -84,5 +85,6 @@ void solution_print(
         SOL_DOUBLE_FMT,
         (long double)profile_elapse(prof));
     solution_format_double(fmt_elapse, 10);
+    fprintf(streamout, SOL_TAB "Precision %u bits" SOL_LF, precision);
     fprintf(streamout, SOL_TAB "Elapse %s s" SOL_LF, fmt_elapse);
 }

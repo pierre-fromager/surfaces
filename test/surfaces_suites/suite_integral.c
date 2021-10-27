@@ -7,6 +7,7 @@ static polynomial_order_t ocpt;
 static polynomial_item_t cptv;
 static char *result;
 static const double granularity = 0.00001f;
+static const mp_bitcnt_t precision = 64;
 static char gmp_buff[INTEG_FACTORY_BUF_SIZE];
 static char buff_compare[INTEG_FACTORY_BUF_SIZE];
 
@@ -53,7 +54,7 @@ static struct
     {test_surfaces_integral_factory_o3, "integral_factory_o3"},
     {test_surfaces_integral_factory_o1024, "integral_factory_o1024"},
     {test_surfaces_integral_factory_o2048, "integral_factory_o2048"},
-    {test_surfaces_integral_factory_o4096, "integral_factory_o4096"},    
+    {test_surfaces_integral_factory_o4096, "integral_factory_o4096"},
     {test_surfaces_integral_ref_o2, "integral_ref_o2"},
     {test_surfaces_integral_ref_o3, "integral_ref_o3"},
     {test_surfaces_integral_ref_o4, "integral_ref_o4"},
@@ -361,7 +362,7 @@ void test_surfaces_integral_factory_o0()
         sizeof(char) * INTEG_FACTORY_BUF_SIZE,
         "%Lf",
         integral_poly_midpnt(p, iv));
-    integral_factory(p, iv, buff_compare);
+    integral_factory(p, iv, buff_compare, precision);
     CU_ASSERT_STRING_EQUAL(gmp_buff, buff_compare);
     reset_test_integral();
 }
@@ -382,7 +383,7 @@ void test_surfaces_integral_factory_o1()
     CU_ASSERT_EQUAL(polynomial_getfactor(0, p), 0);
     CU_ASSERT_EQUAL(polynomial_getfactor(1, p), 1);
     strcpy(result, "");
-    integral_factory(p, iv, result);
+    integral_factory(p, iv, result, precision);
     CU_ASSERT_STRING_EQUAL(result, "12.500000");
 
     // y = x + 10
@@ -391,14 +392,14 @@ void test_surfaces_integral_factory_o1()
     CU_ASSERT_EQUAL(polynomial_getfactor(0, p), 10.0f);
     CU_ASSERT_EQUAL(polynomial_getfactor(1, p), 1.0f);
     strcpy(result, "");
-    integral_factory(p, iv, result);
+    integral_factory(p, iv, result, precision);
     CU_ASSERT_STRING_EQUAL(result, "62.500000");
 
     // y = 2x + 10
     polynomial_setfactor(1, 2.0f, p);
     CU_ASSERT_EQUAL(polynomial_getfactor(1, p), 2.0f);
     strcpy(result, "");
-    integral_factory(p, iv, result);
+    integral_factory(p, iv, result, precision);
     CU_ASSERT_STRING_EQUAL(result, "75.000000");
 
     reset_test_integral();
@@ -423,21 +424,21 @@ void test_surfaces_integral_factory_o2()
     CU_ASSERT_EQUAL(polynomial_getfactor(1, p), 0);
     CU_ASSERT_EQUAL(polynomial_getfactor(2, p), 1);
     strcpy(result, "");
-    integral_factory(p, iv, result);
+    integral_factory(p, iv, result, precision);
     CU_ASSERT_STRING_EQUAL(result, "41.666667");
 
     // y = x^2 + 10
     polynomial_setfactor(0, 10.0f, p);
     CU_ASSERT_EQUAL(polynomial_getfactor(0, p), 10.0f);
     strcpy(result, "");
-    integral_factory(p, iv, result);
+    integral_factory(p, iv, result, precision);
     CU_ASSERT_STRING_EQUAL(result, "91.666667");
 
     // y = 2x^2 + 10
     polynomial_setfactor(2, 2.0f, p);
     CU_ASSERT_EQUAL(polynomial_getfactor(2, p), 2.0f);
     strcpy(result, "");
-    integral_factory(p, iv, result);
+    integral_factory(p, iv, result, precision);
     CU_ASSERT_STRING_EQUAL(result, "133.333333");
 
     reset_test_integral();
@@ -461,21 +462,21 @@ void test_surfaces_integral_factory_o3()
     CU_ASSERT_EQUAL(polynomial_getfactor(2, p), 0);
     CU_ASSERT_EQUAL(polynomial_getfactor(3, p), 1);
     strcpy(result, "");
-    integral_factory(p, iv, result);
+    integral_factory(p, iv, result, precision);
     CU_ASSERT_STRING_EQUAL(result, "156.250000");
 
     // y = x^3 + 10
     polynomial_setfactor(0, 10.0f, p);
     CU_ASSERT_EQUAL(polynomial_getfactor(0, p), 10.0f);
     strcpy(result, "");
-    integral_factory(p, iv, result);
+    integral_factory(p, iv, result, precision);
     CU_ASSERT_STRING_EQUAL(result, "206.250000");
 
     // y = 2x^2 + 10
     polynomial_setfactor(3, 2.0f, p);
     CU_ASSERT_EQUAL(polynomial_getfactor(3, p), 2.0f);
     strcpy(result, "");
-    integral_factory(p, iv, result);
+    integral_factory(p, iv, result, precision);
     CU_ASSERT_STRING_EQUAL(result, "362.500000");
 
     reset_test_integral();
@@ -485,7 +486,6 @@ void test_surfaces_integral_factory_o1024()
 {
     const polynomial_order_t io = 1024;
     const unsigned long int rlen = 714;
-    const mp_bitcnt_t precision = 64;
     mpz_t acc;
 
     CU_ASSERT_PTR_NOT_NULL_FATAL(p);
@@ -507,14 +507,14 @@ void test_surfaces_integral_factory_o1024()
     CU_ASSERT_EQUAL(ra1024.num, 1);
     CU_ASSERT_EQUAL(ra1024.denom, 1);
     mpz_init2(acc, precision);
-    integral_poly_reference_gmp(acc, p, iv);
+    integral_poly_reference_gmp(acc, p, iv, precision);
     strcpy(buff_compare, "");
     gmp_sprintf(buff_compare, "%Zd", acc);
     mpz_clear(acc);
     strcpy(result, "");
-    integral_factory(p, iv, result);
+    integral_factory(p, iv, result, precision);
     CU_ASSERT_EQUAL(strlen(buff_compare), rlen);
-    CU_ASSERT_EQUAL(strlen(result), rlen);    
+    CU_ASSERT_EQUAL(strlen(result), rlen);
     CU_ASSERT_STRING_EQUAL(result, buff_compare);
     reset_test_integral();
 }
@@ -523,7 +523,6 @@ void test_surfaces_integral_factory_o2048()
 {
     const polynomial_order_t io = 2048;
     const unsigned long int rlen = 1429;
-    const mp_bitcnt_t precision = 64;
     mpz_t acc;
 
     CU_ASSERT_PTR_NOT_NULL_FATAL(p);
@@ -545,14 +544,14 @@ void test_surfaces_integral_factory_o2048()
     CU_ASSERT_EQUAL(ra2048.num, 1);
     CU_ASSERT_EQUAL(ra2048.denom, 1);
     mpz_init2(acc, precision);
-    integral_poly_reference_gmp(acc, p, iv);
+    integral_poly_reference_gmp(acc, p, iv, precision);
     strcpy(buff_compare, "");
     gmp_sprintf(buff_compare, "%Zd", acc);
     mpz_clear(acc);
     strcpy(result, "");
-    integral_factory(p, iv, result);
+    integral_factory(p, iv, result, precision);
     CU_ASSERT_EQUAL(strlen(buff_compare), rlen);
-    CU_ASSERT_EQUAL(strlen(result), rlen);    
+    CU_ASSERT_EQUAL(strlen(result), rlen);
     CU_ASSERT_STRING_EQUAL(result, buff_compare);
     reset_test_integral();
 }
@@ -561,7 +560,6 @@ void test_surfaces_integral_factory_o4096()
 {
     const polynomial_order_t io = 4096;
     const unsigned long int rlen = 2861;
-    const mp_bitcnt_t precision = 64;
     mpz_t acc;
 
     CU_ASSERT_PTR_NOT_NULL_FATAL(p);
@@ -583,15 +581,14 @@ void test_surfaces_integral_factory_o4096()
     CU_ASSERT_EQUAL(ra4096.num, 1);
     CU_ASSERT_EQUAL(ra4096.denom, 1);
     mpz_init2(acc, precision);
-    integral_poly_reference_gmp(acc, p, iv);
+    integral_poly_reference_gmp(acc, p, iv, precision);
     strcpy(buff_compare, "");
     gmp_sprintf(buff_compare, "%Zd", acc);
     mpz_clear(acc);
-    printf("%zu\n",strlen(buff_compare));
     strcpy(result, "");
-    integral_factory(p, iv, result);
+    integral_factory(p, iv, result, precision);
     CU_ASSERT_EQUAL(strlen(buff_compare), rlen);
-    CU_ASSERT_EQUAL(strlen(result), rlen);    
+    CU_ASSERT_EQUAL(strlen(result), rlen);
     CU_ASSERT_STRING_EQUAL(result, buff_compare);
     reset_test_integral();
 }
@@ -702,7 +699,6 @@ void test_surfaces_integral_ref_gmp_int_o4096()
 {
     const polynomial_item_t ev = 1.0f;
     const polynomial_order_t io = 4096;
-    const mp_bitcnt_t precision = 64;
     mpz_t acc;
     polynomial_order_t iocpt;
 
@@ -722,13 +718,12 @@ void test_surfaces_integral_ref_gmp_int_o4096()
     CU_ASSERT_EQUAL(polynomial_getratio(io, p).num, 1);
     CU_ASSERT_EQUAL(polynomial_getratio(io, p).denom, 1);
 
-    strcat(gmp_buff, "");
-    strcat(buff_compare, "");
     mpz_init2(acc, precision);
-
+    strcpy(gmp_buff, "");
+    strcpy(buff_compare, "");
     iv.l = 1;
     iv.h = 2;
-    integral_poly_reference_gmp(acc, p, iv);
+    integral_poly_reference_gmp(acc, p, iv, precision);
     gmp_sprintf(gmp_buff, "%Zd", acc);
     renderer_render_bc("(2^4097)/4097", buff_compare, 0);
     CU_ASSERT_STRING_EQUAL(gmp_buff, buff_compare);

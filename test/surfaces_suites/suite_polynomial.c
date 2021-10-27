@@ -424,18 +424,20 @@ void test_surfaces_polynomial_o4097()
 
     mpz_init2(acc, precision);
 
-    polynomial_calc_gmp_int(acc, 0.0f, p);
+    polynomial_calc_gmp_int(acc, 0.0f, p, precision);
     gmp_sprintf(gmp_buff, "%Zd", acc);
     CU_ASSERT_STRING_EQUAL(gmp_buff, "0");
 
-    polynomial_calc_gmp_int(acc, 1.0f, p);
+    polynomial_calc_gmp_int(acc, 1.0f, p, precision);
     gmp_sprintf(gmp_buff, "%Zd", acc);
     CU_ASSERT_STRING_EQUAL(gmp_buff, "1");
 
-    polynomial_calc_gmp_int(acc, 2.0f, p);
+    polynomial_calc_gmp_int(acc, 2.0f, p, precision);
+    mpz_sub_ui(acc,acc, (unsigned long)1);
     gmp_sprintf(gmp_buff, "%Zd", acc);
     renderer_render_bc("2^4097", buff_compare, 0);
     CU_ASSERT_STRING_EQUAL(gmp_buff, buff_compare);
+
     mpz_clear(acc);
 
     reset_test_polynomial();

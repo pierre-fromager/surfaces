@@ -89,28 +89,31 @@ polynomial_item_t polynomial_calc(polynomial_item_t x, polynomial_t *p)
     return sum;
 }
 
-void polynomial_calc_gmp_int(mpz_t acc, polynomial_item_t x, polynomial_t *p)
+void polynomial_calc_gmp_int(mpz_t acc, polynomial_item_t x, polynomial_t *p, mp_bitcnt_t precision)
 {
-    const mp_bitcnt_t precision = 64;
-    mpz_t fact, powd, term, xz;
-    mpz_init2(acc, precision);
+    mpz_t fact, powd, term, xz, nmul;
     mpz_init2(fact, precision);
     mpz_init2(term, precision);
     mpz_init2(powd, precision);
     mpz_init2(xz, precision);
+    mpz_init2(nmul, precision);
+    mpz_set_d(nmul, -1.0f);
     polynomial_order_t ocpt;
     for (ocpt = 0; ocpt < p->order + 1; ocpt++)
         if (polynomial_getratio(ocpt, p).num != 0)
         {
             const polynomial_ratio_t ratio = polynomial_getratio(ocpt, p);
-            mpz_init_set_ui(fact, (unsigned long)ratio.num);
-            mpz_init_set_ui(xz, (unsigned long)x);
+            mpz_set_d(fact, (float)ratio.num);
+            mpz_set_d(xz, (float)x);
             const unsigned long xo = (unsigned long)polynomial_getorder(ocpt, p);
             mpz_pow_ui(powd, xz, xo);
             mpz_mul(term, fact, powd);
             mpz_div_ui(term, term, (unsigned long)ratio.denom);
+            if (ratio.num < 0)
+                mpz_mul(term, term, nmul);
             mpz_add(acc, acc, term);
         }
+    mpz_clear(nmul);
     mpz_clear(fact);
     mpz_clear(powd);
     mpz_clear(term);

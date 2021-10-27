@@ -25,10 +25,12 @@
 #define DEFAULT_EQ "1/2x+3"
 
 arguments_t args;
+mp_bitcnt_t precision;
 
 int main(int argc, char *argv[])
 {
     arguments_process(argc, argv, &args);
+    precision = (mp_bitcnt_t)args.precision;
 
     FILE *streamout = stdout;
     char *result;
@@ -54,13 +56,20 @@ int main(int argc, char *argv[])
     };
 
     profile_start(prof);
-    integral_factory(p, interval, result);
+    integral_factory(p, interval, result, precision);
     profile_stop(prof);
 
     if (args.verbose == 0)
         fprintf(streamout, STR_NL, result);
     else
-        solution_print(streamout, p, interval, result, TITLE_SOL_SITZM, prof);
+        solution_print(
+            streamout,
+            p,
+            interval,
+            result,
+            TITLE_SOL_SITZM,
+            prof,
+            args.precision);
 
     polynomial_destruct(p);
     free(result);

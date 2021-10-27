@@ -40,6 +40,7 @@ void solution_print(
     interval_t li,
     char *result,
     char *title,
-    profile_t *prof);
+    profile_t *prof,
+    unsigned int precision);
 
 #endif // _SURFACES_SOL_

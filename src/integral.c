@@ -50,24 +50,23 @@ polynomial_item_t integral_poly_reference(polynomial_t *p, interval_t il)
     polynomial_t *pad;
     polynomial_item_t r;
     pad = (polynomial_t *)malloc(sizeof(polynomial_t));
-    derivative_antiderivate(p, pad);   
+    derivative_antiderivate(p, pad);
     r = polynomial_calc(il.h, pad) - polynomial_calc(il.l, pad);
     polynomial_destruct(pad);
     free(pad);
     return r;
 }
 
-void integral_poly_reference_gmp(mpz_t acc, polynomial_t *p, interval_t il)
+void integral_poly_reference_gmp(mpz_t acc, polynomial_t *p, interval_t il, mp_bitcnt_t precision)
 {
     polynomial_t *pad;
-    const mp_bitcnt_t precision = 64;
     mpz_t ht, lt;
     pad = (polynomial_t *)malloc(sizeof(polynomial_t));
     derivative_antiderivate(p, pad);
     mpz_init2(ht, precision);
     mpz_init2(lt, precision);
-    polynomial_calc_gmp_int(lt, (polynomial_item_t)il.l, pad);
-    polynomial_calc_gmp_int(ht, il.h, pad);
+    polynomial_calc_gmp_int(lt, (polynomial_item_t)il.l, pad, precision);
+    polynomial_calc_gmp_int(ht, il.h, pad, precision);
     mpz_sub(acc, ht, lt);
     polynomial_destruct(pad);
     free(pad);
@@ -110,15 +109,14 @@ polynomial_item_t integral_factory_riemann(
     return 0;
 }
 
-void integral_factory(polynomial_t *p, interval_t il, char *result)
+void integral_factory(polynomial_t *p, interval_t il, char *result, mp_bitcnt_t precision)
 {
     const char *resfmt = (p->order < 48) ? "%Lf" : "%Zd";
     const size_t ressize = sizeof(char) * INTEG_FACTORY_BUF_SIZE;
-    const mp_bitcnt_t precision = 64;
     mpz_t acc;
     if (p->order < 2)
-    {        
-        snprintf(result,ressize, resfmt, integral_poly_midpnt(p, il));
+    {
+        snprintf(result, ressize, resfmt, integral_poly_midpnt(p, il));
         return;
     }
     if (p->order < 4)
@@ -130,9 +128,9 @@ void integral_factory(polynomial_t *p, interval_t il, char *result)
     {
         snprintf(result, ressize, resfmt, integral_poly_reference(p, il));
         return;
-    }    
+    }
     mpz_init2(acc, precision);
-    integral_poly_reference_gmp(acc, p, il);
+    integral_poly_reference_gmp(acc, p, il, precision);
     gmp_sprintf(result, resfmt, acc);
     mpz_clear(acc);
     return;
