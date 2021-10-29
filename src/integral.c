@@ -57,7 +57,11 @@ polynomial_item_t integral_poly_reference(polynomial_t *p, interval_t il)
     return r;
 }
 
-void integral_poly_reference_gmp(mpz_t acc, polynomial_t *p, interval_t il, mp_bitcnt_t precision)
+void integral_poly_reference_gmp(
+    mpz_t acc,
+    polynomial_t *p,
+    interval_t il,
+    mp_bitcnt_t precision)
 {
     polynomial_t *pad;
     mpz_t ht, lt;
@@ -72,6 +76,27 @@ void integral_poly_reference_gmp(mpz_t acc, polynomial_t *p, interval_t il, mp_b
     free(pad);
     mpz_clear(ht);
     mpz_clear(lt);
+}
+
+void integral_poly_reference_mpfr(
+    mpfr_t acc,
+    polynomial_t *p,
+    interval_t il,
+    mpfr_prec_t precision)
+{
+    polynomial_t *pad;
+    mpfr_t ht, lt;
+    pad = (polynomial_t *)malloc(sizeof(polynomial_t));
+    derivative_antiderivate(p, pad);
+    mpfr_init2(ht, precision);
+    mpfr_init2(lt, precision);
+    polynomial_calc_gmp_mpfr(lt, (polynomial_item_t)il.l, pad, precision);
+    polynomial_calc_gmp_mpfr(ht, il.h, pad, precision);
+    mpfr_sub(acc, ht, lt, MPFR_RNDN);
+    polynomial_destruct(pad);
+    free(pad);
+    mpfr_clear(ht);
+    mpfr_clear(lt);
 }
 
 polynomial_item_t integral_factory_riemann(
@@ -109,11 +134,11 @@ polynomial_item_t integral_factory_riemann(
     return 0;
 }
 
-void integral_factory(polynomial_t *p, interval_t il, char *result, mp_bitcnt_t precision)
+void integral_factory(polynomial_t *p, interval_t il, char *result, factory_ext_t ext)
 {
-    const char *resfmt = (p->order < 48) ? "%Lf" : "%Zd";
+    const char *resfmt = "%Lf";
     const size_t ressize = sizeof(char) * INTEG_FACTORY_BUF_SIZE;
-    mpz_t acc;
+
     if (p->order < 2)
     {
         snprintf(result, ressize, resfmt, integral_poly_midpnt(p, il));
@@ -129,9 +154,26 @@ void integral_factory(polynomial_t *p, interval_t il, char *result, mp_bitcnt_t 
         snprintf(result, ressize, resfmt, integral_poly_reference(p, il));
         return;
     }
-    mpz_init2(acc, precision);
-    integral_poly_reference_gmp(acc, p, il, precision);
-    gmp_sprintf(result, resfmt, acc);
-    mpz_clear(acc);
+
+    if (ext.eng == ee_mpz)
+    {
+        mpz_t mpz_acc;
+        mpz_init2(mpz_acc, (mp_bitcnt_t)ext.precision);
+        integral_poly_reference_gmp(mpz_acc, p, il, (mp_bitcnt_t)ext.precision);
+        gmp_sprintf(result, "%Zd", mpz_acc);
+        mpz_clear(mpz_acc);
+        return;
+    }
+
+    if (ext.eng == ee_mpfr)
+    {
+        mpfr_t mpfr_acc;
+        mpfr_init2(mpfr_acc, (mpfr_prec_t)ext.precision);
+        integral_poly_reference_mpfr(mpfr_acc, p, il, (mpfr_prec_t)ext.precision);
+        mpfr_sprintf(result, "%Rf", mpfr_acc);
+        mpfr_clear(mpfr_acc);
+        return;
+    }
+
     return;
 }

@@ -21,6 +21,6 @@
 #define RENDERER_BC_CMD_MAX_LEN 256
 #define RENDERER_BC_CHUNK_SIZE 100
 
-int renderer_render_bc(char *expr, char *res, unsigned scale);
+int renderer_render_bc(const char *expr, char *res, unsigned scale);
 
 #endif // _SURFACES_RENDERER_

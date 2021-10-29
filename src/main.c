@@ -25,12 +25,13 @@
 #define DEFAULT_EQ "1/2x+3"
 
 arguments_t args;
-mp_bitcnt_t precision;
 
 int main(int argc, char *argv[])
 {
     arguments_process(argc, argv, &args);
-    precision = (mp_bitcnt_t)args.precision;
+    factory_ext_t engine = (factory_ext_t){
+        .eng = args.engine,
+        .precision = args.precision};
 
     FILE *streamout = stdout;
     char *result;
@@ -56,7 +57,7 @@ int main(int argc, char *argv[])
     };
 
     profile_start(prof);
-    integral_factory(p, interval, result, precision);
+    integral_factory(p, interval, result, engine);
     profile_stop(prof);
 
     if (args.verbose == 0)

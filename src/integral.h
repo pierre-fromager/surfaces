@@ -15,6 +15,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
+#include "integral_types.h"
 #include "interval.h"
 #include "polynomial.h"
 #include "derivative.h"
@@ -23,15 +24,6 @@
 #define INTEG_TWO 2.0f
 #define INTEG_EPSILON "ε"
 #define INTEG_FACTORY_BUF_SIZE 1024 * 10
-
-typedef enum
-{
-    riemann_trapezoid,
-    riemann_middle_point,
-    riemann_rectangle,
-    riemann_left,
-    riemann_right,
-} integral_riemann_method_t;
 
 /**
  * @brief polynomial integration middle point
@@ -94,15 +86,6 @@ polynomial_item_t integral_factory_riemann(
     integral_riemann_method_t m);
 
 /**
- * @brief polynomial integration factory
- * 
- * @param p 
- * @param il 
- * @param result
- */
-void integral_factory(polynomial_t *p, interval_t il, char *result, mp_bitcnt_t precision);
-
-/**
  * @brief polynomial integration with gmp arbitrary precision
  * 
  * @param acc 
@@ -110,6 +93,34 @@ void integral_factory(polynomial_t *p, interval_t il, char *result, mp_bitcnt_t 
  * @param il 
  * @param precision 
  */
-void integral_poly_reference_gmp(mpz_t acc, polynomial_t *p, interval_t il, mp_bitcnt_t precision);
+void integral_poly_reference_gmp(
+    mpz_t acc,
+    polynomial_t *p,
+    interval_t il,
+    mp_bitcnt_t precision);
+
+/**
+ * @brief polynomial integration with mpfr arbitrary precision
+ * 
+ * @param acc 
+ * @param p 
+ * @param il 
+ * @param precision 
+ */
+void integral_poly_reference_mpfr(
+    mpfr_t acc,
+    polynomial_t *p,
+    interval_t il,
+    mpfr_prec_t precision);
+
+/**
+ * @brief polynomial integration factory
+ * 
+ * @param p 
+ * @param il 
+ * @param result 
+ * @param ext 
+ */
+void integral_factory(polynomial_t *p, interval_t il, char *result, factory_ext_t ext);
 
 #endif // _SURFACES_INTEGRAL_

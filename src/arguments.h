@@ -29,6 +29,7 @@ typedef struct arguments_s
     int debug;
     int verbose;
     unsigned int precision;
+    unsigned int engine;
     polynomial_item_t low;
     polynomial_item_t high;
 } arguments_t;

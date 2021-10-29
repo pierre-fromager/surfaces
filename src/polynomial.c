@@ -119,3 +119,50 @@ void polynomial_calc_gmp_int(mpz_t acc, polynomial_item_t x, polynomial_t *p, mp
     mpz_clear(term);
     mpz_clear(xz);
 }
+
+void polynomial_calc_gmp_mpfr(mpfr_t acc, polynomial_item_t x, polynomial_t *p, mpfr_prec_t precision)
+{
+    const short debug = 0;
+    mpfr_t denom, fact, powd, term, xz;
+    polynomial_order_t ocpt;
+
+    mpfr_init2(denom, precision);
+    mpfr_init2(fact, precision);
+    mpfr_init2(term, precision);
+    mpfr_init2(powd, precision);
+    mpfr_init2(xz, precision);
+    
+    mpfr_set_d(acc, 0.0f, MPFR_RNDN);
+    for (ocpt = 0; ocpt < p->order + 1; ocpt++)
+        if (polynomial_getratio(ocpt, p).num != 0)
+        {
+            const polynomial_ratio_t ratio = polynomial_getratio(ocpt, p);
+            mpfr_set_d(denom, (double)ratio.denom, MPFR_RNDN);
+            mpfr_set_d(fact, (double)ratio.num, MPFR_RNDN);
+            mpfr_div(fact, fact, denom, MPFR_RNDN);
+            mpfr_set_ld(xz, x, MPFR_RNDN);
+            const unsigned long xo = (unsigned long)polynomial_getorder(ocpt, p);
+            mpfr_pow_ui(powd, xz, xo, MPFR_RNDN);
+            mpfr_mul(term, fact, powd, MPFR_RNDU);
+            mpfr_add(acc, acc, term, MPFR_RNDN);
+            if (debug && p->order > 512)
+                mpfr_printf(
+                    "\n-------------\n"
+                    "fact\t%Rf\n"
+                    "xz\t%Rf\n"
+                    "powd\t%Rf\n"
+                    "term\t%Rf\n"
+                    "acc\t%Rf\n", 
+                    fact, 
+                    xz, 
+                    powd, 
+                    term, 
+                    acc);
+        }
+    mpfr_clear(denom);
+    mpfr_clear(fact);
+    mpfr_clear(term);
+    mpfr_clear(powd);
+    mpfr_clear(xz);
+    mpfr_free_cache();
+}

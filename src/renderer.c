@@ -1,7 +1,7 @@
 
 #include "renderer.h"
 
-static int renderer_bc_execute(char *expr, char *res, unsigned scale)
+static int renderer_bc_execute(const char *expr, char *res, unsigned scale)
 {
     FILE *ps;
     char bc_cmd[RENDERER_BC_CMD_MAX_LEN];
@@ -23,7 +23,7 @@ static int renderer_bc_execute(char *expr, char *res, unsigned scale)
     return 0;
 }
 
-int renderer_render_bc(char *expr, char *res, unsigned scale)
+int renderer_render_bc(const char *expr, char *res, unsigned scale)
 {
     if (-1 == renderer_bc_execute(expr, res, scale))
         return -1;

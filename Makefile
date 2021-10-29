@@ -1,7 +1,8 @@
 CXX = gcc
 CC = $(CXX)
 #-ftest-coverage -fprofile-arcs -lgcov 
-CFLAGS = -O2 -Werror -Wall -Wextra -Wpedantic -std=c99 -lm -lgmp \
+CFLAGS = -O2 -Werror -Wall -Wextra -Wpedantic -std=c99 \
+	-lm -lgmp -lmpfr \
 	-fno-asm -g -s -std=c11 \
 	-Wno-format-nonliteral \
 	-Wformat=2 -Wformat-security \
@@ -12,8 +13,8 @@ CFLAGS = -O2 -Werror -Wall -Wextra -Wpedantic -std=c99 -lm -lgmp \
 	-Wformat-signedness -Wshadow -Wstrict-overflow=4 \
 	-Wundef -Wstrict-prototypes -Wswitch-default -Wswitch-enum \
 	-Wstack-usage=1000000 \
-	-D_FORTIFY_SOURCE=2 \
-	#-fstack-protector-strong -fPIE -fsanitize=address \
+	#-D_FORTIFY_SOURCE=2 \
+	-fstack-protector-strong -fPIE -fsanitize=address \
 	-fsanitize=leak -fno-omit-frame-pointer -fsanitize=undefined \
 	-fsanitize=bounds-strict -fsanitize=float-divide-by-zero \
 	-fsanitize=float-cast-overflow
