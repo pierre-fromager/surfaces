@@ -19,16 +19,22 @@ CFLAGS = -O2 -Werror -Wall -Wextra -Wpedantic -std=c99 \
 	-fsanitize=bounds-strict -fsanitize=float-divide-by-zero \
 	-fsanitize=float-cast-overflow
 
-SRC_FILES = $(wildcard src/*.c) $(wildcard src/**/*.c)
-TST_FILES = $(wildcard test/*.c) $(wildcard test/**/*.c) $(wildcard test/**/**/*.c)
-TO_TEST_FILES = $(filter-out src/main.c, $(SRC_FILES))
+DOC = doc
+SRC = src
+TST = test
+SRC_LIB_FILE = $(SRC)/libpolysurf
+SRC_FILES = $(wildcard $(SRC)/*.c) $(wildcard$(SRC)/**/*.c)
+TST_FILES = $(wildcard $(TST)/*.c) $(wildcard $(TST)/**/*.c) $(wildcard $(TST)/**/**/*.c)
+ALL_SRC_BUT_MAIN = $(filter-out $(SRC)/main.c, $(SRC_FILES))
 
 OBJECTS = $(SRC_FILES:%.c=%.o)
-OBJECTSCOVO = $(SRC_FILES:%.c=%.gcno)
-OBJECTSCOVA = $(SRC_FILES:%.c=%.gcda)
-OBJECTS_TO_TEST = $(TO_TEST_FILES:%.c=%.o)
+#OBJECTSCOVO = $(SRC_FILES:%.c=%.gcno)
+#OBJECTSCOVA = $(SRC_FILES:%.c=%.gcda)
+OBJECTS_TO_TEST = $(ALL_SRC_BUT_MAIN:%.c=%.o)
+OBJECTS_TO_LIB = $(ALL_SRC_BUT_MAIN:%.c=%.o)
 OBJECTS_TEST = $(TST_FILES:%.c=%.o)
 TARGET = surfaces
+TARGET_LIB = libpolysurf
 TARGET_TEST = surfaces_test
 
 .PHONY: all
@@ -39,9 +45,9 @@ $(TARGET): $(OBJECTS)
 
 .PHONY: clean
 clean:
-	rm -rf $(TARGET) $(OBJECTS)
-	rm -rf $(TARGET) $(OBJECTSCOVO)
-	rm -rf $(TARGET) $(OBJECTSCOVA)
+	rm -rf $(TARGET) $(OBJECTS)  
+	#rm $(TARGET_TEST) 
+	rm $(TARGET_LIB).so.1.0  	
 
 .PHONY: trace
 trace:
@@ -57,15 +63,15 @@ debug:
 
 .PHONY: doc
 doc:
-	doxygen doc/surfaces.conf
+	doxygen $(DOC)/surfaces.conf
 
 .PHONY: cleandoc
 cleandoc:
-	rm -rf doc/html
+	rm -rf $(DOC)/html
 
 .PHONY: check
 check:
-	cppcheck --check-config --enable=all --std=c99 --suppress=missingIncludeSystem ./src -I ./src
+	cppcheck --check-config --enable=all --std=c99 --suppress=missingIncludeSystem $(SRC) -I $(SRC)
 
 .PHONY: test
 test:$(OBJECTS_TEST) 
@@ -74,4 +80,13 @@ test:$(OBJECTS_TEST)
 .PHONY: cleantest
 cleantest:
 	rm -rf $(TARGET_TEST) $(OBJECTS_TEST)	
+
+.PHONY: lib
+lib:
+	$(CXX) -fPIC -fvisibility=hidden -shared -Wl,-soname,$(TARGET_LIB).so.1 \
+		$(CFLAGS) -o $(TARGET_LIB).so.1.0 $(SRC)/$(TARGET_LIB).o
+
+# ldconfig -v 2>/dev/null | grep -v ^$'\t'
+# http://www.yolinux.com/TUTORIALS/LibraryArchives-StaticAndDynamic.html
+# https://docencia.ac.upc.edu/FIB/USO/Bibliografia/unix-c-libraries.html
 	

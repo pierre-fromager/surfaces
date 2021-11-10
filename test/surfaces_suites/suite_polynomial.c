@@ -47,6 +47,7 @@ static struct
     char *name;
 } test_functions[] = {
     {test_surfaces_polynomial_reset, "polynomial_reset"},
+    {test_surfaces_polynomial_gethighestfactor, "polynomial_gethighestfactor"},
     {test_surfaces_polynomial_addratio, "polynomial_addratio"},
     {test_surfaces_polynomial_o0, "polynomial_o0"},
     {test_surfaces_polynomial_o1, "polynomial_o1"},
@@ -99,6 +100,24 @@ void test_surfaces_polynomial_reset()
     CU_ASSERT_EQUAL(polynomial_getfactor(io, p), 1);
     CU_ASSERT_EQUAL(polynomial_getratio(io, p).num, 1);
     CU_ASSERT_EQUAL(polynomial_getratio(io, p).denom, 1);
+    polynomial_reset(p);
+    CU_ASSERT_EQUAL(polynomial_getfactor(io, p), 0);
+    CU_ASSERT_EQUAL(polynomial_getratio(io, p).num, 0);
+    CU_ASSERT_EQUAL(polynomial_getratio(io, p).denom, 1);
+
+    reset_test_polynomial();
+}
+
+void test_surfaces_polynomial_gethighestfactor()
+{
+    polynomial_order_t io;
+    CU_ASSERT_PTR_NOT_NULL_FATAL(p);
+    io = 10;
+    polynomial_construct(io, p);
+    polynomial_setfactor(io, 1.0f, p);
+    polynomial_setratio(io, 1, 1, p);
+    CU_ASSERT_EQUAL(polynomial_gethighestfactor(p), 1);
+
     polynomial_reset(p);
     CU_ASSERT_EQUAL(polynomial_getfactor(io, p), 0);
     CU_ASSERT_EQUAL(polynomial_getratio(io, p).num, 0);
@@ -545,7 +564,7 @@ void test_surfaces_polynomial_gmpfr_o512()
 {
     const polynomial_order_t io = 512;
     mpfr_t acc;
-    const char *expected_int = 
+    const char *expected_int =
         "1340780792994259709957"
         "4024998205846127479365"
         "8205923933777235614437"
@@ -589,7 +608,7 @@ void test_surfaces_polynomial_gmpfr_o1024()
 {
     const polynomial_order_t io = 1024;
     mpfr_t acc;
-    const char *expected_int = 
+    const char *expected_int =
         "17976931348623159077293"
         "05190789024733617976978"
         "94230657273430081157732"
@@ -639,8 +658,8 @@ void test_surfaces_polynomial_gmpfr_o2048()
 {
     const polynomial_order_t io = 2048;
     const polynomial_item_t xc = 2.0f;
-    const char *eqc = "(-2^3)+(2^4)+(2^2048)";    
-    const char *expected_int = 
+    const char *eqc = "(-2^3)+(2^4)+(2^2048)";
+    const char *expected_int =
         "3231700607131100730071487668866995196044410266971548403"
         "2130345427524655138867890893197201411522913463688717960"
         "9218980194941195591504909210950881523864482831206308773"
@@ -653,7 +672,7 @@ void test_surfaces_polynomial_gmpfr_o2048()
         "3132346967854258065669793504599726835299863821552516638"
         "9437335543602135433229604645318478604952148193555853611"
         "059596230664";
-    mpfr_t acc;    
+    mpfr_t acc;
     char *expected;
     expected = malloc(sizeof(char) * 1024);
     CU_ASSERT_PTR_NOT_NULL_FATAL(p);
@@ -689,9 +708,9 @@ void test_surfaces_polynomial_gmpfr_o4096()
 {
     const polynomial_order_t io = 4096;
     const polynomial_item_t xc = 2.0f;
-    const char *eqc = "(-2^3)+(2^4)+(2^4096)";    
+    const char *eqc = "(-2^3)+(2^4)+(2^4096)";
     mpfr_t acc;
-    const char *expected_int = 
+    const char *expected_int =
         "10443888814131525066917527107166243825799642490473837803842334832839539079715"
         "57456848826811934997558340890106714439262837987573438185793607263236087851365"
         "27794595697654370999834036159013438371831442807001185594622637631883939771274"

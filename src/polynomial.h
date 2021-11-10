@@ -80,6 +80,14 @@ void polynomial_addratio(polynomial_order_t o, polynomial_ratio_t r, polynomial_
 polynomial_item_t polynomial_getfactor(polynomial_order_t o, polynomial_t *p);
 
 /**
+ * @brief get higher polynomial factor
+ * 
+ * @param p 
+ * @return polynomial_item_t 
+ */
+polynomial_item_t polynomial_gethighestfactor(polynomial_t *p);
+
+/**
  * @brief get polynomial degree for a given order ;-)
  * 
  * @param o 

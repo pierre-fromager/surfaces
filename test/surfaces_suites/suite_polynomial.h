@@ -16,6 +16,7 @@ void test_surfaces_polynomial_add_suite(void);
 void reset_test_polynomial(void);
 
 void test_surfaces_polynomial_reset(void);
+void test_surfaces_polynomial_gethighestfactor(void);
 void test_surfaces_polynomial_addratio(void);
 void test_surfaces_polynomial_o0(void);
 void test_surfaces_polynomial_o1(void);

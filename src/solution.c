@@ -57,6 +57,19 @@ void solution_equation(FILE *streamout, polynomial_t *p)
     fprintf(streamout, SOL_LF);
 }
 
+void solution_roots(FILE *streamout, polynomial_t *p)
+{
+    polynomial_item_t *r;
+    polynomial_order_t res, rcpt;
+    r = (polynomial_item_t *)malloc(sizeof(polynomial_item_t) * (p->order + 1));
+    res = roots_factory(p, r);
+    fprintf(streamout, "\tRoots %u =>", res);
+    for (rcpt = 0; rcpt < res; rcpt++)
+        fprintf(streamout, " r%u:%Lf", rcpt, *(r + rcpt));
+    free(r);
+    fprintf(streamout, "\n");
+}
+
 void solution_print(
     FILE *streamout,
     polynomial_t *p,
@@ -72,7 +85,7 @@ void solution_print(
     char fmt_elapse[SOL_FMT_BUFF_LEN];
     fprintf(streamout, SOL_LF "%s", title);
     solution_equation(streamout, p);
-    fprintf(streamout, "\tHigher order %u\n", p->order);
+    fprintf(streamout, "\tHighest order %u\n", p->order);
     snprintf(fmt_iv_l, sizeof(char) * 10, SOL_DOUBLE_FMT, li.l);
     solution_format_double(fmt_iv_l, SOL_DOUBLE_FMT_DISPLAY_LEN);
     snprintf(fmt_iv_h, sizeof(char) * 10, SOL_DOUBLE_FMT, li.h);
@@ -85,6 +98,7 @@ void solution_print(
         SOL_DOUBLE_FMT,
         (long double)profile_elapse(prof));
     solution_format_double(fmt_elapse, 10);
+    solution_roots(streamout, p);
     fprintf(streamout, SOL_TAB "Precision %u bits" SOL_LF, precision);
     fprintf(streamout, SOL_TAB "Elapse %s s" SOL_LF, fmt_elapse);
 }

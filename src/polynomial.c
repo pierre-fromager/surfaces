@@ -54,6 +54,18 @@ polynomial_item_t polynomial_getfactor(polynomial_order_t o, polynomial_t *p)
     return isnan(*(p->factors + o)) ? 0 : *(p->factors + o);
 }
 
+polynomial_item_t polynomial_gethighestfactor(polynomial_t *p)
+{
+    polynomial_order_t ocpt;
+    polynomial_item_t hf = 0;
+    for (ocpt = 0; ocpt < p->order + 1; ocpt++)
+    {
+        const polynomial_item_t cf = polynomial_getfactor(ocpt, p);
+        hf = (cf > hf) ? cf : hf;
+    }
+    return hf;
+}
+
 polynomial_item_t polynomial_getorder(polynomial_order_t o, polynomial_t *p)
 {
     return *(p->orders + o);
@@ -131,7 +143,7 @@ void polynomial_calc_gmp_mpfr(mpfr_t acc, polynomial_item_t x, polynomial_t *p, 
     mpfr_init2(term, precision);
     mpfr_init2(powd, precision);
     mpfr_init2(xz, precision);
-    
+
     mpfr_set_d(acc, 0.0f, MPFR_RNDN);
     for (ocpt = 0; ocpt < p->order + 1; ocpt++)
         if (polynomial_getratio(ocpt, p).num != 0)
@@ -152,11 +164,11 @@ void polynomial_calc_gmp_mpfr(mpfr_t acc, polynomial_item_t x, polynomial_t *p, 
                     "xz\t%Rf\n"
                     "powd\t%Rf\n"
                     "term\t%Rf\n"
-                    "acc\t%Rf\n", 
-                    fact, 
-                    xz, 
-                    powd, 
-                    term, 
+                    "acc\t%Rf\n",
+                    fact,
+                    xz,
+                    powd,
+                    term,
                     acc);
         }
     mpfr_clear(denom);

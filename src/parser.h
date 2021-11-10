@@ -9,6 +9,9 @@
  * 
  */
 
+#ifndef _SURFACES_PARSER_
+#define _SURFACES_PARSER_
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -31,5 +34,6 @@
 #define PARSER_STR_FMT "%s"
 #define PARSER_SUBSTR_FMT "%.*s"
 
-
 int parser_parse(char *eq, polynomial_t *p);
+
+#endif // _SURFACES_PARSER_

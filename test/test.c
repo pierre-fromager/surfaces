@@ -23,6 +23,7 @@
 #include "surfaces_suites/suite_derivative.h"
 #include "surfaces_suites/suite_riemannsum.h"
 #include "surfaces_suites/suite_integral.h"
+#include "surfaces_suites/suite_roots.h"
 
 int main(int argc, char *argv[])
 {
@@ -114,6 +115,7 @@ int main(int argc, char *argv[])
 	test_surfaces_derivative_add_suite();
 	test_surfaces_riemannsum_add_suite();
 	test_surfaces_integral_add_suite();
+	test_surfaces_roots_add_suite();
 
 	switch (interface)
 	{

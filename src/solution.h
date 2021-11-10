@@ -16,6 +16,7 @@
 #include <stdio.h>
 #include "profile.h"
 #include "integral.h"
+#include "roots.h"
 
 #define SYM_ITGR "∫"
 #define ITGR_UA "u.a"
