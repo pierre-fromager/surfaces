@@ -53,4 +53,11 @@ void test_surfaces_poly_intersect_o1_nosol(void);
  */
 void test_surfaces_poly_intersect_o2(void);
 
+/**
+ * @brief test intersect polynomial order 14
+ * 
+ */
+void test_surfaces_poly_intersect_o14(void);
+
+
 #endif // __TEST_SURFACES_SUITE_INTERSECT_H__

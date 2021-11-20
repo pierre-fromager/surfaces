@@ -2,7 +2,7 @@
 #include "suite_roots.h"
 
 static const double granularity = 0.000001f;
-static polynomial_order_t maxo = 5 + 1;
+static polynomial_order_t maxo = 15 + 1;
 static polynomial_t *p;
 static polynomial_item_t *r;
 static interval_t ivl;
@@ -42,6 +42,7 @@ static struct
     {test_surfaces_roots_factory_o2a, "roots_factory_o2a"},
     {test_surfaces_roots_factory_o3, "roots_factory_o3"},
     {test_surfaces_roots_factory_o4, "roots_factory_o4"},
+    {test_surfaces_roots_factory_o14, "roots_factory_o14"},
     {0, 0},
 };
 
@@ -72,9 +73,6 @@ void test_surfaces_roots_add_suite()
 static void poly_check(polynomial_order_t o)
 {
     polynomial_order_t ocpt;
-    /*
-    for (ocpt = 0; ocpt < o + 1; ocpt++)
-        CU_ASSERT_EQUAL(polynomial_getorder(ocpt, p), ocpt);*/
     for (ocpt = 0; ocpt < o + 1; ocpt++)
         CU_ASSERT_EQUAL(polynomial_getfactor(ocpt, p), 0);
     for (ocpt = 0; ocpt < o + 1; ocpt++)
@@ -327,7 +325,6 @@ void test_surfaces_roots_factory_o4()
     for (cptr = 0; cptr < res; cptr++)
         CU_ASSERT_DOUBLE_EQUAL(polynomial_calc(*(r + cptr), p), 0, granularity);
     polynomial_reset(p);
-
     // y = -20x^4 + 5x^3 + 17x^2 - 29x + 87
     polynomial_reset(p);
     polynomial_setfactor(4, -20.0f, p);
@@ -345,7 +342,31 @@ void test_surfaces_roots_factory_o4()
             granularity);
     for (cptr = 0; cptr < res; cptr++)
         CU_ASSERT_DOUBLE_EQUAL(polynomial_calc(*(r + cptr), p), 0, granularity);
-    //polynomial_reset(p);
+    reset_test_roots();
+}
 
-    //reset_test_roots();
+void test_surfaces_roots_factory_o14()
+{
+    const polynomial_order_t io = 14;
+    polynomial_order_t res;
+    unsigned short cptr;
+    CU_ASSERT_PTR_NOT_NULL_FATAL(p);
+    polynomial_construct(io, p);
+    poly_check(io);
+    // y = 2x^14 - 3x^12 - 100
+    polynomial_reset(p);
+    polynomial_setfactor(14, 2.0f, p);
+    polynomial_setfactor(12, -3.0f, p);
+    polynomial_setfactor(0, -100.0f, p);
+    res = roots_factory(p, ivl, r);
+    CU_ASSERT_EQUAL(res, 2);
+    const double sr0[2] = {-1.446948, 1.446948};
+    for (cptr = 0; cptr < res; cptr++)
+        CU_ASSERT_DOUBLE_EQUAL(
+            *(r + cptr),
+            sr0[cptr],
+            granularity);
+    for (cptr = 0; cptr < res; cptr++)
+        CU_ASSERT_DOUBLE_EQUAL(polynomial_calc(*(r + cptr), p), 0, granularity);
+    polynomial_reset(p);
 }
