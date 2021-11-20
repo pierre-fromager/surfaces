@@ -135,7 +135,7 @@ polynomial_order_t roots_factory(
     interval_t it,
     polynomial_item_t *roots)
 {
-    roots_reset(p, roots);
+    roots_reset(p, roots);    
     if (p->order == 0)
         return 0;
     if (p->order == 1)

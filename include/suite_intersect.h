@@ -30,7 +30,25 @@ void test_surfaces_intersect_add_suite(void);
 void reset_test_intersect(void);
 
 /**
- * @brief test intersect polynomial order 0
+ * @brief test intersect polynomial order 1
+ * 
+ */
+void test_surfaces_poly_intersect_o0(void);
+
+/**
+ * @brief test intersect polynomial order 1
+ * 
+ */
+void test_surfaces_poly_intersect_o1(void);
+
+/**
+ * @brief test intersect polynomial order 1 with // => no solution
+ * 
+ */
+void test_surfaces_poly_intersect_o1_nosol(void);
+
+/**
+ * @brief test intersect polynomial order 2
  * 
  */
 void test_surfaces_poly_intersect_o2(void);

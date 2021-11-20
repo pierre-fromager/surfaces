@@ -35,6 +35,9 @@ static struct
     void (*function)(void);
     char *name;
 } test_functions[] = {
+    {test_surfaces_poly_intersect_o0, "intersect_o0"},
+    {test_surfaces_poly_intersect_o1, "intersect_o1"},
+    {test_surfaces_poly_intersect_o1_nosol, "intersect_o1_nosol"},
     {test_surfaces_poly_intersect_o2, "intersect_o2"},
     {0, 0},
 };
@@ -61,6 +64,80 @@ void test_surfaces_intersect_add_suite()
             _exit(3);
         }
     }
+}
+
+void test_surfaces_poly_intersect_o0()
+{
+    polynomial_order_t nbres;
+    polynomial_order_t ho;
+    // p1 = 3
+    polynomial_construct(o0, p1);
+    polynomial_setfactor(o0, 3.0f, p1);
+    CU_ASSERT_EQUAL(p1->order, o0);
+    CU_ASSERT_EQUAL(polynomial_getfactor(o0, p1), 3);
+    // p2 = 2
+    polynomial_construct(o0, p2);
+    polynomial_setfactor(o0, 2.0f, p2);
+    CU_ASSERT_EQUAL(p2->order, o0);
+    CU_ASSERT_EQUAL(polynomial_getfactor(o0, p2), 2);
+    ho = (p1->order > p2->order) ? p1->order : p2->order;
+    coords = (coord_t *)malloc(sizeof(coord_t) * (ho + 1));
+    nbres = poly_intersect(p1, p2, ivl, coords);
+    CU_ASSERT_EQUAL(nbres, 0);
+    free(coords);
+    reset_test_intersect();
+}
+
+void test_surfaces_poly_intersect_o1()
+{
+    polynomial_order_t nbres;
+    polynomial_order_t ho;
+    // p1 = 3x
+    polynomial_construct(o1, p1);
+    polynomial_setfactor(o1, 3.0f, p1);
+    CU_ASSERT_EQUAL(p1->order, o1);
+    CU_ASSERT_EQUAL(polynomial_getfactor(o1, p1), 3);
+    CU_ASSERT_EQUAL(polynomial_getfactor(o0, p1), 0);
+    // p2 = 2x
+    polynomial_construct(o1, p2);
+    polynomial_setfactor(o1, 2.0f, p2);
+    CU_ASSERT_EQUAL(p2->order, o1);
+    CU_ASSERT_EQUAL(polynomial_getfactor(o1, p2), 2);
+    CU_ASSERT_EQUAL(polynomial_getfactor(o0, p2), 0);
+    ho = (p1->order > p2->order) ? p1->order : p2->order;
+    coords = (coord_t *)malloc(sizeof(coord_t) * (ho + 1));
+    nbres = poly_intersect(p1, p2, ivl, coords);
+    CU_ASSERT_EQUAL(nbres, 1);
+    CU_ASSERT_DOUBLE_EQUAL((*(coords + 0)).x, 0.0, granularity);
+    CU_ASSERT_DOUBLE_EQUAL((*(coords + 0)).y, 0.0, granularity);
+    free(coords);
+    reset_test_intersect();
+}
+
+void test_surfaces_poly_intersect_o1_nosol()
+{
+    polynomial_order_t nbres;
+    polynomial_order_t ho;
+    // p1 = 2x-1
+    polynomial_construct(o1, p1);
+    polynomial_setfactor(o1, 2.0f, p1);
+    polynomial_setfactor(o0, -1.0f, p1);
+    CU_ASSERT_EQUAL(p1->order, o1);
+    CU_ASSERT_EQUAL(polynomial_getfactor(o1, p1), 2);
+    CU_ASSERT_EQUAL(polynomial_getfactor(o0, p1), -1);
+    // p2 = 2x
+    polynomial_construct(o1, p2);
+    polynomial_setfactor(o1, 2.0f, p2);
+    polynomial_setfactor(o0, 0.0f, p2);
+    CU_ASSERT_EQUAL(p2->order, o1);
+    CU_ASSERT_EQUAL(polynomial_getfactor(o1, p2), 2);
+    CU_ASSERT_EQUAL(polynomial_getfactor(o0, p2), 0);
+    ho = (p1->order > p2->order) ? p1->order : p2->order;
+    coords = (coord_t *)malloc(sizeof(coord_t) * (ho + 1));
+    nbres = poly_intersect(p1, p2, ivl, coords);
+    CU_ASSERT_EQUAL(nbres, 0);
+    free(coords);
+    reset_test_intersect();
 }
 
 void test_surfaces_poly_intersect_o2()

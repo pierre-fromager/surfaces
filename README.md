@@ -150,6 +150,24 @@ Can be found in src/examples.
 make examples
 export LD_LIBRARY_PATH=.
 ```
+example intersect usage
+```
+$./ex_intersect 3 2
+     No intersection
+
+$./ex_intersect 2x 2x-1
+     No intersection
+
+$./ex_intersect 5x-10 4x+4
+     p0(14.0000000000000000 , 60.0000000000000000)
+
+$./ex_intersect 2x^14-100 3x^12+10
+     p0(-2.8642670542283216 , 34.6120772738133610)
+     p1(2.8642670542283216 , 34.6120772738133610)
+
+$./ex_intersect 2x^401 4x^4000
+     p0(0.9998074241631791 , 1.8513532041527613)
+```
 ## Extra
 
 Alternatives methods with no reliability are tested here.  
@@ -160,7 +178,7 @@ Alternatives methods with no reliability are tested here.
 
 ## Todo
 * implement integral factory tests for mpfr.
-* make a lib (open to contributors).
+* add features in lib polysurf.
 
 ## Contribute
 * open to pull requests, rule is 1 mod => 1 unit test (TDD).
