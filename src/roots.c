@@ -1,12 +1,11 @@
 
 #include "roots.h"
 #include "derivative.h"
-#include "mpfr.h"
 
 /**
  * @brief linear solver y = ax + b = 0
  * 
- * @param p 
+ * @param p polynomial
  * @param roots 
  * @return polynomial_order_t 
  */
@@ -30,7 +29,7 @@ static polynomial_order_t roots_o1(polynomial_t *p, polynomial_item_t *roots)
 /**
  * @brief quadratic solver y = ax^2 + bx + c = 0
  * 
- * @param p 
+ * @param p polynomial
  * @param roots 
  * @return polynomial_order_t 
  */
@@ -91,7 +90,7 @@ static polynomial_item_t newton_raphson(
 /**
  * @brief n order solver
  * 
- * @param p 
+ * @param p polynomial
  * @param roots 
  * @param signs 
  * @return polynomial_order_t 
@@ -126,12 +125,14 @@ static polynomial_order_t roots_on(
 /**
  * @brief rootsfinder factory
  * 
- * @param p 
+ * @param p polynomial 
+ * @param it interval
  * @param roots 
  * @return polynomial_order_t 
  */
 polynomial_order_t roots_factory(
     polynomial_t *p,
+    interval_t it,
     polynomial_item_t *roots)
 {
     roots_reset(p, roots);
@@ -147,9 +148,7 @@ polynomial_order_t roots_factory(
         signs = malloc(sizeof(signs_t));
         signs->cpt = 0;
         signs->coords = malloc(sizeof(coord_t) * (p->order + 1));
-        signs->interval = (interval_t){
-            .l = ROOTS_SIGNS_INTERVAL_L,
-            .h = ROOTS_SIGNS_INTERVAL_H};
+        signs->interval = it;
         signs->step = ROOTS_SIGNS_STEP;
         polynomial_order_t nbroots = roots_on(p, roots, signs);
         free(signs->coords);
@@ -162,7 +161,7 @@ polynomial_order_t roots_factory(
 /**
  * @brief rootsfinder reset
  * 
- * @param p 
+ * @param p polynomial
  * @param roots 
  */
 void roots_reset(polynomial_t *p, polynomial_item_t *roots)

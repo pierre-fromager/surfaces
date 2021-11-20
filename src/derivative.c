@@ -6,7 +6,7 @@ void derivative_derivate(polynomial_t *psrc, polynomial_t *pdst)
     polynomial_order_t cpto;
     polynomial_item_t actfac;
     polynomial_ratio_t actratio;
-    const polynomial_order_t pdst_order = (psrc->order > 0) ? psrc->order - 1 : 1;
+    const polynomial_order_t pdst_order = (psrc->order > 0) ? psrc->order - 1 : 0;
     polynomial_construct(pdst_order, pdst);
     polynomial_setfactor(0, 0.0f, pdst);
     for (cpto = psrc->order + 1; cpto > 0; cpto--)

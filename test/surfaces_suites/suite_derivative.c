@@ -76,8 +76,6 @@ void test_surfaces_derivative_derivate_o0()
     CU_ASSERT_PTR_NOT_NULL_FATAL(pdst);
     polynomial_construct(io, psrc);
     for (iocpt = 0; iocpt < io + 1; iocpt++)
-        CU_ASSERT_EQUAL(polynomial_getorder(iocpt, psrc), iocpt);
-    for (iocpt = 0; iocpt < io + 1; iocpt++)
         CU_ASSERT_EQUAL(polynomial_getfactor(iocpt, psrc), 0);
     for (iocpt = 0; iocpt < io + 1; iocpt++)
         CU_ASSERT_EQUAL(polynomial_getratio(iocpt, psrc).num, 0);
@@ -87,14 +85,10 @@ void test_surfaces_derivative_derivate_o0()
     polynomial_setfactor(0, ev, psrc);
     CU_ASSERT_EQUAL(polynomial_getfactor(0, psrc), ev);
     derivative_derivate(psrc, pdst);
-    CU_ASSERT_EQUAL(polynomial_getorder(0, pdst), 0.0f);
+    CU_ASSERT_EQUAL(pdst->order, 0.0f);
     CU_ASSERT_DOUBLE_EQUAL(polynomial_getfactor(0, pdst), 0.0f, granularity);
-    for (iocpt = 0; iocpt < io + 1; iocpt++)
-        CU_ASSERT_EQUAL(polynomial_getorder(0, psrc), iocpt);
     for (iocpt = 1; iocpt < io + 1; iocpt++)
         CU_ASSERT_EQUAL(polynomial_getfactor(iocpt, psrc), 0);
-    for (iocpt = 0; iocpt < io + 1; iocpt++)
-        CU_ASSERT_EQUAL(polynomial_getorder(0, pdst), iocpt);
     for (iocpt = 1; iocpt < io + 1; iocpt++)
         CU_ASSERT_EQUAL(polynomial_getfactor(iocpt, pdst), 0);
     for (cptv = -ev; cptv < ev; cptv++)
@@ -117,14 +111,11 @@ void test_surfaces_derivative_derivate_o1()
     CU_ASSERT_PTR_NOT_NULL_FATAL(pdst);
     polynomial_construct(io, psrc);
     for (iocpt = 0; iocpt < io + 1; iocpt++)
-        CU_ASSERT_EQUAL(polynomial_getorder(iocpt, psrc), iocpt);
-    for (iocpt = 0; iocpt < io + 1; iocpt++)
         CU_ASSERT_EQUAL(polynomial_getfactor(iocpt, psrc), 0);
     for (iocpt = 0; iocpt < io + 1; iocpt++)
         CU_ASSERT_EQUAL(polynomial_getratio(iocpt, psrc).num, 0);
     for (iocpt = 0; iocpt < io + 1; iocpt++)
         CU_ASSERT_EQUAL(polynomial_getratio(iocpt, psrc).denom, 1);
-
     // y = x => y' = 1
     polynomial_setfactor(1, 1.0f, psrc);
     CU_ASSERT_EQUAL(polynomial_getfactor(1, psrc), 1);
@@ -133,7 +124,6 @@ void test_surfaces_derivative_derivate_o1()
     for (cptv = -ev; cptv < ev; cptv++)
         CU_ASSERT_EQUAL(polynomial_calc(cptv, pdst), 1);
     polynomial_destruct(pdst);
-
     // y = x + 1 => y' = 1
     polynomial_setfactor(0, 1.0f, psrc);
     CU_ASSERT_EQUAL(polynomial_getfactor(0, psrc), 1);
@@ -141,7 +131,6 @@ void test_surfaces_derivative_derivate_o1()
     for (cptv = -ev; cptv < ev; cptv++)
         CU_ASSERT_EQUAL(polynomial_calc(cptv, pdst), 1);
     polynomial_destruct(pdst);
-
     // y = 2x + 5 => y' = 2
     polynomial_setfactor(1, 2.0f, psrc);
     CU_ASSERT_EQUAL(polynomial_getfactor(1, psrc), 2);
@@ -149,7 +138,6 @@ void test_surfaces_derivative_derivate_o1()
     for (cptv = -ev; cptv < ev; cptv++)
         CU_ASSERT_EQUAL(polynomial_calc(cptv, pdst), 2);
     polynomial_destruct(pdst);
-
     // y = -2x + 5 => y' = -2
     polynomial_setfactor(1, -2.0f, psrc);
     polynomial_setratio(1, -2, 1, psrc);
@@ -175,14 +163,11 @@ void test_surfaces_derivative_derivate_o2()
     CU_ASSERT_PTR_NOT_NULL_FATAL(pdst);
     polynomial_construct(io, psrc);
     for (iocpt = 0; iocpt < io + 1; iocpt++)
-        CU_ASSERT_EQUAL(polynomial_getorder(iocpt, psrc), iocpt);
-    for (iocpt = 0; iocpt < io + 1; iocpt++)
         CU_ASSERT_EQUAL(polynomial_getfactor(iocpt, psrc), 0);
     for (iocpt = 0; iocpt < io + 1; iocpt++)
         CU_ASSERT_EQUAL(polynomial_getratio(iocpt, psrc).num, 0);
     for (iocpt = 0; iocpt < io + 1; iocpt++)
         CU_ASSERT_EQUAL(polynomial_getratio(iocpt, psrc).denom, 1);
-
     // y = x² => y' = 2x
     polynomial_setfactor(2, 1.0f, psrc);
     CU_ASSERT_EQUAL(polynomial_getfactor(2, psrc), 1);
@@ -190,7 +175,6 @@ void test_surfaces_derivative_derivate_o2()
     for (cptv = -ev; cptv < ev; cptv++)
         CU_ASSERT_EQUAL(polynomial_calc(cptv, pdst), 2 * cptv);
     polynomial_destruct(pdst);
-
     // y = x² + 1 => y' = 2x
     polynomial_setfactor(0, 1.0f, psrc);
     CU_ASSERT_EQUAL(polynomial_getfactor(0, psrc), 1);
@@ -198,7 +182,6 @@ void test_surfaces_derivative_derivate_o2()
     for (cptv = -ev; cptv < ev; cptv++)
         CU_ASSERT_EQUAL(polynomial_calc(cptv, pdst), 2 * cptv);
     polynomial_destruct(pdst);
-
     // y = x² + 5 => y' = 2x
     polynomial_setfactor(0, 5.0f, psrc);
     CU_ASSERT_EQUAL(polynomial_getfactor(0, psrc), 5);
@@ -206,7 +189,6 @@ void test_surfaces_derivative_derivate_o2()
     for (cptv = -ev; cptv < ev; cptv++)
         CU_ASSERT_EQUAL(polynomial_calc(cptv, pdst), 2 * cptv);
     polynomial_destruct(pdst);
-
     // y = 2x² + 5 => y' = 4x
     polynomial_setfactor(2, 2.0f, psrc);
     CU_ASSERT_EQUAL(polynomial_getfactor(2, psrc), 2);
@@ -214,7 +196,6 @@ void test_surfaces_derivative_derivate_o2()
     for (cptv = -ev; cptv < ev; cptv++)
         CU_ASSERT_EQUAL(polynomial_calc(cptv, pdst), 4 * cptv);
     polynomial_destruct(pdst);
-
     // y = 2x² + x + 5 => y' = 4x + 1
     polynomial_setfactor(1, 1.0f, psrc);
     CU_ASSERT_EQUAL(polynomial_getfactor(1, psrc), 1);
@@ -242,14 +223,11 @@ void test_surfaces_derivative_derivate_o3()
     CU_ASSERT_PTR_NOT_NULL_FATAL(pdst);
     polynomial_construct(io, psrc);
     for (iocpt = 0; iocpt < io + 1; iocpt++)
-        CU_ASSERT_EQUAL(polynomial_getorder(iocpt, psrc), iocpt);
-    for (iocpt = 0; iocpt < io + 1; iocpt++)
         CU_ASSERT_EQUAL(polynomial_getfactor(iocpt, psrc), 0);
     for (iocpt = 0; iocpt < io + 1; iocpt++)
         CU_ASSERT_EQUAL(polynomial_getratio(iocpt, psrc).num, 0);
     for (iocpt = 0; iocpt < io + 1; iocpt++)
         CU_ASSERT_EQUAL(polynomial_getratio(iocpt, psrc).denom, 1);
-
     // y = x³ => y' = 3x²
     // by factor
     polynomial_setfactor(3, 1.0f, psrc);
@@ -265,7 +243,6 @@ void test_surfaces_derivative_derivate_o3()
     for (cptv = -ev; cptv < ev; cptv++)
         CU_ASSERT_EQUAL(polynomial_calc(cptv, pdst), io * cptv * cptv);
     polynomial_destruct(pdst);
-
     // y = x³ + 1 => y' = 3x²
     polynomial_setfactor(0, 1.0f, psrc);
     polynomial_setratio(0, 1, 1, psrc);
@@ -274,7 +251,6 @@ void test_surfaces_derivative_derivate_o3()
     for (cptv = -ev; cptv < ev; cptv++)
         CU_ASSERT_EQUAL(polynomial_calc(cptv, pdst), io * cptv * cptv);
     polynomial_destruct(pdst);
-
     // y = 2x³ + 1 => y' = 6x²
     polynomial_setfactor(3, 2.0f, psrc);
     polynomial_setratio(3, 2, 1, psrc);
@@ -283,7 +259,6 @@ void test_surfaces_derivative_derivate_o3()
     for (cptv = -ev; cptv < ev; cptv++)
         CU_ASSERT_EQUAL(polynomial_calc(cptv, pdst), io * 2 * cptv * cptv);
     polynomial_destruct(pdst);
-
     // y = 2x³ + x² + x + 1 => y' = 6x² + 2x + 1
     polynomial_setfactor(1, 1.0f, psrc);
     polynomial_setfactor(2, 1.0f, psrc);
@@ -321,8 +296,6 @@ void test_surfaces_derivative_antiderivate_o0()
     CU_ASSERT_PTR_NOT_NULL_FATAL(pdst);
     polynomial_construct(io, psrc);
     for (iocpt = 0; iocpt < io + 1; iocpt++)
-        CU_ASSERT_EQUAL(polynomial_getorder(iocpt, psrc), iocpt);
-    for (iocpt = 0; iocpt < io + 1; iocpt++)
         CU_ASSERT_EQUAL(polynomial_getfactor(iocpt, psrc), 0);
     for (iocpt = 0; iocpt < io + 1; iocpt++)
         CU_ASSERT_EQUAL(polynomial_getratio(iocpt, psrc).num, 0);
@@ -354,14 +327,11 @@ void test_surfaces_derivative_antiderivate_o1()
     CU_ASSERT_PTR_NOT_NULL_FATAL(pdst);
     polynomial_construct(io, psrc);
     for (iocpt = 0; iocpt < io + 1; iocpt++)
-        CU_ASSERT_EQUAL(polynomial_getorder(iocpt, psrc), iocpt);
-    for (iocpt = 0; iocpt < io + 1; iocpt++)
         CU_ASSERT_EQUAL(polynomial_getfactor(iocpt, psrc), 0);
     for (iocpt = 0; iocpt < io + 1; iocpt++)
         CU_ASSERT_EQUAL(polynomial_getratio(iocpt, psrc).num, 0);
     for (iocpt = 0; iocpt < io + 1; iocpt++)
         CU_ASSERT_EQUAL(polynomial_getratio(iocpt, psrc).denom, 1);
-
     // y = x => Y = (1/2)x²
     polynomial_setfactor(1, ev, psrc);
     polynomial_setratio(1, 1, 2, psrc);
@@ -371,7 +341,6 @@ void test_surfaces_derivative_antiderivate_o1()
     CU_ASSERT_EQUAL(polynomial_getfactor(1, pdst), 0.0f);
     CU_ASSERT_DOUBLE_EQUAL(polynomial_getfactor(2, pdst), 0.5f, granularity);
     polynomial_destruct(pdst);
-
     // y = x + 10 => Y = (1/2)x² + 10x
     polynomial_setfactor(0, 10.0f, psrc);
     polynomial_setratio(0, 10, 1, psrc);
@@ -381,7 +350,6 @@ void test_surfaces_derivative_antiderivate_o1()
     CU_ASSERT_EQUAL(polynomial_getfactor(1, pdst), 10.0f);
     CU_ASSERT_DOUBLE_EQUAL(polynomial_getfactor(2, pdst), 0.5f, granularity);
     polynomial_destruct(pdst);
-
     // y = 2x + 10 => Y = x² + 10x
     polynomial_setfactor(1, 2.0f, psrc);
     polynomial_setratio(1, 2, 1, psrc);
@@ -413,14 +381,11 @@ void test_surfaces_derivative_antiderivate_o2()
     CU_ASSERT_PTR_NOT_NULL_FATAL(pdst);
     polynomial_construct(io, psrc);
     for (iocpt = 0; iocpt < io + 1; iocpt++)
-        CU_ASSERT_EQUAL(polynomial_getorder(iocpt, psrc), iocpt);
-    for (iocpt = 0; iocpt < io + 1; iocpt++)
         CU_ASSERT_EQUAL(polynomial_getfactor(iocpt, psrc), 0);
     for (iocpt = 0; iocpt < io + 1; iocpt++)
         CU_ASSERT_EQUAL(polynomial_getratio(iocpt, psrc).num, 0);
     for (iocpt = 0; iocpt < io + 1; iocpt++)
         CU_ASSERT_EQUAL(polynomial_getratio(iocpt, psrc).denom, 1);
-
     // y = x² => Y = (1/3)x^3
     polynomial_setfactor(2, ev, psrc);
     polynomial_setratio(2, 1, 1, psrc);
@@ -431,7 +396,6 @@ void test_surfaces_derivative_antiderivate_o2()
     CU_ASSERT_EQUAL(polynomial_getfactor(2, pdst), 0.0f);
     CU_ASSERT_DOUBLE_EQUAL(polynomial_getfactor(3, pdst), 0.333333f, granularity);
     polynomial_destruct(pdst);
-
     // y = x² + 10 => Y = (1/3)x^3 + 10x
     polynomial_setfactor(0, 10.0f, psrc);
     polynomial_setratio(0, 10, 1, psrc);
@@ -442,7 +406,6 @@ void test_surfaces_derivative_antiderivate_o2()
     CU_ASSERT_EQUAL(polynomial_getfactor(2, pdst), 0.0f);
     CU_ASSERT_DOUBLE_EQUAL(polynomial_getfactor(3, pdst), 0.333333f, granularity);
     polynomial_destruct(pdst);
-
     // y = 3x² + 10 => Y = x^3 + 10x
     polynomial_setfactor(2, 3.0f, psrc);
     polynomial_setratio(2, 3, 1, psrc);
@@ -477,14 +440,11 @@ void test_surfaces_derivative_antiderivate_o3()
     CU_ASSERT_PTR_NOT_NULL_FATAL(pdst);
     polynomial_construct(io, psrc);
     for (iocpt = 0; iocpt < io + 1; iocpt++)
-        CU_ASSERT_EQUAL(polynomial_getorder(iocpt, psrc), iocpt);
-    for (iocpt = 0; iocpt < io + 1; iocpt++)
         CU_ASSERT_EQUAL(polynomial_getfactor(iocpt, psrc), 0);
     for (iocpt = 0; iocpt < io + 1; iocpt++)
         CU_ASSERT_EQUAL(polynomial_getratio(iocpt, psrc).num, 0);
     for (iocpt = 0; iocpt < io + 1; iocpt++)
         CU_ASSERT_EQUAL(polynomial_getratio(iocpt, psrc).denom, 1);
-
     // y = x³ => Y = (1/4)x^4
     polynomial_setfactor(3, ev, psrc);
     polynomial_setratio(3, 1, 1, psrc);
@@ -496,7 +456,6 @@ void test_surfaces_derivative_antiderivate_o3()
     CU_ASSERT_EQUAL(polynomial_getfactor(3, pdst), 0.0f);
     CU_ASSERT_DOUBLE_EQUAL(polynomial_getfactor(4, pdst), 0.25f, granularity);
     polynomial_destruct(pdst);
-
     // y = x³ + 10 => Y = (1/4)x^4 + 10x
     polynomial_setfactor(0, 10.0f, psrc);
     polynomial_setratio(0, 10, 1, psrc);
@@ -508,7 +467,6 @@ void test_surfaces_derivative_antiderivate_o3()
     CU_ASSERT_EQUAL(polynomial_getfactor(3, pdst), 0.0f);
     CU_ASSERT_DOUBLE_EQUAL(polynomial_getfactor(4, pdst), 0.25f, granularity);
     polynomial_destruct(pdst);
-
     // y = 4x³ + 10 => Y = x^4 + 10x
     polynomial_setfactor(3, 4.0f, psrc);
     polynomial_setratio(3, 4, 1, psrc);
@@ -548,18 +506,14 @@ void test_surfaces_derivative_antiderivate_o4096()
     CU_ASSERT_PTR_NOT_NULL_FATAL(pdst);
     polynomial_construct(io, psrc);
     for (iocpt = 0; iocpt < io + 1; iocpt++)
-        CU_ASSERT_EQUAL(polynomial_getorder(iocpt, psrc), iocpt);
-    for (iocpt = 0; iocpt < io + 1; iocpt++)
         CU_ASSERT_EQUAL(polynomial_getfactor(iocpt, psrc), 0);
     for (iocpt = 0; iocpt < io + 1; iocpt++)
         CU_ASSERT_EQUAL(polynomial_getratio(iocpt, psrc).num, 0);
     for (iocpt = 0; iocpt < io + 1; iocpt++)
         CU_ASSERT_EQUAL(polynomial_getratio(iocpt, psrc).denom, 1);
-
     // y = x^4096 => Y = x^4097
     polynomial_setfactor(io, 1.0f, psrc);
     polynomial_setratio(io, 1, 1, psrc);
-
     derivative_antiderivate(psrc, pdst);
     const polynomial_ratio_t r4096 = polynomial_getratio(io, pdst);
     CU_ASSERT_EQUAL(r4096.num, 0);

@@ -1,7 +1,7 @@
 /**
  * @file main.c
  * @author Pierre Fromager (info@pier-infor.fr)
- * @brief  surface calc for polynomial
+ * @brief surface calc for polynomial
  * @version 0.1
  * @date 2021-09-19
  * 

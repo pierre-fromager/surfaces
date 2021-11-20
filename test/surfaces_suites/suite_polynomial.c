@@ -32,8 +32,6 @@ static void check_poly_prepare(polynomial_order_t o)
 {
     polynomial_order_t iocpt;
     for (iocpt = 0; iocpt < o + 1; iocpt++)
-        CU_ASSERT_EQUAL(polynomial_getorder(iocpt, p), iocpt);
-    for (iocpt = 0; iocpt < o + 1; iocpt++)
         CU_ASSERT_EQUAL(polynomial_getfactor(iocpt, p), 0);
     for (iocpt = 0; iocpt < o + 1; iocpt++)
         CU_ASSERT_EQUAL(polynomial_getratio(iocpt, p).num, 0);
@@ -62,6 +60,13 @@ static struct
     {test_surfaces_polynomial_gmpfr_o1024, "polynomial_gmpfr_o1024"},
     {test_surfaces_polynomial_gmpfr_o2048, "polynomial_gmpfr_o2048"},
     {test_surfaces_polynomial_gmpfr_o4096, "polynomial_gmpfr_o4096"},
+    {test_surfaces_polynomial_add_o0, "polynomial_add_o0"},
+    {test_surfaces_polynomial_add_o1, "polynomial_add_o1"},
+    {test_surfaces_polynomial_add_o2, "polynomial_add_o2"},
+    {test_surfaces_polynomial_sub_o0, "polynomial_sub_o0"},
+    {test_surfaces_polynomial_sub_o1, "polynomial_sub_o1"},
+    {test_surfaces_polynomial_sub_o2, "polynomial_sub_o2"},
+    {test_surfaces_polynomial_sub_o2a, "polynomial_sub_o2a"},
     {0, 0},
 };
 
@@ -419,7 +424,6 @@ void test_surfaces_polynomial_gmp_int()
     CU_ASSERT_PTR_NOT_NULL_FATAL(p);
     polynomial_construct(io, p);
     check_poly_prepare(io);
-
     polynomial_setratio(io, 1, 1, p);
     CU_ASSERT_EQUAL(polynomial_getratio(io, p).num, 1);
     CU_ASSERT_EQUAL(polynomial_getratio(io, p).denom, 1);
@@ -451,7 +455,6 @@ void test_surfaces_polynomial_gmpfr_o0()
     check_poly_prepare(io);
     // y = 4/3
     polynomial_setratio(io, 4, 3, p);
-
     CU_ASSERT_EQUAL(polynomial_getratio(io, p).num, 4);
     CU_ASSERT_EQUAL(polynomial_getratio(io, p).denom, 3);
     mpfr_init2(acc, precision_mpfr);
@@ -477,12 +480,10 @@ void test_surfaces_polynomial_gmpfr_o64()
     polynomial_construct(io, p);
     check_poly_prepare(io);
     mpfr_init2(acc, precision_mpfr);
-
     // y = -x^3 + x^4 + x^64
     polynomial_setratio(3, -1, 1, p);
     polynomial_setratio(4, 1, 1, p);
     polynomial_setratio(64, 1, 1, p);
-
     strcpy(gmp_buff, "");
     strcpy(buff_compare, "");
     polynomial_calc_gmp_mpfr(acc, 2.0f, p, precision_mpfr);
@@ -503,7 +504,6 @@ void test_surfaces_polynomial_gmpfr_o128()
     polynomial_construct(io, p);
     check_poly_prepare(io);
     mpfr_init2(acc, precision_mpfr);
-
     // y = -x^3 + x^4 + x^128
     polynomial_setratio(3, -1, 1, p);
     polynomial_setratio(4, 1, 1, p);
@@ -579,12 +579,10 @@ void test_surfaces_polynomial_gmpfr_o512()
     polynomial_construct(io, p);
     check_poly_prepare(io);
     mpfr_init2(acc, precision_mpfr * 2);
-
     // y = -x^3 + x^4 + x^512
     polynomial_setratio(3, -1, 1, p);
     polynomial_setratio(4, 1, 1, p);
     polynomial_setratio(io, 1, 1, p);
-
     strcpy(gmp_buff, __emptychar);
     strcpy(buff_compare, __emptychar);
     polynomial_calc_gmp_mpfr(acc, 2.0f, p, precision_mpfr);
@@ -629,12 +627,10 @@ void test_surfaces_polynomial_gmpfr_o1024()
     polynomial_construct(io, p);
     check_poly_prepare(io);
     mpfr_init2(acc, precision_mpfr * 4);
-
     // y = -x^3 + x^4 + x^1024
     polynomial_setratio(3, -1, 1, p);
     polynomial_setratio(4, 1, 1, p);
     polynomial_setratio(io, 1, 1, p);
-
     strcpy(gmp_buff, __emptychar);
     strcpy(buff_compare, __emptychar);
     polynomial_calc_gmp_mpfr(acc, 2.0f, p, precision_mpfr);
@@ -679,12 +675,10 @@ void test_surfaces_polynomial_gmpfr_o2048()
     polynomial_construct(io, p);
     check_poly_prepare(io);
     mpfr_init2(acc, precision_mpfr * 8);
-
     // y = -x^3 + x^4 + x^2048
     polynomial_setratio(3, -1, 1, p);
     polynomial_setratio(4, 1, 1, p);
     polynomial_setratio(io, 1, 1, p);
-
     strcpy(gmp_buff, __emptychar);
     strcpy(buff_compare, __emptychar);
     polynomial_calc_gmp_mpfr(acc, xc, p, precision_mpfr);
@@ -729,17 +723,15 @@ void test_surfaces_polynomial_gmpfr_o4096()
         "30013024134671897266732164915111316029207817380334360902438047083404031541903"
         "44";
     char *expected;
-    expected = malloc(sizeof(char) * 1024);
+    expected = malloc(sizeof(char) * 1024 * 2);
     CU_ASSERT_PTR_NOT_NULL_FATAL(p);
     polynomial_construct(io, p);
     check_poly_prepare(io);
     mpfr_init2(acc, precision_mpfr * 16);
-
     // y = -x^3 + x^4 + x^4096
     polynomial_setratio(3, -1, 1, p);
     polynomial_setratio(4, 1, 1, p);
     polynomial_setratio(io, 1, 1, p);
-
     strcpy(gmp_buff, __emptychar);
     strcpy(buff_compare, __emptychar);
     polynomial_calc_gmp_mpfr(acc, xc, p, precision_mpfr);
@@ -755,6 +747,238 @@ void test_surfaces_polynomial_gmpfr_o4096()
         buff_compare,
         expected_int);
     mpfr_clear(acc);
-    reset_test_polynomial();
     free(expected);
+    reset_test_polynomial();
+}
+
+void test_surfaces_polynomial_add_o0()
+{
+    const polynomial_order_t o0 = 0;
+    polynomial_t *p2;
+    polynomial_t *pr;
+    CU_ASSERT_PTR_NOT_NULL_FATAL(p);
+    polynomial_construct(o0, p);
+    // p(x) = 1
+    polynomial_setfactor(o0, 1.0f, p);
+    CU_ASSERT_EQUAL(polynomial_getfactor(o0, p), 1);
+    // p2(x) = 1
+    p2 = (polynomial_t *)malloc(sizeof(polynomial_t));
+    polynomial_construct(o0, p2);
+    polynomial_setfactor(o0, 1.0f, p2);
+    CU_ASSERT_EQUAL(polynomial_getfactor(o0, p2), 1);
+    // pr => p + p2 = (1) + (1) = 2
+    pr = (polynomial_t *)malloc(sizeof(polynomial_t));
+    polynomial_construct(o0, pr);
+    polynomial_add(p, p2, pr);
+    CU_ASSERT_EQUAL(polynomial_getfactor(o0, pr), 2);
+    polynomial_destruct(pr);
+    free(pr);
+    polynomial_destruct(p2);
+    free(p2);
+    reset_test_polynomial();
+}
+
+void test_surfaces_polynomial_add_o1()
+{
+    const polynomial_order_t o0 = 0;
+    const polynomial_order_t o1 = 1;
+    CU_ASSERT_PTR_NOT_NULL_FATAL(p);
+    polynomial_construct(o1, p);
+    // p(x) = x
+    polynomial_setfactor(o1, 1.0f, p);
+    CU_ASSERT_EQUAL(polynomial_getfactor(o0, p), 0);
+    CU_ASSERT_EQUAL(polynomial_getfactor(o1, p), 1);
+    polynomial_t *p2 = (polynomial_t *)malloc(sizeof(polynomial_t));
+    polynomial_construct(o0, p2);
+    // p2(x) = 1
+    polynomial_setfactor(o0, 1.0f, p2);
+    CU_ASSERT_EQUAL(polynomial_getfactor(o0, p2), 1);
+    CU_ASSERT_EQUAL(polynomial_getfactor(o1, p2), 0);
+    polynomial_t *pr = (polynomial_t *)malloc(sizeof(polynomial_t));
+    polynomial_construct(o1, pr);
+    polynomial_add(p, p2, pr);
+    // pr => p + p2 = (x) + (1) = x + 1
+    CU_ASSERT_EQUAL(polynomial_getfactor(o0, pr), 1);
+    CU_ASSERT_EQUAL(polynomial_getfactor(o1, pr), 1);
+    polynomial_destruct(p2);
+    free(p2);
+    polynomial_destruct(pr);
+    free(pr);
+    reset_test_polynomial();
+}
+
+void test_surfaces_polynomial_add_o2()
+{
+    const polynomial_order_t o0 = 0;
+    const polynomial_order_t o1 = 1;
+    const polynomial_order_t o2 = 2;
+    CU_ASSERT_PTR_NOT_NULL_FATAL(p);
+    // p(x) = 2x^2 + x
+    polynomial_construct(o2, p);
+    CU_ASSERT_EQUAL(p->order, o2);
+    polynomial_setfactor(o2, 2.0f, p);
+    polynomial_setfactor(o1, 1.0f, p);
+    CU_ASSERT_EQUAL(polynomial_getfactor(o2, p), 2);
+    CU_ASSERT_EQUAL(polynomial_getfactor(o1, p), 1);
+    CU_ASSERT_EQUAL(polynomial_getfactor(o0, p), 0);
+    // p2(x) = -2x^2 - x
+    polynomial_t *p2 = (polynomial_t *)malloc(sizeof(polynomial_t));
+    polynomial_construct(o2, p2);
+    CU_ASSERT_EQUAL(p2->order, o2);
+    polynomial_setfactor(o2, -2.0f, p2);
+    polynomial_setfactor(o1, -1.0f, p2);
+    CU_ASSERT_EQUAL(polynomial_getfactor(o2, p2), -2);
+    CU_ASSERT_EQUAL(polynomial_getfactor(o1, p2), -1);
+    CU_ASSERT_EQUAL(polynomial_getfactor(o0, p2), 0);
+    // pr(x) =  p(x) + p2(x) = (2x^2 + x) + (-2x^2 - x) = 0
+    polynomial_t *pr = (polynomial_t *)malloc(sizeof(polynomial_t));
+    polynomial_construct(o2, pr);
+    polynomial_add(p, p2, pr);
+    CU_ASSERT_EQUAL(polynomial_getfactor(o2, pr), 0);
+    CU_ASSERT_EQUAL(polynomial_getfactor(o1, pr), 0);
+    CU_ASSERT_EQUAL(polynomial_getfactor(o0, pr), 0);
+    polynomial_destruct(pr);
+    free(pr);
+    polynomial_destruct(p2);
+    free(p2);
+    reset_test_polynomial();
+}
+
+void test_surfaces_polynomial_sub_o0()
+{
+    const polynomial_order_t o0 = 0;
+    polynomial_order_t nbr;
+    CU_ASSERT_PTR_NOT_NULL_FATAL(p);
+    // p(x) = 1
+    polynomial_construct(o0, p);
+    polynomial_setfactor(o0, 1.0f, p);
+    CU_ASSERT_EQUAL(polynomial_getfactor(o0, p), 1);
+    // p2(x) = 1
+    polynomial_t *p2 = (polynomial_t *)malloc(sizeof(polynomial_t));
+    polynomial_construct(o0, p2);
+    polynomial_setfactor(o0, 1.0f, p2);
+    CU_ASSERT_EQUAL(polynomial_getfactor(o0, p2), 1);
+    // pr => p - p2 = (1) - (1) = 0
+    polynomial_t *pr = (polynomial_t *)malloc(sizeof(polynomial_t));
+    polynomial_construct(o0, pr);
+    nbr = polynomial_sub(p, p2, pr);
+    CU_ASSERT_EQUAL(nbr, o0);
+    CU_ASSERT_EQUAL(polynomial_getfactor(o0, pr), 0);
+    polynomial_destruct(pr);
+    free(pr);
+    polynomial_destruct(p2);
+    free(p2);
+    reset_test_polynomial();
+}
+
+void test_surfaces_polynomial_sub_o1()
+{
+    const polynomial_order_t o0 = 0;
+    const polynomial_order_t o1 = 1;
+    polynomial_order_t nbr;
+    CU_ASSERT_PTR_NOT_NULL_FATAL(p);
+    // p(x) = x
+    polynomial_construct(o1, p);
+    CU_ASSERT_EQUAL(p->order, o1);
+    polynomial_setfactor(o1, 1.0f, p);
+    CU_ASSERT_EQUAL(polynomial_getfactor(o0, p), 0);
+    CU_ASSERT_EQUAL(polynomial_getfactor(o1, p), 1);
+    polynomial_t *p2 = (polynomial_t *)malloc(sizeof(polynomial_t));
+    // p2(x) = 1
+    polynomial_construct(o0, p2);
+    CU_ASSERT_EQUAL(p2->order, o0);
+    polynomial_setfactor(o0, 1.0f, p2);
+    CU_ASSERT_EQUAL(polynomial_getfactor(o0, p2), 1);
+    CU_ASSERT_EQUAL(polynomial_getfactor(o1, p2), 0);
+    // pr => p - p2 = (x) - (1) = x - 1
+    polynomial_t *pr = (polynomial_t *)malloc(sizeof(polynomial_t));
+    polynomial_construct(o1, pr);
+    nbr = polynomial_sub(p, p2, pr);
+    CU_ASSERT_EQUAL(nbr, o1);
+    CU_ASSERT_EQUAL(polynomial_getfactor(o1, pr), 1);
+    CU_ASSERT_EQUAL(polynomial_getfactor(o0, pr), -1);
+    polynomial_destruct(pr);
+    free(pr);
+    polynomial_destruct(p2);
+    free(p2);
+    reset_test_polynomial();
+}
+
+void test_surfaces_polynomial_sub_o2()
+{
+    const polynomial_order_t o0 = 0;
+    const polynomial_order_t o1 = 1;
+    const polynomial_order_t o2 = 2;
+    polynomial_order_t nbr;
+    CU_ASSERT_PTR_NOT_NULL_FATAL(p);
+    // p(x) = 2x^2 + x
+    polynomial_construct(o2, p);
+    CU_ASSERT_EQUAL(p->order, o2);
+    polynomial_setfactor(o2, 2.0f, p);
+    polynomial_setfactor(o1, 1.0f, p);
+    CU_ASSERT_EQUAL(polynomial_getfactor(o2, p), 2);
+    CU_ASSERT_EQUAL(polynomial_getfactor(o1, p), 1);
+    CU_ASSERT_EQUAL(polynomial_getfactor(o0, p), 0);
+    polynomial_t *p2 = (polynomial_t *)malloc(sizeof(polynomial_t));
+    // p2(x) = 2x^2 + x
+    polynomial_construct(o2, p2);
+    CU_ASSERT_EQUAL(p2->order, o2);
+    polynomial_setfactor(o2, 2.0f, p2);
+    polynomial_setfactor(o1, 1.0f, p2);
+    CU_ASSERT_EQUAL(polynomial_getfactor(o2, p2), 2);
+    CU_ASSERT_EQUAL(polynomial_getfactor(o1, p2), 1);
+    CU_ASSERT_EQUAL(polynomial_getfactor(o0, p2), 0);
+    // pr(x) =  p(x) - p2(x) = (2x^2 + x) - (2x^2 + x) = 0
+    polynomial_t *pr = (polynomial_t *)malloc(sizeof(polynomial_t));
+    polynomial_construct(o2, pr);
+    nbr = polynomial_sub(p, p2, pr);
+    polynomial_destruct(p2);
+    free(p2);
+    CU_ASSERT_EQUAL(nbr, o2);
+    CU_ASSERT_EQUAL(polynomial_getfactor(o2, pr), 0);
+    CU_ASSERT_EQUAL(polynomial_getfactor(o1, pr), 0);
+    CU_ASSERT_EQUAL(polynomial_getfactor(o0, pr), 0);
+    polynomial_destruct(pr);
+    free(pr);
+    reset_test_polynomial();
+}
+
+void test_surfaces_polynomial_sub_o2a()
+{
+    const polynomial_order_t o0 = 0;
+    const polynomial_order_t o1 = 1;
+    const polynomial_order_t o2 = 2;
+    polynomial_order_t nbr;
+    CU_ASSERT_PTR_NOT_NULL_FATAL(p);
+    // p = 8x^2+2x-1
+    polynomial_construct(o2, p);
+    CU_ASSERT_EQUAL(p->order, o2);
+    polynomial_setfactor(o2, 8.0f, p);
+    polynomial_setfactor(o1, 2.0f, p);
+    polynomial_setfactor(o0, -1.0f, p);
+    CU_ASSERT_EQUAL(polynomial_getfactor(o2, p), 8);
+    CU_ASSERT_EQUAL(polynomial_getfactor(o1, p), 2);
+    CU_ASSERT_EQUAL(polynomial_getfactor(o0, p), -1);
+    polynomial_t *p2 = (polynomial_t *)malloc(sizeof(polynomial_t));
+    // p2 = 5x^2+x
+    polynomial_construct(o2, p2);
+    CU_ASSERT_EQUAL(p2->order, o2);
+    polynomial_setfactor(o2, 5.0f, p2);
+    polynomial_setfactor(o1, 1.0f, p2);
+    CU_ASSERT_EQUAL(polynomial_getfactor(o2, p2), 5);
+    CU_ASSERT_EQUAL(polynomial_getfactor(o1, p2), 1);
+    CU_ASSERT_EQUAL(polynomial_getfactor(o0, p2), 0);
+    // pr = p - p2 = (8x^2+2x-1)-(5x^2+x) = 3x^2-x-1
+    polynomial_t *pr = (polynomial_t *)malloc(sizeof(polynomial_t));
+    polynomial_construct(o2, pr);
+    nbr = polynomial_sub(p, p2, pr);
+    polynomial_destruct(p2);
+    free(p2);
+    CU_ASSERT_EQUAL(nbr, o2);
+    CU_ASSERT_EQUAL(polynomial_getfactor(o2, pr), 3);
+    CU_ASSERT_EQUAL(polynomial_getfactor(o1, pr), 1);
+    CU_ASSERT_EQUAL(polynomial_getfactor(o0, pr), -1);
+    polynomial_destruct(pr);
+    free(pr);
+    reset_test_polynomial();
 }

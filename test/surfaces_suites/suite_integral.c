@@ -96,8 +96,6 @@ void test_surfaces_integral_ref_o0()
     CU_ASSERT_PTR_NOT_NULL_FATAL(p);
     polynomial_construct(io, p);
     for (ocpt = 0; ocpt < io + 1; ocpt++)
-        CU_ASSERT_EQUAL(polynomial_getorder(ocpt, p), ocpt);
-    for (ocpt = 0; ocpt < io + 1; ocpt++)
         CU_ASSERT_EQUAL(polynomial_getfactor(ocpt, p), io);
     // y = 10
     polynomial_setfactor(io, ev, p);
@@ -108,7 +106,6 @@ void test_surfaces_integral_ref_o0()
         polynomial_setfactor(io, cptv, p);
         CU_ASSERT_EQUAL(integral_poly_reference(p, iv), (iv.h - iv.l) * cptv);
     }
-
     reset_test_integral();
 }
 
@@ -118,8 +115,6 @@ void test_surfaces_integral_trapez_o0()
     const polynomial_item_t ev = 100.0f;
     CU_ASSERT_PTR_NOT_NULL_FATAL(p);
     polynomial_construct(io, p);
-    for (ocpt = 0; ocpt < io + 1; ocpt++)
-        CU_ASSERT_EQUAL(polynomial_getorder(ocpt, p), ocpt);
     for (ocpt = 0; ocpt < io + 1; ocpt++)
         CU_ASSERT_EQUAL(polynomial_getfactor(ocpt, p), io);
     // y = 10
@@ -141,8 +136,6 @@ void test_surfaces_integral_midpnt_o0()
     CU_ASSERT_PTR_NOT_NULL_FATAL(p);
     polynomial_construct(io, p);
     for (ocpt = 0; ocpt < io + 1; ocpt++)
-        CU_ASSERT_EQUAL(polynomial_getorder(ocpt, p), ocpt);
-    for (ocpt = 0; ocpt < io + 1; ocpt++)
         CU_ASSERT_EQUAL(polynomial_getfactor(ocpt, p), io);
     // y = 10
     polynomial_setfactor(0, ev, p);
@@ -153,7 +146,6 @@ void test_surfaces_integral_midpnt_o0()
         polynomial_setfactor(io, cptv, p);
         CU_ASSERT_EQUAL(integral_poly_midpnt(p, iv), (iv.h - iv.l) * cptv);
     }
-
     reset_test_integral();
 }
 
@@ -163,8 +155,6 @@ void test_surfaces_integral_simpson_o0()
     const polynomial_item_t ev = 100.0f;
     CU_ASSERT_PTR_NOT_NULL_FATAL(p);
     polynomial_construct(io, p);
-    for (ocpt = 0; ocpt < io + 1; ocpt++)
-        CU_ASSERT_EQUAL(polynomial_getorder(ocpt, p), ocpt);
     for (ocpt = 0; ocpt < io + 1; ocpt++)
         CU_ASSERT_EQUAL(polynomial_getfactor(ocpt, p), io);
     // y = ev
@@ -176,7 +166,6 @@ void test_surfaces_integral_simpson_o0()
         polynomial_setfactor(io, cptv, p);
         CU_ASSERT_EQUAL(integral_poly_simpson(p, iv), (iv.h - iv.l) * cptv);
     }
-
     reset_test_integral();
 }
 
@@ -188,8 +177,6 @@ void test_surfaces_integral_factory_riemann_o0()
     const polynomial_item_t nbr = 2.0f;
     CU_ASSERT_PTR_NOT_NULL_FATAL(p);
     polynomial_construct(io, p);
-    for (ocpt = 0; ocpt < io + 1; ocpt++)
-        CU_ASSERT_EQUAL(polynomial_getorder(ocpt, p), ocpt);
     for (ocpt = 0; ocpt < io + 1; ocpt++)
         CU_ASSERT_EQUAL(polynomial_getfactor(ocpt, p), io);
     // y = ev
@@ -231,7 +218,6 @@ void test_surfaces_integral_factory_riemann_o0()
             integral_factory_riemann(p, iv, nbr, riemann_rectangle),
             dxi * cptv);
     }
-
     reset_test_integral();
 }
 
@@ -244,8 +230,6 @@ void test_surfaces_integral_ref_o1()
     const polynomial_item_t expected2xplusten = 75.0f;
     CU_ASSERT_PTR_NOT_NULL_FATAL(p);
     polynomial_construct(io, p);
-    for (ocpt = 0; ocpt < io + 1; ocpt++)
-        CU_ASSERT_EQUAL(polynomial_getorder(ocpt, p), ocpt);
     for (ocpt = 0; ocpt < io + 1; ocpt++)
         CU_ASSERT_EQUAL(polynomial_getfactor(ocpt, p), 0);
     // y = x
@@ -267,7 +251,6 @@ void test_surfaces_integral_ref_o1()
     polynomial_setfactor(1, 2.0f, p);
     CU_ASSERT_EQUAL(polynomial_getfactor(1, p), 2.0f);
     CU_ASSERT_EQUAL(integral_poly_reference(p, iv), expected2xplusten);
-
     reset_test_integral();
 }
 
@@ -280,8 +263,6 @@ void test_surfaces_integral_trapez_o1()
     const polynomial_item_t expected2xplusten = 75.0f;
     CU_ASSERT_PTR_NOT_NULL_FATAL(p);
     polynomial_construct(io, p);
-    for (ocpt = 0; ocpt < io + 1; ocpt++)
-        CU_ASSERT_EQUAL(polynomial_getorder(ocpt, p), ocpt);
     for (ocpt = 0; ocpt < io + 1; ocpt++)
         CU_ASSERT_EQUAL(polynomial_getfactor(ocpt, p), 0);
     // y = x
@@ -303,7 +284,6 @@ void test_surfaces_integral_trapez_o1()
     polynomial_setfactor(1, 2.0f, p);
     CU_ASSERT_EQUAL(polynomial_getfactor(1, p), 2.0f);
     CU_ASSERT_EQUAL(integral_poly_trapez(p, iv), expected2xplusten);
-
     reset_test_integral();
 }
 
@@ -316,8 +296,6 @@ void test_surfaces_integral_midpnt_o1()
     const polynomial_item_t expected2xplusten = 75.0f;
     CU_ASSERT_PTR_NOT_NULL_FATAL(p);
     polynomial_construct(io, p);
-    for (ocpt = 0; ocpt < io + 1; ocpt++)
-        CU_ASSERT_EQUAL(polynomial_getorder(ocpt, p), ocpt);
     for (ocpt = 0; ocpt < io + 1; ocpt++)
         CU_ASSERT_EQUAL(polynomial_getfactor(ocpt, p), 0);
     // y = x
@@ -339,7 +317,6 @@ void test_surfaces_integral_midpnt_o1()
     polynomial_setfactor(1, 2.0f, p);
     CU_ASSERT_EQUAL(polynomial_getfactor(1, p), 2.0f);
     CU_ASSERT_EQUAL(integral_poly_midpnt(p, iv), expected2xplusten);
-
     reset_test_integral();
 }
 
@@ -351,8 +328,6 @@ void test_surfaces_integral_factory_o0()
     CU_ASSERT_PTR_NOT_NULL_FATAL(p);
     polynomial_construct(io, p);
     CU_ASSERT_EQUAL(p->order, io);
-    for (ocpt = 0; ocpt < io + 1; ocpt++)
-        CU_ASSERT_EQUAL(polynomial_getorder(ocpt, p), ocpt);
     for (ocpt = 0; ocpt < io + 1; ocpt++)
         CU_ASSERT_EQUAL(polynomial_getfactor(ocpt, p), io);
     // y = 100
@@ -376,10 +351,7 @@ void test_surfaces_integral_factory_o1()
     CU_ASSERT_PTR_NOT_NULL_FATAL(p);
     polynomial_construct(io, p);
     for (ocpt = 0; ocpt < io + 1; ocpt++)
-        CU_ASSERT_EQUAL(polynomial_getorder(ocpt, p), ocpt);
-    for (ocpt = 0; ocpt < io + 1; ocpt++)
         CU_ASSERT_EQUAL(polynomial_getfactor(ocpt, p), 0);
-
     // y = x
     polynomial_setfactor(0, 0.0f, p);
     polynomial_setfactor(1, 1.0f, p);
@@ -388,7 +360,6 @@ void test_surfaces_integral_factory_o1()
     strcpy(result, "");
     integral_factory(p, iv, result, factext);
     CU_ASSERT_STRING_EQUAL(result, "12.500000");
-
     // y = x + 10
     polynomial_setfactor(0, 10.0f, p);
     polynomial_setfactor(1, 1.0f, p);
@@ -397,14 +368,12 @@ void test_surfaces_integral_factory_o1()
     strcpy(result, "");
     integral_factory(p, iv, result, factext);
     CU_ASSERT_STRING_EQUAL(result, "62.500000");
-
     // y = 2x + 10
     polynomial_setfactor(1, 2.0f, p);
     CU_ASSERT_EQUAL(polynomial_getfactor(1, p), 2.0f);
     strcpy(result, "");
     integral_factory(p, iv, result, factext);
     CU_ASSERT_STRING_EQUAL(result, "75.000000");
-
     reset_test_integral();
 }
 
@@ -415,10 +384,7 @@ void test_surfaces_integral_factory_o2()
     polynomial_construct(io, p);
     CU_ASSERT_EQUAL(p->order, io);
     for (ocpt = 0; ocpt < io + 1; ocpt++)
-        CU_ASSERT_EQUAL(polynomial_getorder(ocpt, p), ocpt);
-    for (ocpt = 0; ocpt < io + 1; ocpt++)
         CU_ASSERT_EQUAL(polynomial_getfactor(ocpt, p), 0);
-
     // y = x^2
     polynomial_setfactor(0, 0.0f, p);
     polynomial_setfactor(1, 0.0f, p);
@@ -429,21 +395,18 @@ void test_surfaces_integral_factory_o2()
     strcpy(result, "");
     integral_factory(p, iv, result, factext);
     CU_ASSERT_STRING_EQUAL(result, "41.666667");
-
     // y = x^2 + 10
     polynomial_setfactor(0, 10.0f, p);
     CU_ASSERT_EQUAL(polynomial_getfactor(0, p), 10.0f);
     strcpy(result, "");
     integral_factory(p, iv, result, factext);
     CU_ASSERT_STRING_EQUAL(result, "91.666667");
-
     // y = 2x^2 + 10
     polynomial_setfactor(2, 2.0f, p);
     CU_ASSERT_EQUAL(polynomial_getfactor(2, p), 2.0f);
     strcpy(result, "");
     integral_factory(p, iv, result, factext);
     CU_ASSERT_STRING_EQUAL(result, "133.333333");
-
     reset_test_integral();
 }
 
@@ -454,10 +417,7 @@ void test_surfaces_integral_factory_o3()
     polynomial_construct(io, p);
     CU_ASSERT_EQUAL(p->order, io);
     for (ocpt = 0; ocpt < io + 1; ocpt++)
-        CU_ASSERT_EQUAL(polynomial_getorder(ocpt, p), ocpt);
-    for (ocpt = 0; ocpt < io + 1; ocpt++)
         CU_ASSERT_EQUAL(polynomial_getfactor(ocpt, p), 0);
-
     // y = x^3
     polynomial_setfactor(3, 1.0f, p);
     CU_ASSERT_EQUAL(polynomial_getfactor(0, p), 0);
@@ -467,21 +427,18 @@ void test_surfaces_integral_factory_o3()
     strcpy(result, "");
     integral_factory(p, iv, result, factext);
     CU_ASSERT_STRING_EQUAL(result, "156.250000");
-
     // y = x^3 + 10
     polynomial_setfactor(0, 10.0f, p);
     CU_ASSERT_EQUAL(polynomial_getfactor(0, p), 10.0f);
     strcpy(result, "");
     integral_factory(p, iv, result, factext);
     CU_ASSERT_STRING_EQUAL(result, "206.250000");
-
     // y = 2x^2 + 10
     polynomial_setfactor(3, 2.0f, p);
     CU_ASSERT_EQUAL(polynomial_getfactor(3, p), 2.0f);
     strcpy(result, "");
     integral_factory(p, iv, result, factext);
     CU_ASSERT_STRING_EQUAL(result, "362.500000");
-
     reset_test_integral();
 }
 
@@ -495,14 +452,11 @@ void test_surfaces_integral_factory_o1024()
     polynomial_construct(io, p);
     CU_ASSERT_EQUAL(p->order, io);
     for (ocpt = 0; ocpt < io + 1; ocpt++)
-        CU_ASSERT_EQUAL(polynomial_getorder(ocpt, p), ocpt);
-    for (ocpt = 0; ocpt < io + 1; ocpt++)
         CU_ASSERT_EQUAL(polynomial_getfactor(ocpt, p), 0);
     for (ocpt = 0; ocpt < io + 1; ocpt++)
         CU_ASSERT_EQUAL(polynomial_getratio(ocpt, p).num, 0);
     for (ocpt = 0; ocpt < io + 1; ocpt++)
         CU_ASSERT_EQUAL(polynomial_getratio(ocpt, p).denom, 1);
-
     // y = x^1024
     polynomial_ratio_t ra1024;
     polynomial_setratio(io, 1, 1, p);
@@ -531,8 +485,6 @@ void test_surfaces_integral_factory_o2048()
     CU_ASSERT_PTR_NOT_NULL_FATAL(p);
     polynomial_construct(io, p);
     CU_ASSERT_EQUAL(p->order, io);
-    for (ocpt = 0; ocpt < io + 1; ocpt++)
-        CU_ASSERT_EQUAL(polynomial_getorder(ocpt, p), ocpt);
     for (ocpt = 0; ocpt < io + 1; ocpt++)
         CU_ASSERT_EQUAL(polynomial_getfactor(ocpt, p), 0);
     for (ocpt = 0; ocpt < io + 1; ocpt++)
@@ -569,8 +521,6 @@ void test_surfaces_integral_factory_o4096()
     polynomial_construct(io, p);
     CU_ASSERT_EQUAL(p->order, io);
     for (ocpt = 0; ocpt < io + 1; ocpt++)
-        CU_ASSERT_EQUAL(polynomial_getorder(ocpt, p), ocpt);
-    for (ocpt = 0; ocpt < io + 1; ocpt++)
         CU_ASSERT_EQUAL(polynomial_getfactor(ocpt, p), 0);
     for (ocpt = 0; ocpt < io + 1; ocpt++)
         CU_ASSERT_EQUAL(polynomial_getratio(ocpt, p).num, 0);
@@ -588,7 +538,6 @@ void test_surfaces_integral_factory_o4096()
     strcpy(buff_compare, "");
     gmp_sprintf(buff_compare, "%Zd", acc);
     mpz_clear(acc);
-    //printf("%zu\n",strlen(buff_compare));
     strcpy(result, "");
     integral_factory(p, iv, result, factext);
     CU_ASSERT_EQUAL(strlen(buff_compare), rlen);
@@ -602,8 +551,6 @@ void test_surfaces_integral_ref_o2()
     const polynomial_order_t io = 2;
     CU_ASSERT_PTR_NOT_NULL_FATAL(p);
     polynomial_construct(io, p);
-    for (ocpt = 0; ocpt < io + 1; ocpt++)
-        CU_ASSERT_EQUAL(polynomial_getorder(ocpt, p), ocpt);
     for (ocpt = 0; ocpt < io + 1; ocpt++)
         CU_ASSERT_EQUAL(polynomial_getfactor(ocpt, p), 0);
     // y = x²
@@ -627,7 +574,6 @@ void test_surfaces_integral_ref_o2()
         (double)integral_poly_reference(p, iv),
         (double)133.333333,
         (double)granularity);
-
     reset_test_integral();
 }
 
@@ -636,8 +582,6 @@ void test_surfaces_integral_ref_o3()
     const polynomial_order_t io = 3;
     CU_ASSERT_PTR_NOT_NULL_FATAL(p);
     polynomial_construct(io, p);
-    for (ocpt = 0; ocpt < io + 1; ocpt++)
-        CU_ASSERT_EQUAL(polynomial_getorder(ocpt, p), ocpt);
     for (ocpt = 0; ocpt < io + 1; ocpt++)
         CU_ASSERT_EQUAL(polynomial_getfactor(ocpt, p), 0);
     // y = x³
@@ -661,7 +605,6 @@ void test_surfaces_integral_ref_o3()
         (double)integral_poly_reference(p, iv),
         (double)362.5f,
         (double)granularity);
-
     reset_test_integral();
 }
 
@@ -670,8 +613,6 @@ void test_surfaces_integral_ref_o4()
     const polynomial_order_t io = 4;
     CU_ASSERT_PTR_NOT_NULL_FATAL(p);
     polynomial_construct(io, p);
-    for (ocpt = 0; ocpt < io + 1; ocpt++)
-        CU_ASSERT_EQUAL(polynomial_getorder(ocpt, p), ocpt);
     for (ocpt = 0; ocpt < io + 1; ocpt++)
         CU_ASSERT_EQUAL(polynomial_getfactor(ocpt, p), 0);
     // y = x⁴
@@ -695,7 +636,6 @@ void test_surfaces_integral_ref_o4()
         (double)integral_poly_reference(p, iv),
         (double)987.5f,
         (double)granularity);
-
     reset_test_integral();
 }
 
@@ -709,31 +649,24 @@ void test_surfaces_integral_ref_gmp_int_o4096()
     CU_ASSERT_PTR_NOT_NULL_FATAL(p);
     polynomial_construct(io, p);
     for (iocpt = 0; iocpt < io + 1; iocpt++)
-        CU_ASSERT_EQUAL(polynomial_getorder(iocpt, p), iocpt);
-    for (iocpt = 0; iocpt < io + 1; iocpt++)
         CU_ASSERT_EQUAL(polynomial_getfactor(iocpt, p), 0);
     for (iocpt = 0; iocpt < io + 1; iocpt++)
         CU_ASSERT_EQUAL(polynomial_getratio(iocpt, p).num, 0);
     for (iocpt = 0; iocpt < io + 1; iocpt++)
         CU_ASSERT_EQUAL(polynomial_getratio(iocpt, p).denom, 1);
     CU_ASSERT_EQUAL(polynomial_calc(ev, p), 0);
-
     polynomial_setratio(io, 1, 1, p);
     CU_ASSERT_EQUAL(polynomial_getratio(io, p).num, 1);
     CU_ASSERT_EQUAL(polynomial_getratio(io, p).denom, 1);
-
     strcat(gmp_buff, "");
     strcat(buff_compare, "");
     mpz_init2(acc, (mp_bitcnt_t)factext.precision);
-
     iv.l = 1;
     iv.h = 2;
     integral_poly_reference_gmp(acc, p, iv, (mp_bitcnt_t)factext.precision);
     gmp_sprintf(gmp_buff, "%Zd", acc);
     renderer_render_bc("(2^4097)/4097", buff_compare, 0);
     CU_ASSERT_STRING_EQUAL(gmp_buff, buff_compare);
-
     mpz_clear(acc);
-
     reset_test_integral();
 }

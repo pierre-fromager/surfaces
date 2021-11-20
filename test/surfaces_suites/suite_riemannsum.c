@@ -74,8 +74,6 @@ void test_surfaces_riemannsum_left_o0()
     CU_ASSERT_PTR_NOT_NULL_FATAL(pol);
     polynomial_construct(io, pol);
     for (iocpt = 0; iocpt < io + 1; iocpt++)
-        CU_ASSERT_EQUAL(polynomial_getorder(iocpt, pol), iocpt);
-    for (iocpt = 0; iocpt < io + 1; iocpt++)
         CU_ASSERT_EQUAL(polynomial_getfactor(iocpt, pol), io);
     // y = ev
     polynomial_setfactor(0, ev, pol);
@@ -88,7 +86,6 @@ void test_surfaces_riemannsum_left_o0()
         (double)ifr_left,
         (double)(5.0f * ev),
         0.00001);
-
     reset_test_riemannsum();
 }
 
@@ -100,8 +97,6 @@ void test_surfaces_riemannsum_right_o0()
     polynomial_order_t iocpt;
     CU_ASSERT_PTR_NOT_NULL_FATAL(pol);
     polynomial_construct(io, pol);
-    for (iocpt = 0; iocpt < io + 1; iocpt++)
-        CU_ASSERT_EQUAL(polynomial_getorder(iocpt, pol), iocpt);
     for (iocpt = 0; iocpt < io + 1; iocpt++)
         CU_ASSERT_EQUAL(polynomial_getfactor(iocpt, pol), io);
     // y = ev
@@ -115,7 +110,6 @@ void test_surfaces_riemannsum_right_o0()
         (double)ifr_right,
         (double)(5.0f * ev),
         0.00001);
-
     reset_test_riemannsum();
 }
 
@@ -127,8 +121,6 @@ void test_surfaces_riemannsum_trap_o0()
     polynomial_order_t iocpt;
     CU_ASSERT_PTR_NOT_NULL_FATAL(pol);
     polynomial_construct(io, pol);
-    for (iocpt = 0; iocpt < io + 1; iocpt++)
-        CU_ASSERT_EQUAL(polynomial_getorder(iocpt, pol), iocpt);
     for (iocpt = 0; iocpt < io + 1; iocpt++)
         CU_ASSERT_EQUAL(polynomial_getfactor(iocpt, pol), io);
     // y = ev
@@ -142,7 +134,6 @@ void test_surfaces_riemannsum_trap_o0()
         (double)ifr_trap,
         (double)(5.0f * ev),
         0.00001);
-
     reset_test_riemannsum();
 }
 
@@ -154,8 +145,6 @@ void test_surfaces_riemannsum_rect_o0()
     polynomial_order_t iocpt;
     CU_ASSERT_PTR_NOT_NULL_FATAL(pol);
     polynomial_construct(io, pol);
-    for (iocpt = 0; iocpt < io + 1; iocpt++)
-        CU_ASSERT_EQUAL(polynomial_getorder(iocpt, pol), iocpt);
     for (iocpt = 0; iocpt < io + 1; iocpt++)
         CU_ASSERT_EQUAL(polynomial_getfactor(iocpt, pol), io);
     // y = ev
@@ -169,7 +158,6 @@ void test_surfaces_riemannsum_rect_o0()
         (double)ifr_rect,
         (double)(5.0f * ev),
         0.00001);
-
     reset_test_riemannsum();
 }
 
@@ -181,8 +169,6 @@ void test_surfaces_riemannsum_mp_o0()
     polynomial_order_t iocpt;
     CU_ASSERT_PTR_NOT_NULL_FATAL(pol);
     polynomial_construct(io, pol);
-    for (iocpt = 0; iocpt < io + 1; iocpt++)
-        CU_ASSERT_EQUAL(polynomial_getorder(iocpt, pol), iocpt);
     for (iocpt = 0; iocpt < io + 1; iocpt++)
         CU_ASSERT_EQUAL(polynomial_getfactor(iocpt, pol), io);
     // y = ev
@@ -196,7 +182,6 @@ void test_surfaces_riemannsum_mp_o0()
         (double)ifr_mp,
         (double)(5.0f * ev),
         0.00001);
-
     reset_test_riemannsum();
 }
 
@@ -208,8 +193,6 @@ void test_surfaces_riemannsum_left_o1()
     polynomial_item_t cptv;
     CU_ASSERT_PTR_NOT_NULL_FATAL(pol);
     polynomial_construct(io, pol);
-    for (iocpt = 0; iocpt < io + 1; iocpt++)
-        CU_ASSERT_EQUAL(polynomial_getorder(iocpt, pol), iocpt);
     for (iocpt = 0; iocpt < io + 1; iocpt++)
         CU_ASSERT_EQUAL(polynomial_getfactor(iocpt, pol), 0);
     // y = x
@@ -241,7 +224,6 @@ void test_surfaces_riemannsum_left_o1()
         (double)riemann_sum_left(pol, iv, 3.0f),
         (double)66.666667f,
         0.00001);
-
     reset_test_riemannsum();
 }
 
@@ -252,8 +234,6 @@ void test_surfaces_riemannsum_right_o1()
     polynomial_order_t iocpt;
     CU_ASSERT_PTR_NOT_NULL_FATAL(pol);
     polynomial_construct(io, pol);
-    for (iocpt = 0; iocpt < io + 1; iocpt++)
-        CU_ASSERT_EQUAL(polynomial_getorder(iocpt, pol), iocpt);
     for (iocpt = 0; iocpt < io + 1; iocpt++)
         CU_ASSERT_EQUAL(polynomial_getfactor(iocpt, pol), 0);
     // y = x
@@ -279,7 +259,6 @@ void test_surfaces_riemannsum_right_o1()
         (double)riemann_sum_right(pol, iv, 3.0f),
         (double)83.333333f,
         0.00001);
-
     reset_test_riemannsum();
 }
 
@@ -290,8 +269,6 @@ void test_surfaces_riemannsum_trap_o1()
     polynomial_order_t iocpt;
     CU_ASSERT_PTR_NOT_NULL_FATAL(pol);
     polynomial_construct(io, pol);
-    for (iocpt = 0; iocpt < io + 1; iocpt++)
-        CU_ASSERT_EQUAL(polynomial_getorder(iocpt, pol), iocpt);
     for (iocpt = 0; iocpt < io + 1; iocpt++)
         CU_ASSERT_EQUAL(polynomial_getfactor(iocpt, pol), 0);
     // y = x
@@ -317,7 +294,6 @@ void test_surfaces_riemannsum_trap_o1()
         (double)riemann_sum_trap(pol, iv, 3.0f),
         (double)75.0,
         0.00001);
-
     reset_test_riemannsum();
 }
 
@@ -328,8 +304,6 @@ void test_surfaces_riemannsum_rect_o1()
     polynomial_order_t iocpt;
     CU_ASSERT_PTR_NOT_NULL_FATAL(pol);
     polynomial_construct(io, pol);
-    for (iocpt = 0; iocpt < io + 1; iocpt++)
-        CU_ASSERT_EQUAL(polynomial_getorder(iocpt, pol), iocpt);
     for (iocpt = 0; iocpt < io + 1; iocpt++)
         CU_ASSERT_EQUAL(polynomial_getfactor(iocpt, pol), 0);
     // y = x
@@ -355,7 +329,6 @@ void test_surfaces_riemannsum_rect_o1()
         (double)riemann_sum_rect(pol, iv, 3.0f),
         (double)66.666667f,
         0.00001);
-
     reset_test_riemannsum();
 }
 
@@ -366,8 +339,6 @@ void test_surfaces_riemannsum_mp_o1()
     polynomial_order_t iocpt;
     CU_ASSERT_PTR_NOT_NULL_FATAL(pol);
     polynomial_construct(io, pol);
-    for (iocpt = 0; iocpt < io + 1; iocpt++)
-        CU_ASSERT_EQUAL(polynomial_getorder(iocpt, pol), iocpt);
     for (iocpt = 0; iocpt < io + 1; iocpt++)
         CU_ASSERT_EQUAL(polynomial_getfactor(iocpt, pol), 0);
     // y = x
@@ -393,6 +364,5 @@ void test_surfaces_riemannsum_mp_o1()
         (double)riemann_sum_mp(pol, iv, 3.0f),
         (double)75.0f,
         0.00001);
-
     reset_test_riemannsum();
 }

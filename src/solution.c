@@ -57,12 +57,12 @@ void solution_equation(FILE *streamout, polynomial_t *p)
     fprintf(streamout, SOL_LF);
 }
 
-void solution_roots(FILE *streamout, polynomial_t *p)
+static void solution_roots(FILE *streamout, polynomial_t *p, interval_t li)
 {
     polynomial_item_t *r;
     polynomial_order_t res, rcpt;
     r = (polynomial_item_t *)malloc(sizeof(polynomial_item_t) * (p->order + 1));
-    res = roots_factory(p, r);
+    res = roots_factory(p, li, r);
     fprintf(streamout, "\tRoots %u =>", res);
     for (rcpt = 0; rcpt < res; rcpt++)
         fprintf(streamout, " r%u:%Lf", rcpt, *(r + rcpt));
@@ -98,7 +98,7 @@ void solution_print(
         SOL_DOUBLE_FMT,
         (long double)profile_elapse(prof));
     solution_format_double(fmt_elapse, 10);
-    solution_roots(streamout, p);
+    solution_roots(streamout, p, li);
     fprintf(streamout, SOL_TAB "Precision %u bits" SOL_LF, precision);
     fprintf(streamout, SOL_TAB "Elapse %s s" SOL_LF, fmt_elapse);
 }

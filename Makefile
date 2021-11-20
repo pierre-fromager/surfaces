@@ -1,9 +1,9 @@
 CXX = gcc
 CC = $(CXX)
-#-ftest-coverage -fprofile-arcs -lgcov 
-CFLAGS = -O2 -Werror -Wall -Wextra -Wpedantic -std=c99 \
+CFLAGS = -O2 -Werror -Wall -Wextra -Wpedantic -std=c99 -I./include \
+	-g -s \
 	-lm -lgmp -lmpfr \
-	-fno-asm -g -s -std=c11 \
+	-fno-asm -std=c11 \
 	-Wno-format-nonliteral \
 	-Wformat=2 -Wformat-security \
 	-Wnull-dereference -Wstack-protector -Wtrampolines -Wvla \
@@ -22,14 +22,15 @@ CFLAGS = -O2 -Werror -Wall -Wextra -Wpedantic -std=c99 \
 DOC = doc
 SRC = src
 TST = test
+LIB_EXT = .so
+LIB_VER_MAJ = .1
+LIB_VER_MIN = .0
 SRC_LIB_FILE = $(SRC)/libpolysurf
 SRC_FILES = $(wildcard $(SRC)/*.c) $(wildcard$(SRC)/**/*.c)
 TST_FILES = $(wildcard $(TST)/*.c) $(wildcard $(TST)/**/*.c) $(wildcard $(TST)/**/**/*.c)
-ALL_SRC_BUT_MAIN = $(filter-out $(SRC)/main.c, $(SRC_FILES))
+ALL_SRC_BUT_MAIN = $(filter-out $(SRC)/main.c,  $(SRC_FILES))
 
 OBJECTS = $(SRC_FILES:%.c=%.o)
-#OBJECTSCOVO = $(SRC_FILES:%.c=%.gcno)
-#OBJECTSCOVA = $(SRC_FILES:%.c=%.gcda)
 OBJECTS_TO_TEST = $(ALL_SRC_BUT_MAIN:%.c=%.o)
 OBJECTS_TO_LIB = $(ALL_SRC_BUT_MAIN:%.c=%.o)
 OBJECTS_TEST = $(TST_FILES:%.c=%.o)
@@ -46,8 +47,6 @@ $(TARGET): $(OBJECTS)
 .PHONY: clean
 clean:
 	rm -rf $(TARGET) $(OBJECTS)  
-	#rm $(TARGET_TEST) 
-	rm $(TARGET_LIB).so.1.0  	
 
 .PHONY: trace
 trace:
@@ -71,7 +70,7 @@ cleandoc:
 
 .PHONY: check
 check:
-	cppcheck --check-config --enable=all --std=c99 --suppress=missingIncludeSystem $(SRC) -I $(SRC)
+	cppcheck -I./include --check-config --enable=all --std=c99 --suppress=missingIncludeSystem $(SRC) -I $(SRC)
 
 .PHONY: test
 test:$(OBJECTS_TEST) 
@@ -83,10 +82,20 @@ cleantest:
 
 .PHONY: lib
 lib:
-	$(CXX) -fPIC -fvisibility=hidden -shared -Wl,-soname,$(TARGET_LIB).so.1 \
-		$(CFLAGS) -o $(TARGET_LIB).so.1.0 $(SRC)/$(TARGET_LIB).o
+	$(CXX) $(CFLAGS) -shared -fPIC -Wl,-soname,$(TARGET_LIB)$(LIB_EXT) \
+		-o $(TARGET_LIB)$(LIB_EXT)$(LIB_VER_MAJ)$(LIB_VER_MIN)
 
-# ldconfig -v 2>/dev/null | grep -v ^$'\t'
-# http://www.yolinux.com/TUTORIALS/LibraryArchives-StaticAndDynamic.html
-# https://docencia.ac.upc.edu/FIB/USO/Bibliografia/unix-c-libraries.html
+.PHONY: cleanlib
+cleanlib:
+	rm -rf $(TARGET_LIB)$(LIB_EXT)$(LIB_VER_MAJ)$(LIB_VER_MIN)	
+
+.PHONY: examples
+examples:
+	rm -rf src/main.o
+	$(CXX) $(CFLAGS) src/examples/intersect.c \
+		-I./include -L . -lpolysurf \
+		src/*.o \
+		-o ex_intersect
+	ldd ex_intersect
+	nm -D libpolysurf.so.1.0
 	

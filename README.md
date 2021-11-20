@@ -1,10 +1,11 @@
 # Polynomial surface
 
-Polynomial surface is a factory based on higher degree best effort.  
-
-For polynomial max order higher than 48 gmp(int) or mpfr(float) is used.  
-
-Default precision is 64bits but you have to consider mpfr requires 256UL * 16 to get relevant accuracy on x^4096.
+The idea first is to compute integral.  
+It is also by extension a lib(libpolysurf) with many others features :
+* Sign study
+* Roots finder
+* Intersection
+* ...
   
 ## Requirements
 
@@ -13,15 +14,9 @@ Default precision is 64bits but you have to consider mpfr requires 256UL * 16 to
 * [CUnity/Cunit](https://gitlab.com/cunity/cunit)
 
 ## Releases
-
-### v1.0
-* Highest tested order 48.
-
-### v2.0
-* Highest tested order gmp(mpz_t) 4096.
-
-### v2.1.0 (prerelease)
-* Highest tested order mpfr(mpfr_t) wip.
+* v1.0 : Highest tested order 48.
+* v2.0 : Highest tested order gmp(mpz_t) 4096.
+* v2.1.0 (prerelease) : Highest tested order mpfr(mpfr_t).
 
 ## Build
 all
@@ -43,7 +38,7 @@ Generate to doc/html folder.
 make doc
 ```
 
-## Usage
+## Usage surfaces
 Overview
 ``` 
 ./surfaces 
@@ -52,8 +47,6 @@ Detail
 ```
 ./surfaces -?
 ```
-
-## Examples
 Default interval [0..5]
 ```
 ./surfaces 3+x+2x^3
@@ -102,12 +95,13 @@ If you activate the sanitizer options on compiler for debug purpose you will see
 Polynomial surface is optimized from higher order as below :
 * o < 2 => middle point method.
 * o < 4 => simpson method (aka rk4).
-* o < 48 => antiderivative(primitiv) delta method.
-* o > 48 => antiderivative(primitiv) delta method with multiple precision.
+* o < 48 => antiderivative Δ.
+* o > 48 => antiderivative mp Δ.
 
 ## Tests
-* Tests are based on [CUnity/Cunit framework](https://gitlab.com/cunity/cunit).  
-* I can assert this project to be widely tested.  
+* Based on [CUnity/Cunit framework](https://gitlab.com/cunity/cunit).  
+* Organized by suite => a suite is a domain feature.
+* See tests report below.  
 
 Build sources (fresh release v3.2.7), clone repo and follow the Readme.  
 Then
@@ -128,14 +122,34 @@ Clean tests from root project.
 ``` 
 make cleantest
 ```
-Active tests report from polynomial highest order 0 upto 4096
+Tests report
 ```
 Run Summary       -      Run    Failed  Inactive   Skipped
-     Suites       :        6         0         0         0
-     Asserts      :   229471         0       n/a       n/a
-     Tests        :       61         0         0         0
+     Suites       :        8         0         0         0
+     Asserts      :   173333         0       n/a       n/a
+     Tests        :       76         0         0         0
 ```
+## Lib polysurf
 
+Compile lib.
+```
+make lib
+```
+Install lib.
+```
+sudo mkdir -p /usr/include/libpolysurf
+sudo cp include/*.h /usr/include/libpolysurf
+sudo cp libpolysurf.so.1.0 /usr/lib
+sudo ln -s /usr/lib/libpolysurf.so.1.0 /usr/lib/libpolysurf.so
+sudo chmod 0755 /usr/lib/libpolysurf.so
+sudo ldconfig
+```
+## Examples polysurf
+Can be found in src/examples.
+```
+make examples
+export LD_LIBRARY_PATH=.
+```
 ## Extra
 
 Alternatives methods with no reliability are tested here.  
@@ -149,7 +163,7 @@ Alternatives methods with no reliability are tested here.
 * make a lib (open to contributors).
 
 ## Contribute
-* open to pull requests, fork then submit.
+* open to pull requests, rule is 1 mod => 1 unit test (TDD).
 
 ## Licence
 * GNU3 GPL(not LGPL).  

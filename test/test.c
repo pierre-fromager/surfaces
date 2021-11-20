@@ -17,13 +17,14 @@
 #include <getopt.h>
 #include <string.h>
 #include <stdio.h>
-#include "surfaces_suites/suite_fraction.h"
-#include "surfaces_suites/suite_parser.h"
-#include "surfaces_suites/suite_polynomial.h"
-#include "surfaces_suites/suite_derivative.h"
-#include "surfaces_suites/suite_riemannsum.h"
-#include "surfaces_suites/suite_integral.h"
-#include "surfaces_suites/suite_roots.h"
+#include "suite_fraction.h"
+#include "suite_parser.h"
+#include "suite_polynomial.h"
+#include "suite_derivative.h"
+#include "suite_riemannsum.h"
+#include "suite_integral.h"
+#include "suite_roots.h"
+#include "suite_intersect.h"
 
 int main(int argc, char *argv[])
 {
@@ -116,6 +117,7 @@ int main(int argc, char *argv[])
 	test_surfaces_riemannsum_add_suite();
 	test_surfaces_integral_add_suite();
 	test_surfaces_roots_add_suite();
+	test_surfaces_intersect_add_suite();
 
 	switch (interface)
 	{
